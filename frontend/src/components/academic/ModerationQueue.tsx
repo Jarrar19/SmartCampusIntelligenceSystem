@@ -8,6 +8,7 @@ import { useToast } from '../../context/ToastContext';
 import { Resource } from '../../types';
 import { Badge } from '../common/Badge';
 import { EmptyState } from '../common/EmptyState';
+import { ModerationFeedbackModal } from './ModerationFeedbackModal';
 
 export const ModerationQueue: React.FC = () => {
   const { success, error } = useToast();
@@ -15,6 +16,10 @@ export const ModerationQueue: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'PENDING_REVIEW' | 'APPROVED' | 'REJECTED'>('PENDING_REVIEW');
   const [processingId, setProcessingId] = useState<number | null>(null);
+  const [feedbackModalTarget, setFeedbackModalTarget] = useState<{
+    resource: Resource;
+    status: 'REJECTED' | 'CHANGES_REQUESTED';
+  } | null>(null);
 
   const fetchQueue = async () => {
     setIsLoading(true);
@@ -34,21 +39,11 @@ export const ModerationQueue: React.FC = () => {
     fetchQueue();
   }, [activeTab]);
 
-  const handleModerate = async (resourceId: number, status: 'APPROVED' | 'REJECTED') => {
-    let rejectionReason: string | null = null;
-    if (status === 'REJECTED') {
-      rejectionReason = window.prompt('Please provide a constructive reason for rejecting this upload:');
-      if (!rejectionReason || !rejectionReason.trim()) {
-        error('Rejection reason is required.');
-        return;
-      }
-    }
-
+  const handleApprove = async (resourceId: number) => {
     setProcessingId(resourceId);
     try {
       const res = await api.patch(`/resources/${resourceId}/moderate`, {
-        status,
-        rejectionReason,
+        status: 'APPROVED',
       });
 
       if (res.data.success) {
@@ -61,6 +56,30 @@ export const ModerationQueue: React.FC = () => {
       setProcessingId(null);
     }
   };
+
+  const handleFeedbackSubmit = async (reason: string) => {
+    if (!feedbackModalTarget) return;
+    const { resource, status } = feedbackModalTarget;
+
+    setProcessingId(resource.id);
+    try {
+      const res = await api.patch(`/resources/${resource.id}/moderate`, {
+        status,
+        rejectionReason: reason,
+      });
+
+      if (res.data.success) {
+        success(res.data.message);
+        setResources(prev => prev.filter(r => r.id !== resource.id));
+        setFeedbackModalTarget(null);
+      }
+    } catch (err: any) {
+      error(err.response?.data?.message || 'Moderation action failed');
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
 
   const handleDownload = async (resource: Resource) => {
     try {
@@ -177,15 +196,25 @@ export const ModerationQueue: React.FC = () => {
                 {activeTab === 'PENDING_REVIEW' && (
                   <>
                     <button
-                      onClick={() => handleModerate(r.id, 'APPROVED')}
+                      onClick={() => handleApprove(r.id)}
                       disabled={processingId === r.id}
                       className="px-5 py-2.5 rounded-2xl text-xs font-black text-white bg-emerald-600 hover:bg-emerald-500 shadow-md shadow-emerald-500/25 flex items-center gap-1.5 transition cursor-pointer disabled:opacity-50 active:scale-95"
                     >
                       <Check className="w-4 h-4" />
                       <span>Approve</span>
                     </button>
+
                     <button
-                      onClick={() => handleModerate(r.id, 'REJECTED')}
+                      onClick={() => setFeedbackModalTarget({ resource: r, status: 'CHANGES_REQUESTED' })}
+                      disabled={processingId === r.id}
+                      className="px-4 py-2.5 rounded-2xl text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/15 hover:bg-amber-100 dark:hover:bg-amber-500/25 border border-amber-200 dark:border-amber-500/30 flex items-center gap-1.5 transition cursor-pointer disabled:opacity-50 active:scale-95"
+                    >
+                      <AlertCircle className="w-4 h-4" />
+                      <span>Request Changes</span>
+                    </button>
+
+                    <button
+                      onClick={() => setFeedbackModalTarget({ resource: r, status: 'REJECTED' })}
                       disabled={processingId === r.id}
                       className="px-4 py-2.5 rounded-2xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 flex items-center gap-1.5 transition cursor-pointer disabled:opacity-50 active:scale-95"
                     >
@@ -199,6 +228,32 @@ export const ModerationQueue: React.FC = () => {
           ))}
         </div>
       )}
+
+      {/* Moderation Feedback Modal */}
+      {feedbackModalTarget && (
+        <ModerationFeedbackModal
+          isOpen={!!feedbackModalTarget}
+          onClose={() => setFeedbackModalTarget(null)}
+          onConfirm={handleFeedbackSubmit}
+          title={
+            feedbackModalTarget.status === 'CHANGES_REQUESTED'
+              ? `Request Revisions: ${feedbackModalTarget.resource.title}`
+              : `Reject Upload: ${feedbackModalTarget.resource.title}`
+          }
+          subtitle={
+            feedbackModalTarget.status === 'CHANGES_REQUESTED'
+              ? 'Specify what corrections the student must make before this resource can be approved.'
+              : 'Provide constructive feedback explaining why this upload cannot be accepted.'
+          }
+          actionText={
+            feedbackModalTarget.status === 'CHANGES_REQUESTED'
+              ? 'Submit Revision Request'
+              : 'Reject Resource'
+          }
+          isProcessing={processingId === feedbackModalTarget.resource.id}
+        />
+      )}
     </div>
   );
 };
+

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, Plus, Search, Users, FileText, CheckSquare, 
   Download, Clock, ArrowLeft, Send, Sparkles, CheckCircle2, X,
-  ExternalLink, ChevronRight, User, AlertCircle
+  ExternalLink, ChevronRight, User, AlertCircle, Edit3, Trash2
 } from 'lucide-react';
 import { api, extractErrorMessage } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
@@ -13,6 +13,10 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { CreateAssignmentModal } from '../../components/academic/CreateAssignmentModal';
 import { SubmissionModal } from '../../components/academic/SubmissionModal';
 import { ResourceUploadModal } from '../../components/academic/ResourceUploadModal';
+import { EditCourseModal } from '../../components/academic/EditCourseModal';
+import { EditAssignmentModal } from '../../components/academic/EditAssignmentModal';
+import { DeleteConfirmModal } from '../../components/common/DeleteConfirmModal';
+
 
 interface CoursesPageProps {
   initialCourseId?: number;
@@ -32,7 +36,13 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
 
   // Modals
   const [showCreateCourseModal, setShowCreateCourseModal] = useState(false);
+  const [showEditCourseModal, setShowEditCourseModal] = useState(false);
+  const [showDeleteCourseModal, setShowDeleteCourseModal] = useState(false);
+  const [isDeletingCourse, setIsDeletingCourse] = useState(false);
   const [showCreateAssignmentModal, setShowCreateAssignmentModal] = useState(false);
+  const [editingAssignment, setEditingAssignment] = useState<Assignment | null>(null);
+  const [deletingAssignment, setDeletingAssignment] = useState<Assignment | null>(null);
+  const [isDeletingAssignment, setIsDeletingAssignment] = useState(false);
   const [showUploadResourceModal, setShowUploadResourceModal] = useState(false);
   const [submittingAssignment, setSubmittingAssignment] = useState<Assignment | null>(null);
 
@@ -49,6 +59,43 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
   const [isPostingAnn, setIsPostingAnn] = useState(false);
 
   const isFaculty = user?.role === 'FACULTY' || user?.role === 'ADMIN';
+
+  const handleDeleteCourse = async () => {
+    if (!selectedCourse) return;
+    setIsDeletingCourse(true);
+    try {
+      const res = await api.delete(`/courses/${selectedCourse.id}`);
+      if (res.data.success) {
+        success('Course deleted successfully!');
+        setShowDeleteCourseModal(false);
+        setSelectedCourse(null);
+        onSelectCourse?.(undefined);
+        fetchCourses();
+      }
+    } catch (err: any) {
+      error(err.response?.data?.message || 'Failed to delete course');
+    } finally {
+      setIsDeletingCourse(false);
+    }
+  };
+
+  const handleDeleteAssignment = async () => {
+    if (!deletingAssignment || !selectedCourse) return;
+    setIsDeletingAssignment(true);
+    try {
+      const res = await api.delete(`/assignments/${deletingAssignment.id}`);
+      if (res.data.success) {
+        success('Assignment deleted successfully!');
+        setDeletingAssignment(null);
+        fetchCourseDetail(selectedCourse.id);
+      }
+    } catch (err: any) {
+      error(err.response?.data?.message || 'Failed to delete assignment');
+    } finally {
+      setIsDeletingAssignment(false);
+    }
+  };
+
 
   const fetchCourses = async () => {
     setIsLoading(true);
@@ -228,8 +275,22 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
                     {selectedCourse.isEnrolled ? 'Enrolled (Leave Course)' : 'Join Course Hub'}
                   </button>
                 )}
-                {isFaculty && selectedCourse.facultyId === user?.id && (
-                  <>
+                {isFaculty && (selectedCourse.facultyId === user?.id || user?.role === 'ADMIN') && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={() => setShowEditCourseModal(true)}
+                      className="px-3.5 py-2.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition cursor-pointer active:scale-95"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Edit Course</span>
+                    </button>
+                    <button
+                      onClick={() => setShowDeleteCourseModal(true)}
+                      className="px-3.5 py-2.5 rounded-2xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 border border-rose-200 dark:border-rose-500/30 flex items-center gap-1.5 transition cursor-pointer active:scale-95"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Delete</span>
+                    </button>
                     <button
                       onClick={() => setShowCreateAssignmentModal(true)}
                       className="px-4 py-2.5 rounded-2xl text-xs font-black text-white bg-brand-600 hover:bg-brand-500 shadow-md shadow-brand-500/25 flex items-center gap-1.5 transition cursor-pointer active:scale-95"
@@ -244,8 +305,9 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
                       <Plus className="w-4 h-4" />
                       <span>Upload Material</span>
                     </button>
-                  </>
+                  </div>
                 )}
+
               </div>
             </div>
 
@@ -424,21 +486,43 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
                           </div>
                         </div>
 
-                        {!isFaculty && (
-                          <button
-                            onClick={() => setSubmittingAssignment(a)}
-                            className={`px-5 py-2.5 rounded-2xl text-xs font-black transition flex-shrink-0 cursor-pointer shadow-sm active:scale-95 ${
-                              mySub
-                                ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                                : 'bg-brand-600 text-white hover:bg-brand-500 shadow-md shadow-brand-500/25'
-                            }`}
-                          >
-                            {mySub ? 'View / Resubmit' : 'Turn In Work'}
-                          </button>
-                        )}
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          {isFaculty && (selectedCourse.facultyId === user?.id || user?.role === 'ADMIN') && (
+                            <>
+                              <button
+                                onClick={() => setEditingAssignment(a)}
+                                title="Edit Assignment"
+                                className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition cursor-pointer active:scale-95"
+                              >
+                                <Edit3 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => setDeletingAssignment(a)}
+                                title="Delete Assignment"
+                                className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30 transition cursor-pointer active:scale-95"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </>
+                          )}
+
+                          {!isFaculty && (
+                            <button
+                              onClick={() => setSubmittingAssignment(a)}
+                              className={`px-5 py-2.5 rounded-2xl text-xs font-black transition cursor-pointer shadow-sm active:scale-95 ${
+                                mySub
+                                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                                  : 'bg-brand-600 text-white hover:bg-brand-500 shadow-md shadow-brand-500/25'
+                              }`}
+                            >
+                              {mySub ? 'View / Resubmit' : 'Turn In Work'}
+                            </button>
+                          )}
+                        </div>
                       </div>
                     );
                   })}
+
                 </div>
               )}
             </div>
@@ -680,7 +764,45 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
             onSuccess={() => fetchCourseDetail(selectedCourse.id)}
             courseId={selectedCourse.id}
           />
+          <EditCourseModal
+            isOpen={showEditCourseModal}
+            onClose={() => setShowEditCourseModal(false)}
+            onSuccess={(updated) => setSelectedCourse(updated)}
+            course={selectedCourse}
+          />
+          <DeleteConfirmModal
+            isOpen={showDeleteCourseModal}
+            onClose={() => setShowDeleteCourseModal(false)}
+            onConfirm={handleDeleteCourse}
+            title={`Delete Course: ${selectedCourse.courseCode}?`}
+            description="Permanently removing this course will also delete all associated coursework, student assignment submissions, and class notices. This action cannot be undone."
+            confirmText="Delete Course"
+            isDeleting={isDeletingCourse}
+          />
         </>
+      )}
+
+      {editingAssignment && (
+        <EditAssignmentModal
+          isOpen={!!editingAssignment}
+          onClose={() => setEditingAssignment(null)}
+          onSuccess={() => {
+            if (selectedCourse) fetchCourseDetail(selectedCourse.id);
+          }}
+          assignment={editingAssignment}
+        />
+      )}
+
+      {deletingAssignment && (
+        <DeleteConfirmModal
+          isOpen={!!deletingAssignment}
+          onClose={() => setDeletingAssignment(null)}
+          onConfirm={handleDeleteAssignment}
+          title={`Delete Assignment: ${deletingAssignment.title}?`}
+          description="Are you sure you want to remove this assignment? Any student submissions attached will also be removed."
+          confirmText="Delete Assignment"
+          isDeleting={isDeletingAssignment}
+        />
       )}
 
       {submittingAssignment && (
@@ -697,3 +819,4 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
     </div>
   );
 };
+
