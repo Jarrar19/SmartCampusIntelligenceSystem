@@ -16,6 +16,11 @@ import { ResourceUploadModal } from '../../components/academic/ResourceUploadMod
 import { EditCourseModal } from '../../components/academic/EditCourseModal';
 import { EditAssignmentModal } from '../../components/academic/EditAssignmentModal';
 import { DeleteConfirmModal } from '../../components/common/DeleteConfirmModal';
+import { CardSkeleton } from '../../components/common/Skeleton';
+
+
+
+
 
 
 interface CoursesPageProps {
@@ -599,10 +604,18 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
 
           {/* Course Grid */}
           {isLoading ? (
-            <div className="text-center py-16 text-xs text-slate-400">Loading courses catalog...</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+            </div>
           ) : courses.length === 0 ? (
             <EmptyState icon={BookOpen} title="No Courses Found" description="Try adjusting your search query or semester filter." />
           ) : (
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {courses.map((course) => (
                 <div

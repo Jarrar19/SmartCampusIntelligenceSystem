@@ -58,6 +58,12 @@
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     letter-spacing: -0.025em;
   }
+
+  /* Accessible focus indicators */
+  :focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+  }
 }
 
 /* Custom sleek scrollbar */
@@ -190,7 +196,7 @@
     transform: translateY(0) scale(1);
   }
   50% {
-    transform: translateY(-12px) scale(1.05);
+    transform: translateY(-10px) scale(1.04);
   }
 }
 
@@ -201,7 +207,7 @@
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -210,7 +216,7 @@
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .hover-lift {
@@ -252,4 +258,27 @@
 .dark .bg-dot-pattern {
   background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
   background-size: 20px 20px;
+}
+
+/* Strict Reduced Motion Accessibility Guard */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .glass-panel-hover:hover,
+  .hover-lift:hover {
+    transform: none !important;
+  }
+
+  .animate-float-glow,
+  .animate-fade-in-up,
+  .shimmer {
+    animation: none !important;
+  }
 }

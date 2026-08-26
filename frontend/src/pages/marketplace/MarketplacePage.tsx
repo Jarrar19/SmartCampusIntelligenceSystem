@@ -10,8 +10,11 @@ import { useChat } from '../../context/ChatContext';
 import { MarketplaceProduct, ProductCategory } from '../../types';
 import { Badge } from '../../components/common/Badge';
 import { EmptyState } from '../../components/common/EmptyState';
+import { CardSkeleton } from '../../components/common/Skeleton';
 import { CreateProductModal } from '../../components/marketplace/CreateProductModal';
 import { ProductDetailModal } from '../../components/marketplace/ProductDetailModal';
+
+
 
 export const MarketplacePage: React.FC = () => {
   const { user } = useAuth();
@@ -154,8 +157,18 @@ export const MarketplacePage: React.FC = () => {
 
       {/* Product Grid */}
       {isLoading ? (
-        <div className="text-center py-16 text-xs text-slate-400">Loading campus marketplace...</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
       ) : products.length === 0 ? (
+
         <EmptyState
           icon={ShoppingBag}
           title="No Products Found"

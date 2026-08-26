@@ -10,7 +10,9 @@ import { useToast } from '../../context/ToastContext';
 import { Resource, ResourceCategory } from '../../types';
 import { Badge } from '../../components/common/Badge';
 import { EmptyState } from '../../components/common/EmptyState';
+import { CardSkeleton } from '../../components/common/Skeleton';
 import { ResourceUploadModal } from '../../components/academic/ResourceUploadModal';
+
 
 interface ResourcesPageProps {
   onOpenUpload?: () => void;
@@ -238,7 +240,14 @@ export const ResourcesPage: React.FC<ResourcesPageProps> = () => {
 
       {/* Resources Grid */}
       {isLoading ? (
-        <div className="text-center py-16 text-xs text-slate-400">Loading resources library...</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
       ) : resources.length === 0 ? (
         <EmptyState
           icon={FileText}
@@ -248,6 +257,7 @@ export const ResourcesPage: React.FC<ResourcesPageProps> = () => {
           onAction={() => setShowUploadModal(true)}
         />
       ) : (
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {resources.map((item) => (
             <div

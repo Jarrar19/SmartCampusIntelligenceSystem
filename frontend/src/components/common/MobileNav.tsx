@@ -30,17 +30,17 @@ export const MobileNav: React.FC<MobileNavProps> = ({
 
   const studentNavItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'courses', label: 'My Courses & LMS', icon: BookOpen },
-    { id: 'resources', label: 'Resource Hub & PYQs', icon: FileText },
+    { id: 'courses', label: 'My Courses', icon: BookOpen },
+    { id: 'resources', label: 'Notes & PYQs', icon: FileText },
     { id: 'assignments', label: 'Assignments', icon: CheckSquare },
-    { id: 'marketplace', label: 'Campus Marketplace', icon: ShoppingBag },
-    { id: 'my-listings', label: 'My Listings & Requests', icon: Tag },
-    { id: 'wishlist', label: 'Wishlist & Saved', icon: Heart },
-    { id: 'audit-logs', label: 'Security & Audit Logs', icon: ShieldCheck },
+    { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag },
+    { id: 'my-listings', label: 'My Items', icon: Tag },
+    { id: 'wishlist', label: 'Saved Items', icon: Heart },
+    { id: 'audit-logs', label: 'Security Logs', icon: ShieldCheck },
   ];
 
   const facultyNavItems = [
-    { id: 'dashboard', label: 'Faculty Dashboard', icon: LayoutDashboard },
+    { id: 'dashboard', label: 'Faculty Cockpit', icon: LayoutDashboard },
     { id: 'courses', label: 'Course Management', icon: BookOpen },
     { 
       id: 'moderation', 
@@ -48,13 +48,27 @@ export const MobileNav: React.FC<MobileNavProps> = ({
       icon: Inbox,
       badge: pendingModerationCount > 0 ? pendingModerationCount : undefined 
     },
-    { id: 'grading', label: 'Assignment Grading', icon: CheckSquare },
-    { id: 'resources', label: 'Academic Resources', icon: FileText },
+    { id: 'grading', label: 'Grading Center', icon: CheckSquare },
+    { id: 'resources', label: 'Resource Library', icon: FileText },
+    { id: 'marketplace', label: 'Campus Marketplace', icon: ShoppingBag },
+    { id: 'audit-logs', label: 'Audit Trail', icon: ShieldCheck },
+  ];
+
+  const adminNavItems = [
+    { id: 'dashboard', label: 'Admin Cockpit', icon: LayoutDashboard },
+    { id: 'courses', label: 'All Courses', icon: BookOpen },
+    { 
+      id: 'moderation', 
+      label: 'Academic Moderation', 
+      icon: Inbox,
+      badge: pendingModerationCount > 0 ? pendingModerationCount : undefined 
+    },
+    { id: 'resources', label: 'Global Repository', icon: FileText },
     { id: 'marketplace', label: 'Campus Marketplace', icon: ShoppingBag },
     { id: 'audit-logs', label: 'Security & Audit Logs', icon: ShieldCheck },
   ];
 
-  const navItems = isFaculty ? facultyNavItems : studentNavItems;
+  const navItems = user?.role === 'ADMIN' ? adminNavItems : isFaculty ? facultyNavItems : studentNavItems;
 
   const bottomItems = [
     { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
@@ -83,13 +97,13 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           {/* Drawer Header */}
           <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center space-x-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-sm">
+              <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25">
                 <GraduationCap className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-extrabold text-slate-900 dark:text-white text-sm">Smart Campus</h3>
+                <h3 className="font-black text-slate-900 dark:text-white text-sm">Smart Campus</h3>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold">
-                  {isFaculty ? 'Faculty Portal' : 'Student Hub'}
+                  {user?.role === 'ADMIN' ? 'Admin Portal' : isFaculty ? 'Faculty Portal' : 'Student Hub'}
                 </p>
               </div>
             </div>
@@ -103,7 +117,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
 
           {/* User badge */}
           <div className="my-4 p-3 rounded-2xl bg-indigo-50/60 dark:bg-slate-800/60 border border-indigo-100 dark:border-slate-700/60">
-            <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+            <p className="text-xs font-black text-slate-900 dark:text-white truncate">
               {user?.fullName}
             </p>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate font-medium">
@@ -123,9 +137,9 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                     onSelectTab(item.id);
                     onClose();
                   }}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-bold transition cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-bold transition cursor-pointer active:scale-95 ${
                     isActive
-                      ? 'bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-brand-500/25'
+                      ? 'bg-brand-600 text-white shadow-md shadow-brand-500/25'
                       : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60'
                   }`}
                 >
@@ -169,7 +183,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               }`}
             >
               <Icon className={`w-5 h-5 ${isActive ? 'scale-110' : ''} transition-transform`} />
-              <span className="text-[10px] mt-0.5 tracking-tight">{item.label}</span>
+              <span className="text-[10px] mt-0.5 tracking-tight font-bold">{item.label}</span>
             </button>
           );
         })}
@@ -180,7 +194,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           className="relative flex flex-col items-center py-1 px-3 rounded-2xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition cursor-pointer"
         >
           <MessageSquare className="w-5 h-5" />
-          <span className="text-[10px] mt-0.5 tracking-tight">Chat</span>
+          <span className="text-[10px] mt-0.5 tracking-tight font-bold">Chat</span>
           {unreadMessagesCount > 0 && (
             <span className="absolute top-0 right-2 w-4 h-4 bg-brand-600 text-white rounded-full text-[9px] font-black flex items-center justify-center animate-pulse shadow-xs">
               {unreadMessagesCount}

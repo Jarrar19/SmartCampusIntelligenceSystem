@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, CheckSquare, FileText, ShoppingBag, 
-  Clock, Upload, Plus, AlertCircle, ShieldCheck
+  Clock, Upload, Plus, AlertCircle, ShieldCheck, ArrowRight,
+  Sparkles, CheckCircle2, ChevronRight
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 import { Course, Assignment, MarketplaceProduct } from '../../types';
+import { CampusHeroCanvas } from '../../components/common/CampusHeroCanvas';
+import { Badge } from '../../components/common/Badge';
+import { Button } from '../../components/common/Button';
+import { CardSkeleton, StatWidgetSkeleton, ListRowSkeleton } from '../../components/common/Skeleton';
 
 interface StudentDashboardProps {
   onNavigate: (tab: string, courseId?: number) => void;
@@ -86,133 +91,227 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
     const now = new Date().getTime();
     const diffHours = (due - now) / (1000 * 60 * 60);
 
-    if (diffHours < 0) return { label: 'Past due', isUrgent: true };
-    if (diffHours <= 24) return { label: 'Due today', isUrgent: true };
-    if (diffHours <= 72) return { label: 'Due soon', isUrgent: false };
-    return { label: `Due ${new Date(dueDateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`, isUrgent: false };
+    if (diffHours < 0) return { label: 'Past due', variant: 'rose' as const };
+    if (diffHours <= 24) return { label: 'Due today', variant: 'rose' as const };
+    if (diffHours <= 72) return { label: 'Due soon', variant: 'amber' as const };
+    return { 
+      label: `Due ${new Date(dueDateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`, 
+      variant: 'indigo' as const 
+    };
   };
 
   const firstName = user?.fullName?.split(' ')[0] || 'Student';
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6 max-w-[1400px] mx-auto pb-10">
+        <div className="h-44 rounded-3xl glass-panel p-8 shimmer border border-slate-200/80 dark:border-slate-800" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatWidgetSkeleton />
+          <StatWidgetSkeleton />
+          <StatWidgetSkeleton />
+          <StatWidgetSkeleton />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-7 space-y-4">
+            <ListRowSkeleton />
+            <ListRowSkeleton />
+            <ListRowSkeleton />
+          </div>
+          <div className="lg:col-span-5 space-y-4">
+            <CardSkeleton />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-7 text-slate-900 dark:text-slate-100 max-w-[1400px] mx-auto pb-10">
+    <div className="space-y-7 text-slate-900 dark:text-slate-100 max-w-[1400px] mx-auto pb-10 animate-fade-in-up">
       
-      {/* 1. Calm, Student-Centered Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-slate-200/80 dark:border-slate-800/80">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            {formattedDate} • Semester {user?.semester || 6} ({user?.department || 'Engineering'})
-          </p>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-1">
-            {getGreeting()}, {firstName}
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 font-normal">
-            {assignments.length > 0 
-              ? `You have ${assignments.length} task${assignments.length > 1 ? 's' : ''} coming up.` 
-              : `You are all caught up on your coursework for today.`}
-          </p>
-        </div>
+      {/* 1. Hero Banner with Ambient Geometry Canvas */}
+      <div className="relative overflow-hidden rounded-3xl glass-panel p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+        <CampusHeroCanvas />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[11px] font-black uppercase tracking-wider text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-2.5 py-0.5 rounded-full border border-brand-200 dark:border-brand-800">
+                {formattedDate}
+              </span>
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                Semester {user?.semester || 6} • {user?.department || 'Engineering'}
+              </span>
+            </div>
 
-        {/* Quiet Quick Action Links */}
-        <div className="flex items-center gap-2 pt-2 md:pt-0">
-          <button
-            onClick={onOpenUploadResource}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5 cursor-pointer"
-          >
-            <Upload className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-            <span>Upload Notes</span>
-          </button>
-          <button
-            onClick={onOpenCreateProduct}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5 cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-            <span>List Item</span>
-          </button>
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+              {getGreeting()}, <span className="text-gradient">{firstName}</span>
+            </h1>
+
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+              {assignments.length > 0 
+                ? `You have ${assignments.length} task${assignments.length > 1 ? 's' : ''} scheduled on your academic calendar.` 
+                : `You're all caught up on your coursework for today. Explore notes and PYQs below.`}
+            </p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={onOpenUploadResource}
+              leftIcon={<Upload className="w-3.5 h-3.5" />}
+            >
+              Upload Notes
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={onOpenCreateProduct}
+              leftIcon={<Plus className="w-3.5 h-3.5" />}
+            >
+              List Item
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* 2. Reworked Contextual Summary Bar (Bordered inline indicators instead of floating equal KPI cards) */}
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-600 dark:text-slate-400 font-medium py-1">
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-slate-900 dark:text-white">{stats.enrolledCoursesCount ?? enrolledCourses.length}</span>
-          <span>Enrolled Courses</span>
+      {/* 2. KPI Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div 
+          onClick={() => onNavigate('courses')}
+          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer flex items-center justify-between shadow-2xs"
+        >
+          <div className="space-y-1">
+            <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">Enrolled Courses</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{stats.enrolledCoursesCount ?? enrolledCourses.length}</h3>
+            <p className="text-[11px] text-brand-600 dark:text-brand-400 font-bold flex items-center gap-1">
+              <span>View catalog</span>
+              <ChevronRight className="w-3 h-3" />
+            </p>
+          </div>
+          <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-brand-600 dark:text-brand-400 border border-indigo-100 dark:border-indigo-800">
+            <BookOpen className="w-5 h-5" />
+          </div>
         </div>
-        <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-slate-900 dark:text-white">{assignments.length}</span>
-          <span>Tasks Due Soon</span>
+
+        <div 
+          onClick={() => onNavigate('assignments')}
+          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer flex items-center justify-between shadow-2xs"
+        >
+          <div className="space-y-1">
+            <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">Tasks Due</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{assignments.length}</h3>
+            <p className="text-[11px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1">
+              <span>View submissions</span>
+              <ChevronRight className="w-3 h-3" />
+            </p>
+          </div>
+          <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-800">
+            <CheckSquare className="w-5 h-5" />
+          </div>
         </div>
-        <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-slate-900 dark:text-white">{stats.myResourcesCount ?? 0}</span>
-          <span>Shared Notes</span>
+
+        <div 
+          onClick={() => onNavigate('resources')}
+          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer flex items-center justify-between shadow-2xs"
+        >
+          <div className="space-y-1">
+            <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">Shared Notes</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{stats.myResourcesCount ?? 0}</h3>
+            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+              <span>Explore hub</span>
+              <ChevronRight className="w-3 h-3" />
+            </p>
+          </div>
+          <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800">
+            <FileText className="w-5 h-5" />
+          </div>
         </div>
-        <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-slate-900 dark:text-white">{marketplaceProducts.length}</span>
-          <span>Campus Market Items</span>
+
+        <div 
+          onClick={() => onNavigate('marketplace')}
+          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer flex items-center justify-between shadow-2xs"
+        >
+          <div className="space-y-1">
+            <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">Marketplace</p>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{marketplaceProducts.length}</h3>
+            <p className="text-[11px] text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1">
+              <span>Browse items</span>
+              <ChevronRight className="w-3 h-3" />
+            </p>
+          </div>
+          <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800">
+            <ShoppingBag className="w-5 h-5" />
+          </div>
         </div>
       </div>
 
-      {/* 3. Asymmetric 2-Column Main Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-1">
+      {/* 3. Main Split View: Tasks & Course Workspaces */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-7">
         
-        {/* Left Column (Main Academic Focus: 7 Cols on desktop) */}
-        <div className="lg:col-span-7 space-y-8">
+        {/* Left Column (7 Cols) */}
+        <div className="lg:col-span-7 space-y-7">
           
-          {/* Section: Needs Attention / Priority Deadlines */}
-          <section className="space-y-3">
+          {/* Upcoming Tasks Section */}
+          <section className="space-y-3.5">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-slate-900 dark:text-white">
-                Needs Attention
+              <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <Clock className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                <span>Upcoming Coursework Tasks</span>
               </h2>
               {assignments.length > 0 && (
                 <button
                   onClick={() => onNavigate('assignments')}
-                  className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
+                  className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
                 >
-                  View all tasks
+                  View all ({assignments.length})
                 </button>
               )}
             </div>
 
             {assignments.length === 0 ? (
-              <div className="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-500 text-xs">
-                No tasks due right now. You are all caught up!
+              <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 text-center space-y-2">
+                <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
+                <p className="text-xs font-black text-slate-900 dark:text-white">All Caught Up!</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  No assignments due right now. Enjoy your free time or explore study materials.
+                </p>
               </div>
             ) : (
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {assignments.map((a) => {
                   const status = getDueDateStatus(a.dueDate);
                   return (
                     <div
                       key={a.id}
-                      className="p-3.5 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-start justify-between gap-4 transition hover:border-slate-300 dark:hover:border-slate-700"
+                      className="p-4 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 flex items-start justify-between gap-4 transition shadow-2xs"
                     >
-                      <div className="space-y-1 min-w-0">
+                      <div className="space-y-1.5 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
-                            {a.course?.courseCode || 'Task'}
+                          <span className="text-[10px] font-black text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700">
+                            {a.course?.courseCode || 'Coursework'}
                           </span>
-                          <span className={`text-[11px] font-medium ${status.isUrgent ? 'text-rose-600 dark:text-rose-400 font-semibold' : 'text-slate-500 dark:text-slate-400'}`}>
+                          <Badge variant={status.variant} size="sm" dot>
                             {status.label}
-                          </span>
+                          </Badge>
                         </div>
-                        <h3 className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                        <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
                           {a.title}
                         </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                           Due {new Date(a.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} at {new Date(a.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • Max {a.maxMarks} marks
                         </p>
                       </div>
 
-                      <button
+                      <Button
+                        size="sm"
+                        variant="secondary"
                         onClick={() => onNavigate('assignments')}
-                        className="flex-shrink-0 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline pt-1 cursor-pointer"
+                        className="flex-shrink-0"
                       >
-                        View task
-                      </button>
+                        Submit
+                      </Button>
                     </div>
                   );
                 })}
@@ -220,26 +319,34 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             )}
           </section>
 
-          {/* Section: Your Courses */}
-          <section className="space-y-3">
+          {/* Enrolled Courses Grid */}
+          <section className="space-y-3.5">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-slate-900 dark:text-white">
-                Your Courses
+              <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                <span>My Active Courses</span>
               </h2>
               <button
                 onClick={() => onNavigate('courses')}
-                className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
+                className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
               >
                 Browse catalog
               </button>
             </div>
 
             {enrolledCourses.length === 0 ? (
-              <div className="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-500 text-xs">
-                You are not enrolled in any courses yet. <button onClick={() => onNavigate('courses')} className="text-brand-600 dark:text-brand-400 font-semibold hover:underline cursor-pointer">Explore available courses</button>.
+              <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 text-center space-y-2">
+                <BookOpen className="w-8 h-8 text-slate-400 mx-auto" />
+                <p className="text-xs font-black text-slate-900 dark:text-white">Not enrolled in any courses yet</p>
+                <button
+                  onClick={() => onNavigate('courses')}
+                  className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline"
+                >
+                  Join your first course hub
+                </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {enrolledCourses.map((course) => {
                   const taskCount = course.assignmentsCount ?? 0;
                   const progressPct = taskCount > 0 ? Math.min(100, Math.max(35, 100 - taskCount * 15)) : 100;
@@ -247,46 +354,47 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                   return (
                     <div
                       key={course.id}
-                      className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between space-y-3 transition hover:border-slate-300 dark:hover:border-slate-700"
+                      className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between space-y-4 shadow-2xs"
                     >
-                      <div className="space-y-1">
+                      <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-semibold text-brand-600 dark:text-brand-400">
+                          <span className="text-xs font-black text-brand-600 dark:text-brand-400">
                             {course.courseCode}
                           </span>
-                          <span className="text-[11px] text-slate-400">
+                          <span className="text-[10px] font-bold text-slate-400">
                             Sem {course.semester}
                           </span>
                         </div>
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
+                        <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white line-clamp-1">
                           {course.title}
                         </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                           {course.faculty?.fullName || 'Faculty Member'}
                         </p>
                       </div>
 
-                      <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 space-y-1.5">
-                        <div className="flex items-center justify-between text-[11px] text-slate-500">
-                          <span>Course progress</span>
-                          <span className="font-semibold text-slate-700 dark:text-slate-300">{progressPct}%</span>
+                      <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 space-y-2">
+                        <div className="flex items-center justify-between text-[10px] text-slate-500 font-bold">
+                          <span>Progress</span>
+                          <span>{progressPct}%</span>
                         </div>
-                        <div className="w-full h-1 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-brand-600 rounded-full"
+                            className="h-full bg-brand-600 rounded-full transition-all duration-500"
                             style={{ width: `${progressPct}%` }}
                           />
                         </div>
 
                         <div className="flex items-center justify-between pt-1 text-xs">
-                          <span className="text-[11px] text-slate-400">
-                            {taskCount} task{taskCount !== 1 ? 's' : ''}
+                          <span className="text-[10px] text-slate-400 font-semibold">
+                            {taskCount} assignment{taskCount !== 1 ? 's' : ''}
                           </span>
                           <button
                             onClick={() => onNavigate('courses', course.id)}
-                            className="font-semibold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
+                            className="font-bold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer flex items-center gap-1"
                           >
-                            Open course
+                            <span>Open Hub</span>
+                            <ChevronRight className="w-3 h-3" />
                           </button>
                         </div>
                       </div>
@@ -298,184 +406,129 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
           </section>
         </div>
 
-        {/* Right Column (Secondary Focus: 5 Cols on desktop) */}
-        <div className="lg:col-span-5 space-y-8">
+        {/* Right Column (5 Cols) */}
+        <div className="lg:col-span-5 space-y-7">
           
-          {/* Section: What's Happening (Replaces AI "Smart Insights") */}
-          <section className="space-y-3">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white">
-              What's Happening
+          {/* Quick Access Tools */}
+          <section className="space-y-3.5">
+            <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+              <span>Campus Shortcuts</span>
             </h2>
 
-            <div className="p-4 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-4">
-              {assignments.length > 0 && (
-                <div className="space-y-1 pb-3 border-b border-slate-100 dark:border-slate-800/80">
-                  <span className="text-[10px] uppercase font-bold text-rose-600 dark:text-rose-400 tracking-wider">
-                    Upcoming Deadline
-                  </span>
-                  <p className="text-xs font-semibold text-slate-900 dark:text-white">
-                    {assignments[0].title} ({assignments[0].course?.courseCode})
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Due {new Date(assignments[0].dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                  </p>
-                  <button
-                    onClick={() => onNavigate('assignments')}
-                    className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline pt-0.5 inline-block cursor-pointer"
-                  >
-                    View assignments
-                  </button>
-                </div>
-              )}
-
-              <div className="space-y-1 pb-3 border-b border-slate-100 dark:border-slate-800/80">
-                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
-                  Academic Materials
-                </span>
-                <p className="text-xs font-semibold text-slate-900 dark:text-white">
-                  {enrolledCourses.length} active courses for Semester {user?.semester || 6}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Access lecture notes, syllabus breakdown and past year questions.
-                </p>
-                <button
-                  onClick={() => onNavigate('resources')}
-                  className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline pt-0.5 inline-block cursor-pointer"
-                >
-                  Browse notes & PYQs
-                </button>
-              </div>
-
-              {marketplaceProducts.length > 0 && (
-                <div className="space-y-1">
-                  <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
-                    Campus Marketplace
-                  </span>
-                  <p className="text-xs font-semibold text-slate-900 dark:text-white">
-                    {marketplaceProducts.length} new items listed recently by students
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Textbooks, lab coats and tools traded directly on campus.
-                  </p>
-                  <button
-                    onClick={() => onNavigate('marketplace')}
-                    className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline pt-0.5 inline-block cursor-pointer"
-                  >
-                    Browse marketplace
-                  </button>
-                </div>
-              )}
-            </div>
-          </section>
-
-          {/* Section: Quick Access Tools */}
-          <section className="space-y-3">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white">
-              Quick Actions
-            </h2>
-
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               <button
                 onClick={onOpenUploadResource}
-                className="w-full p-3 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/60 text-left transition flex items-center justify-between cursor-pointer"
+                className="w-full p-4 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 text-left transition flex items-center justify-between cursor-pointer shadow-2xs"
               >
-                <div className="flex items-center gap-2.5">
-                  <FileText className="w-4 h-4 text-slate-500" />
-                  <span className="text-xs font-semibold text-slate-900 dark:text-white">Upload Notes or PYQ</span>
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-black text-slate-900 dark:text-white">Upload Notes & PYQs</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Contribute study materials to academic hub</p>
+                  </div>
                 </div>
-                <span className="text-xs font-medium text-brand-600 dark:text-brand-400">Upload</span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
               </button>
 
               <button
                 onClick={onOpenCreateProduct}
-                className="w-full p-3 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/60 text-left transition flex items-center justify-between cursor-pointer"
+                className="w-full p-4 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 text-left transition flex items-center justify-between cursor-pointer shadow-2xs"
               >
-                <div className="flex items-center gap-2.5">
-                  <ShoppingBag className="w-4 h-4 text-slate-500" />
-                  <span className="text-xs font-semibold text-slate-900 dark:text-white">List Item in Campus Market</span>
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400">
+                    <ShoppingBag className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-black text-slate-900 dark:text-white">List Item for Sale</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Sell textbooks, uniforms, and campus gear</p>
+                  </div>
                 </div>
-                <span className="text-xs font-medium text-brand-600 dark:text-brand-400">List item</span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
               </button>
 
               <button
                 onClick={() => onNavigate('audit-logs')}
-                className="w-full p-3 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/60 text-left transition flex items-center justify-between cursor-pointer"
+                className="w-full p-4 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 text-left transition flex items-center justify-between cursor-pointer shadow-2xs"
               >
-                <div className="flex items-center gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-slate-500" />
-                  <span className="text-xs font-semibold text-slate-900 dark:text-white">Security & Audit Activity</span>
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-brand-600 dark:text-brand-400">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-black text-slate-900 dark:text-white">Security & Audit Log</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Inspect login history and session audit trail</p>
+                  </div>
                 </div>
-                <span className="text-xs font-medium text-brand-600 dark:text-brand-400">View log</span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
               </button>
             </div>
           </section>
 
+          {/* Campus Marketplace Spotlight */}
+          <section className="space-y-3.5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4 text-rose-500" />
+                <span>Marketplace Spotlight</span>
+              </h2>
+              <button
+                onClick={() => onNavigate('marketplace')}
+                className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
+              >
+                View all
+              </button>
+            </div>
+
+            {marketplaceProducts.length === 0 ? (
+              <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 text-center space-y-2">
+                <ShoppingBag className="w-8 h-8 text-slate-400 mx-auto" />
+                <p className="text-xs font-black text-slate-900 dark:text-white">No active listings</p>
+                <p className="text-[11px] text-slate-500">Be the first to list an item for your peers.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {marketplaceProducts.map((prod) => (
+                  <div
+                    key={prod.id}
+                    onClick={() => onNavigate('marketplace')}
+                    className="p-4 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-4 cursor-pointer shadow-2xs"
+                  >
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="rose" size="sm">
+                          {prod.category}
+                        </Badge>
+                        <span className="text-[10px] font-bold text-slate-400">
+                          {prod.condition}
+                        </span>
+                      </div>
+                      <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
+                        {prod.title}
+                      </h3>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                        Seller: {prod.seller?.fullName?.split(' ')[0] || 'Student'}
+                      </p>
+                    </div>
+
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-sm font-black text-slate-900 dark:text-white">
+                        ₹{prod.price}
+                      </p>
+                      <span className="text-[10px] text-brand-600 dark:text-brand-400 font-bold">
+                        Inspect
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
         </div>
       </div>
-
-      {/* 4. Full-Width Horizontal Section: Campus Marketplace */}
-      <section className="space-y-3 pt-4 border-t border-slate-200/80 dark:border-slate-800/80">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-base font-bold text-slate-900 dark:text-white">
-              Campus Marketplace
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Student-to-student textbook and gear listings
-            </p>
-          </div>
-          <button
-            onClick={() => onNavigate('marketplace')}
-            className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
-          >
-            View marketplace
-          </button>
-        </div>
-
-        {marketplaceProducts.length === 0 ? (
-          <div className="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-500 text-xs">
-            No marketplace items listed yet. <button onClick={onOpenCreateProduct} className="text-brand-600 dark:text-brand-400 font-semibold hover:underline cursor-pointer">List an item for sale</button>.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {marketplaceProducts.map((product) => (
-              <div
-                key={product.id}
-                className="p-3.5 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between space-y-3 transition hover:border-slate-300 dark:hover:border-slate-700"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
-                      {product.category}
-                    </span>
-                    <span className="font-bold text-slate-900 dark:text-white">
-                      ₹{product.price}
-                    </span>
-                  </div>
-                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">
-                    {product.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
-                    {product.description || 'No description.'}
-                  </p>
-                </div>
-
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
-                  <span>Seller: {product.seller?.fullName?.split(' ')[0] || 'Student'}</span>
-                  <button
-                    onClick={() => onNavigate('marketplace')}
-                    className="font-semibold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
-                  >
-                    View item
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
     </div>
   );
 };
-

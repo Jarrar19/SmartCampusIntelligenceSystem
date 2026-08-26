@@ -2,29 +2,60 @@ import React from 'react';
 
 export const CardSkeleton: React.FC = () => {
   return (
-    <div className="glass-panel rounded-3xl p-5 border border-slate-200 dark:border-slate-800 animate-pulse">
-      <div className="flex items-center justify-between mb-4">
-        <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-md w-1/4"></div>
-        <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-full w-16"></div>
+    <div className="glass-panel rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="h-4 bg-slate-200/80 dark:bg-slate-800 rounded-lg w-1/4 shimmer" />
+        <div className="h-4 bg-slate-200/80 dark:bg-slate-800 rounded-full w-16 shimmer" />
       </div>
-      <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded-md w-3/4 mb-2"></div>
-      <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-md w-full mb-4"></div>
-      <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
-        <div className="h-8 bg-slate-200 dark:bg-slate-800 rounded-full w-8"></div>
-        <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-md w-1/3"></div>
+      <div className="h-6 bg-slate-200/80 dark:bg-slate-800 rounded-xl w-3/4 shimmer" />
+      <div className="space-y-2">
+        <div className="h-3.5 bg-slate-200/80 dark:bg-slate-800 rounded-lg w-full shimmer" />
+        <div className="h-3.5 bg-slate-200/80 dark:bg-slate-800 rounded-lg w-4/5 shimmer" />
       </div>
+      <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800/80">
+        <div className="h-7 bg-slate-200/80 dark:bg-slate-800 rounded-full w-7 shimmer" />
+        <div className="h-4 bg-slate-200/80 dark:bg-slate-800 rounded-lg w-1/3 shimmer" />
+      </div>
+    </div>
+  );
+};
+
+export const StatWidgetSkeleton: React.FC = () => {
+  return (
+    <div className="glass-panel rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="h-3.5 bg-slate-200/80 dark:bg-slate-800 rounded-lg w-1/3 shimmer" />
+        <div className="h-8 w-8 bg-slate-200/80 dark:bg-slate-800 rounded-2xl shimmer" />
+      </div>
+      <div className="h-8 bg-slate-200/80 dark:bg-slate-800 rounded-xl w-1/2 shimmer" />
+      <div className="h-3 bg-slate-200/80 dark:bg-slate-800 rounded-lg w-2/3 shimmer" />
+    </div>
+  );
+};
+
+export const ListRowSkeleton: React.FC = () => {
+  return (
+    <div className="glass-panel rounded-2xl p-4 flex items-center justify-between gap-4 border border-slate-200/80 dark:border-slate-800">
+      <div className="flex items-center gap-3 flex-1">
+        <div className="w-10 h-10 rounded-2xl bg-slate-200/80 dark:bg-slate-800 flex-shrink-0 shimmer" />
+        <div className="space-y-1.5 flex-1">
+          <div className="h-4 bg-slate-200/80 dark:bg-slate-800 rounded-lg w-1/2 shimmer" />
+          <div className="h-3 bg-slate-200/80 dark:bg-slate-800 rounded-lg w-1/3 shimmer" />
+        </div>
+      </div>
+      <div className="h-7 w-20 bg-slate-200/80 dark:bg-slate-800 rounded-xl shimmer" />
     </div>
   );
 };
 
 export const TableRowSkeleton: React.FC = () => {
   return (
-    <tr className="animate-pulse border-b border-slate-100 dark:border-slate-800/60">
-      <td className="p-4"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-24"></div></td>
-      <td className="p-4"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-48"></div></td>
-      <td className="p-4"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-20"></div></td>
-      <td className="p-4"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-16"></div></td>
-      <td className="p-4"><div className="h-8 bg-slate-200 dark:bg-slate-800 rounded-xl w-24"></div></td>
+    <tr className="border-b border-slate-100 dark:border-slate-800/60">
+      <td className="p-4"><div className="h-4 bg-slate-200/80 dark:bg-slate-800 rounded w-24 shimmer" /></td>
+      <td className="p-4"><div className="h-4 bg-slate-200/80 dark:bg-slate-800 rounded w-48 shimmer" /></td>
+      <td className="p-4"><div className="h-4 bg-slate-200/80 dark:bg-slate-800 rounded w-20 shimmer" /></td>
+      <td className="p-4"><div className="h-4 bg-slate-200/80 dark:bg-slate-800 rounded w-16 shimmer" /></td>
+      <td className="p-4"><div className="h-8 bg-slate-200/80 dark:bg-slate-800 rounded-xl w-24 shimmer" /></td>
     </tr>
   );
 };

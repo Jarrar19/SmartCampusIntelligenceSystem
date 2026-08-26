@@ -9,7 +9,9 @@ import { useToast } from '../../context/ToastContext';
 import { Assignment } from '../../types';
 import { Badge } from '../../components/common/Badge';
 import { EmptyState } from '../../components/common/EmptyState';
+import { ListRowSkeleton } from '../../components/common/Skeleton';
 import { SubmissionModal } from '../../components/academic/SubmissionModal';
+
 
 export const AssignmentsPage: React.FC = () => {
   const { user } = useAuth();
@@ -97,8 +99,14 @@ export const AssignmentsPage: React.FC = () => {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-16 text-xs text-slate-400">Loading assignments...</div>
+        <div className="space-y-4">
+          <ListRowSkeleton />
+          <ListRowSkeleton />
+          <ListRowSkeleton />
+          <ListRowSkeleton />
+        </div>
       ) : filteredAssignments.length === 0 ? (
+
         <EmptyState
           icon={CheckSquare}
           title="No Assignments Found"

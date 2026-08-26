@@ -8,11 +8,15 @@ import { useToast } from '../../context/ToastContext';
 import { Submission, Assignment } from '../../types';
 import { Badge } from '../../components/common/Badge';
 import { EmptyState } from '../../components/common/EmptyState';
+import { ListRowSkeleton } from '../../components/common/Skeleton';
 import { GradingModal } from '../../components/academic/GradingModal';
+
 
 interface GradingCenterPageProps {
   onNavigate?: (tab: string, courseId?: number) => void;
 }
+
+
 
 export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate }) => {
   const { error } = useToast();
@@ -95,8 +99,14 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
       </div>
 
       {isLoading ? (
-        <div className="text-center py-16 text-xs text-slate-400">Loading student submissions...</div>
+        <div className="space-y-4">
+          <ListRowSkeleton />
+          <ListRowSkeleton />
+          <ListRowSkeleton />
+          <ListRowSkeleton />
+        </div>
       ) : filtered.length === 0 ? (
+
         <EmptyState
           icon={CheckSquare}
           title={`No ${filter === 'pending' ? 'Pending' : filter === 'graded' ? 'Graded' : ''} Submissions`}

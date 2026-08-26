@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, BookOpen, FileText, CheckSquare, ShoppingBag, X, ArrowRight, CornerDownLeft } from 'lucide-react';
+import { Search, BookOpen, FileText, ShoppingBag, X, CornerDownLeft } from 'lucide-react';
 import { api } from '../../services/api';
-import { Course, Resource, Assignment, MarketplaceProduct } from '../../types';
+import { Course, Resource, MarketplaceProduct } from '../../types';
 
 interface GlobalSearchModalProps {
   isOpen: boolean;
@@ -19,12 +19,10 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   const [results, setResults] = useState<{
     courses: Course[];
     resources: Resource[];
-    assignments: Assignment[];
     products: MarketplaceProduct[];
   }>({
     courses: [],
     resources: [],
-    assignments: [],
     products: [],
   });
 
@@ -33,15 +31,22 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 50);
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          onClose();
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
     } else {
       setQuery('');
-      setResults({ courses: [], resources: [], assignments: [], products: [] });
+      setResults({ courses: [], resources: [], products: [] });
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (!query.trim()) {
-      setResults({ courses: [], resources: [], assignments: [], products: [] });
+      setResults({ courses: [], resources: [], products: [] });
       setIsSearching(false);
       return;
     }
@@ -62,7 +67,6 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         setResults({
           courses: fetchedCourses.slice(0, 3),
           resources: fetchedResources.slice(0, 4),
-          assignments: [],
           products: fetchedProducts.slice(0, 3),
         });
       } catch (err) {
@@ -85,7 +89,12 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Global Campus Search"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150"
+    >
       <div 
         className="fixed inset-0" 
         onClick={onClose}
@@ -107,7 +116,8 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           {query ? (
             <button
               onClick={() => setQuery('')}
-              className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg"
+              className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg cursor-pointer"
+              aria-label="Clear Search Input"
             >
               <X className="w-4 h-4" />
             </button>

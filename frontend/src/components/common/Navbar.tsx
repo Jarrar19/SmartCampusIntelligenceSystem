@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  GraduationCap, Bell, MessageSquare, User as UserIcon, 
-  LogOut, Shield, Check, ExternalLink, Menu, X, Sparkles, BookOpen, 
-  ShoppingBag, Sun, Moon, CheckCheck, ShieldCheck, Inbox, PanelLeft, Search
+  GraduationCap, Bell, MessageSquare, LogOut, 
+  Menu, BookOpen, ShoppingBag, Sun, Moon, 
+  ShieldCheck, Inbox, PanelLeft, Search
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../../context/NotificationContext';
@@ -90,15 +90,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
 
           <div className="flex items-center space-x-2.5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-600 text-white">
+            <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-brand-600 text-white shadow-md shadow-brand-500/25">
               <GraduationCap className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-bold text-slate-900 dark:text-white text-base leading-tight">
+                <span className="font-black text-slate-900 dark:text-white text-base leading-tight tracking-tight">
                   Smart Campus
                 </span>
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hidden sm:inline-block">
+                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hidden sm:inline-block border border-slate-200/80 dark:border-slate-700/60">
                   {config?.collegeShortName || 'SBIT'}
                 </span>
               </div>
@@ -110,13 +110,13 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex-1 max-w-md mx-2 hidden sm:block">
           <button
             onClick={onOpenSearch}
-            className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-lg bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/70 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700/60 text-slate-500 dark:text-slate-400 text-xs font-normal transition cursor-pointer"
+            className="w-full flex items-center justify-between px-4 py-2 rounded-2xl bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/70 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700/60 text-slate-500 dark:text-slate-400 text-xs font-medium transition-all cursor-pointer shadow-2xs"
           >
-            <div className="flex items-center gap-2 truncate">
+            <div className="flex items-center gap-2.5 truncate">
               <Search className="w-3.5 h-3.5 text-slate-400" />
               <span className="truncate">Search courses, notes, PYQs, marketplace...</span>
             </div>
-            <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded">
+            <kbd className="hidden md:inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-2xs">
               <span>Ctrl</span>
               <span>K</span>
             </kbd>
@@ -128,8 +128,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Mobile Search Button */}
           <button
             onClick={onOpenSearch}
-            className="sm:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition border border-slate-200/80 dark:border-slate-800 shadow-2xs"
+            className="sm:hidden p-2 rounded-2xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition border border-slate-200/80 dark:border-slate-800 shadow-2xs"
             title="Search Smart Campus"
+            aria-label="Search"
           >
             <Search className="w-4 h-4" />
           </button>
@@ -137,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Light / Dark Mode Toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 flex items-center justify-center shadow-2xs cursor-pointer active:scale-95"
+            className="p-2.5 rounded-2xl text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 flex items-center justify-center shadow-2xs cursor-pointer active:scale-95"
             title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             aria-label="Toggle Theme"
           >
@@ -151,8 +152,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Realtime Chat Button */}
           <button
             onClick={onOpenChat}
-            className="relative p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
+            className="relative p-2.5 rounded-2xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
             title="Campus Marketplace Messenger"
+            aria-label="Open Messenger"
           >
             <MessageSquare className="w-4 h-4" />
             <span className="hidden md:inline text-xs font-bold">Messenger</span>
@@ -167,8 +169,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 shadow-2xs cursor-pointer active:scale-95"
+              className="relative p-2.5 rounded-2xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 shadow-2xs cursor-pointer active:scale-95"
               title="Notifications"
+              aria-label="Notifications"
             >
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && (
@@ -183,9 +186,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="absolute right-0 mt-3 w-80 sm:w-96 rounded-3xl glass-panel bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-700/80 shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center space-x-2">
-                    <h4 className="text-sm font-extrabold text-slate-900 dark:text-white">Campus Alerts</h4>
+                    <h4 className="text-sm font-black text-slate-900 dark:text-white">Campus Alerts</h4>
                     {unreadCount > 0 && (
-                      <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-300 font-bold">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-300 font-bold">
                         {unreadCount} new
                       </span>
                     )}
@@ -240,7 +243,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="relative" ref={userRef}>
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center space-x-2 p-1 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 shadow-2xs cursor-pointer"
+              className="flex items-center space-x-2 p-1.5 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 shadow-2xs cursor-pointer active:scale-95"
+              aria-label="User Menu"
             >
               {user?.avatarUrl ? (
                 <img
@@ -254,11 +258,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               )}
               <div className="text-left hidden lg:block pr-1.5">
-                <p className="text-xs font-bold text-slate-900 dark:text-white leading-tight flex items-center gap-1">
+                <p className="text-xs font-black text-slate-900 dark:text-white leading-tight flex items-center gap-1">
                   {user?.fullName}
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
                 </p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium leading-tight">
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold leading-tight">
                   {user?.role === 'FACULTY' ? 'Faculty Member' : `${user?.semester}th Sem • ${user?.department || 'Student'}`}
                 </p>
               </div>
@@ -266,29 +270,29 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Profile Dropdown Menu */}
             {showUserMenu && (
-              <div className="absolute right-0 mt-3 w-72 rounded-3xl glass-panel bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-700/80 shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="p-3 rounded-2xl bg-indigo-50/60 dark:bg-slate-800/60 border border-indigo-100 dark:border-slate-700/60 mb-2">
-                  <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Signed in as</p>
-                  <p className="text-xs font-extrabold text-slate-900 dark:text-white truncate mt-0.5">{user?.email}</p>
+              <div className="absolute right-0 mt-3 w-72 rounded-3xl glass-panel bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-700/80 shadow-2xl p-3.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="p-3.5 rounded-2xl bg-indigo-50/60 dark:bg-slate-800/60 border border-indigo-100 dark:border-slate-700/60 mb-2">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Signed in as</p>
+                  <p className="text-xs font-black text-slate-900 dark:text-white truncate mt-0.5">{user?.email}</p>
                   <div className="mt-2.5 flex items-center gap-1.5 flex-wrap">
-                    <Badge variant={user?.role === 'FACULTY' ? 'indigo' : 'emerald'} size="sm">
+                    <Badge variant={user?.role === 'FACULTY' ? 'indigo' : user?.role === 'ADMIN' ? 'rose' : 'emerald'} size="sm" dot>
                       {user?.role}
                     </Badge>
                     {user?.isVerified && (
-                      <Badge variant="blue" size="sm">Verified Campus Email</Badge>
+                      <Badge variant="blue" size="sm">Verified Campus</Badge>
                     )}
                   </div>
                 </div>
 
-                <div className="px-3 py-2 text-xs text-slate-500 dark:text-slate-400 space-y-1">
+                <div className="px-3 py-2 text-xs text-slate-500 dark:text-slate-400 space-y-1.5">
                   <div className="flex justify-between items-center text-[11px]">
-                    <span className="font-semibold text-slate-700 dark:text-slate-300">Department:</span>
-                    <span className="truncate max-w-[140px] text-slate-600 dark:text-slate-400 text-right">{user?.department || 'General'}</span>
+                    <span className="font-bold text-slate-700 dark:text-slate-300">Department:</span>
+                    <span className="truncate max-w-[140px] text-slate-600 dark:text-slate-400 text-right font-medium">{user?.department || 'General'}</span>
                   </div>
                   {user?.semester && (
                     <div className="flex justify-between items-center text-[11px]">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">Current Semester:</span>
-                      <span className="text-slate-600 dark:text-slate-400">{user.semester}th</span>
+                      <span className="font-bold text-slate-700 dark:text-slate-300">Semester:</span>
+                      <span className="text-slate-600 dark:text-slate-400 font-medium">{user.semester}th</span>
                     </div>
                   )}
                 </div>
@@ -296,7 +300,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="pt-2 mt-1 border-t border-slate-100 dark:border-slate-800">
                   <button
                     onClick={logout}
-                    className="w-full flex items-center space-x-2 px-3.5 py-2.5 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition cursor-pointer"
+                    className="w-full flex items-center space-x-2 px-3.5 py-2.5 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-2xl transition cursor-pointer active:scale-95"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Sign Out</span>

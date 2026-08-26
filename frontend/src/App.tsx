@@ -25,7 +25,10 @@ import { AuditLogsPage } from './pages/audit/AuditLogsPage';
 import { ResourceUploadModal } from './components/academic/ResourceUploadModal';
 import { CreateProductModal } from './components/marketplace/CreateProductModal';
 import { GlobalSearchModal } from './components/common/GlobalSearchModal';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { api } from './services/api';
+
+
 import { useChat } from './context/ChatContext';
 
 const AppContent: React.FC = () => {
@@ -113,64 +116,66 @@ const AppContent: React.FC = () => {
 
         {/* Content Viewport */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
-          {currentTab === 'dashboard' && (
-            user.role === 'ADMIN' ? (
-              <AdminDashboard onNavigate={handleNavigate} />
-            ) : isFaculty ? (
-              <FacultyDashboard
-                onNavigate={handleNavigate}
-                onOpenCreateCourse={() => handleNavigate('courses')}
-                onOpenUploadResource={() => setShowUploadResourceModal(true)}
+          <ErrorBoundary>
+            {currentTab === 'dashboard' && (
+              user.role === 'ADMIN' ? (
+                <AdminDashboard onNavigate={handleNavigate} />
+              ) : isFaculty ? (
+                <FacultyDashboard
+                  onNavigate={handleNavigate}
+                  onOpenCreateCourse={() => handleNavigate('courses')}
+                  onOpenUploadResource={() => setShowUploadResourceModal(true)}
+                />
+              ) : (
+                <StudentDashboard
+                  onNavigate={handleNavigate}
+                  onOpenUploadResource={() => setShowUploadResourceModal(true)}
+                  onOpenCreateProduct={() => setShowCreateProductModal(true)}
+                />
+              )
+            )}
+
+            {currentTab === 'courses' && (
+              <CoursesPage
+                initialCourseId={selectedCourseId}
+                onSelectCourse={(id) => setSelectedCourseId(id)}
               />
-            ) : (
-              <StudentDashboard
-                onNavigate={handleNavigate}
-                onOpenUploadResource={() => setShowUploadResourceModal(true)}
-                onOpenCreateProduct={() => setShowCreateProductModal(true)}
-              />
-            )
-          )}
+            )}
 
+            {currentTab === 'resources' && (
+              <ResourcesPage />
+            )}
 
-          {currentTab === 'courses' && (
-            <CoursesPage
-              initialCourseId={selectedCourseId}
-              onSelectCourse={(id) => setSelectedCourseId(id)}
-            />
-          )}
+            {currentTab === 'moderation' && (
+              <ModerationQueue />
+            )}
 
-          {currentTab === 'resources' && (
-            <ResourcesPage />
-          )}
+            {currentTab === 'assignments' && (
+              <AssignmentsPage />
+            )}
 
-          {currentTab === 'moderation' && (
-            <ModerationQueue />
-          )}
+            {currentTab === 'grading' && (
+              <GradingCenterPage onNavigate={handleNavigate} />
+            )}
 
-          {currentTab === 'assignments' && (
-            <AssignmentsPage />
-          )}
+            {currentTab === 'marketplace' && (
+              <MarketplacePage />
+            )}
 
-          {currentTab === 'grading' && (
-            <GradingCenterPage onNavigate={handleNavigate} />
-          )}
+            {currentTab === 'my-listings' && (
+              <MyListingsPage />
+            )}
 
-          {currentTab === 'marketplace' && (
-            <MarketplacePage />
-          )}
+            {currentTab === 'wishlist' && (
+              <WishlistPage />
+            )}
 
-          {currentTab === 'my-listings' && (
-            <MyListingsPage />
-          )}
-
-          {currentTab === 'wishlist' && (
-            <WishlistPage />
-          )}
-
-          {currentTab === 'audit-logs' && (
-            <AuditLogsPage />
-          )}
+            {currentTab === 'audit-logs' && (
+              <AuditLogsPage />
+            )}
+          </ErrorBoundary>
         </main>
+
       </div>
 
       {/* Responsive Mobile Drawer & Bottom Bar */}
