@@ -11,6 +11,8 @@ import { ChatDrawer } from './components/chat/ChatDrawer';
 import { AuthPage } from './pages/auth/AuthPage';
 import { StudentDashboard } from './pages/student/StudentDashboard';
 import { FacultyDashboard } from './pages/faculty/FacultyDashboard';
+import { AdminDashboard } from './pages/admin/AdminDashboard';
+
 import { CoursesPage } from './pages/academic/CoursesPage';
 import { ResourcesPage } from './pages/academic/ResourcesPage';
 import { AssignmentsPage } from './pages/academic/AssignmentsPage';
@@ -112,7 +114,9 @@ const AppContent: React.FC = () => {
         {/* Content Viewport */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           {currentTab === 'dashboard' && (
-            isFaculty ? (
+            user.role === 'ADMIN' ? (
+              <AdminDashboard onNavigate={handleNavigate} />
+            ) : isFaculty ? (
               <FacultyDashboard
                 onNavigate={handleNavigate}
                 onOpenCreateCourse={() => handleNavigate('courses')}
@@ -126,6 +130,7 @@ const AppContent: React.FC = () => {
               />
             )
           )}
+
 
           {currentTab === 'courses' && (
             <CoursesPage

@@ -91,7 +91,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
-  const sections = isFaculty ? facultySections : studentSections;
+  const adminSections: NavSection[] = [
+    {
+      title: 'Governance',
+      items: [
+        { id: 'dashboard', label: 'Admin Cockpit', icon: LayoutDashboard },
+        { id: 'courses', label: 'All Courses', icon: BookOpen },
+        { 
+          id: 'moderation', 
+          label: 'Academic Moderation', 
+          icon: Inbox,
+          badge: pendingModerationCount > 0 ? pendingModerationCount : undefined,
+          badgeVariant: 'amber'
+        },
+        { id: 'resources', label: 'Global Repository', icon: FileText },
+      ],
+    },
+    {
+      title: 'Marketplace',
+      items: [
+        { id: 'marketplace', label: 'Campus Marketplace', icon: ShoppingBag },
+      ],
+    },
+    {
+      title: 'System',
+      items: [
+        { id: 'audit-logs', label: 'Security & Audit Logs', icon: ShieldCheck },
+      ],
+    },
+  ];
+
+  const sections = user?.role === 'ADMIN' ? adminSections : isFaculty ? facultySections : studentSections;
+
 
   return (
     <aside
