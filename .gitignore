@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Production Builds
+dist/
+*/dist/
+build/
+*/build/
+
+# Environment Variables & Secrets
+.env
+.env.local
+backend/.env
+
+# Databases & Storage
+*.db
+*.db-journal
+backend/prisma/dev.db
+backend/storage/resources/*
+backend/storage/assignments/*
+backend/storage/products/*
+!backend/storage/.gitkeep
+
+# System & OS Files
+.DS_Store
+Thumbs.db
+*.log
