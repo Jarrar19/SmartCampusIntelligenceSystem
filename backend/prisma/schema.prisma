@@ -1,0 +1,331 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                    Int                   @id @default(autoincrement())
+  email                 String                @unique
+  fullName              String
+  passwordHash          String
+  role                  String                @default("STUDENT") // STUDENT, FACULTY, ADMIN
+  department            String?
+  semester              Int?
+  avatarUrl             String?
+  isActive              Boolean               @default(true)
+  isVerified            Boolean               @default(false)
+  verificationToken     String?
+  resetToken            String?
+  resetTokenExpiresAt   DateTime?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  coursesTaught         Course[]
+  enrollments           Enrollment[]
+  announcements         Announcement[]
+  resourcesUploaded     Resource[]            @relation("ResourceUploader")
+  resourcesReviewed     Resource[]            @relation("ResourceReviewer")
+  resourceRatings       ResourceRating[]
+  resourceBookmarks     ResourceBookmark[]
+  submissions           Submission[]          @relation("StudentSubmissions")
+  submissionsGraded     Submission[]          @relation("FacultyGrader")
+  products              MarketplaceProduct[]  @relation("ProductSeller")
+  purchaseRequestsMade  PurchaseRequest[]     @relation("BuyerRequests")
+  purchaseRequestsReceived PurchaseRequest[]  @relation("SellerRequests")
+  favorites             MarketplaceFavorite[]
+  buyerConversations    Conversation[]        @relation("BuyerConversations")
+  sellerConversations   Conversation[]        @relation("SellerConversations")
+  messagesSent          Message[]
+  reportsFiled          Report[]
+  auditLogs             AuditLog[]
+  notifications         Notification[]
+  blocksInitiated       BlockedUser[]         @relation("BlockInitiator")
+  blocksReceived        BlockedUser[]         @relation("BlockTarget")
+}
+
+model Course {
+  id            Int            @id @default(autoincrement())
+  courseCode    String
+  title         String
+  description   String?
+  department    String
+  semester      Int
+  academicYear  String
+  facultyId     Int
+  isArchived    Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  faculty       User           @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  enrollments   Enrollment[]
+  announcements Announcement[]
+  resources     Resource[]
+  assignments   Assignment[]
+}
+
+model Enrollment {
+  id          Int      @id @default(autoincrement())
+  courseId    Int
+  studentId   Int
+  enrolledAt  DateTime @default(now())
+
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student     User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, studentId])
+}
+
+model Announcement {
+  id            Int      @id @default(autoincrement())
+  courseId      Int
+  authorId      Int
+  title         String
+  content       String
+  attachmentUrl String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Resource {
+  id              Int              @id @default(autoincrement())
+  courseId        Int?
+  title           String
+  description     String?
+  category        String           @default("NOTES") // NOTES, PYQ, ASSIGNMENT_REF, REFERENCE_MATERIAL, STUDENT_GUIDE, OTHER
+  filePath        String
+  fileName        String
+  fileSize        Int
+  mimeType        String
+  fileHash        String
+  uploaderId      Int
+  uploaderRole    String
+  approvalStatus  String           @default("APPROVED") // APPROVED, PENDING_REVIEW, REJECTED
+  reviewerId      Int?
+  reviewedAt      DateTime?
+  rejectionReason String?
+  downloadsCount  Int              @default(0)
+  viewsCount      Int              @default(0)
+  subjectCode     String?
+  department      String?
+  semester        Int?
+  tags            String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  course          Course?          @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  uploader        User             @relation("ResourceUploader", fields: [uploaderId], references: [id], onDelete: Cascade)
+  reviewer        User?            @relation("ResourceReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  ratings         ResourceRating[]
+  bookmarks       ResourceBookmark[]
+}
+
+model ResourceRating {
+  id          Int      @id @default(autoincrement())
+  resourceId  Int
+  userId      Int
+  isHelpful   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  resource    Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([resourceId, userId])
+}
+
+model ResourceBookmark {
+  id          Int      @id @default(autoincrement())
+  resourceId  Int
+  userId      Int
+  createdAt   DateTime @default(now())
+
+  resource    Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([resourceId, userId])
+}
+
+model Assignment {
+  id            Int          @id @default(autoincrement())
+  courseId      Int
+  facultyId     Int
+  title         String
+  description   String
+  attachmentUrl String?
+  maxMarks      Float        @default(100.0)
+  dueDate       DateTime
+  allowLate     Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  course        Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  submissions   Submission[]
+}
+
+model Submission {
+  id              Int              @id @default(autoincrement())
+  assignmentId    Int
+  studentId       Int
+  filePath        String?
+  fileName        String?
+  fileSize        Int?
+  submissionText  String?
+  submittedAt     DateTime         @default(now())
+  isLate          Boolean          @default(false)
+  marksAwarded    Float?
+  facultyFeedback String?
+  gradedAt        DateTime?
+  gradedById      Int?
+  status          String           @default("SUBMITTED") // SUBMITTED, GRADED, RETURNED
+
+  assignment      Assignment       @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student         User             @relation("StudentSubmissions", fields: [studentId], references: [id], onDelete: Cascade)
+  gradedBy        User?            @relation("FacultyGrader", fields: [gradedById], references: [id], onDelete: SetNull)
+
+  @@unique([assignmentId, studentId])
+}
+
+model MarketplaceProduct {
+  id                Int                  @id @default(autoincrement())
+  sellerId          Int
+  title             String
+  description       String
+  category          String               @default("OTHER") // TEXTBOOK, CALCULATOR, LAB_COAT, STATIONERY, ELECTRONICS, HOSTEL_ITEM, SPORTS, ACADEMIC_MATERIAL, OTHER
+  price             Float                @default(0.0)
+  condition         String               @default("GOOD") // NEW, LIKE_NEW, GOOD, USED, HEAVILY_USED
+  campusInfo        String?
+  status            String               @default("AVAILABLE") // AVAILABLE, RESERVED, SOLD, REMOVED
+  moderationStatus  String               @default("APPROVED") // APPROVED, PENDING, REJECTED
+  viewsCount        Int                  @default(0)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  seller            User                 @relation("ProductSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  images            ProductImage[]
+  purchaseRequests  PurchaseRequest[]
+  favorites         MarketplaceFavorite[]
+  conversations     Conversation[]
+}
+
+model ProductImage {
+  id          Int                @id @default(autoincrement())
+  productId   Int
+  imagePath   String
+  isPrimary   Boolean            @default(false)
+  createdAt   DateTime           @default(now())
+
+  product     MarketplaceProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model PurchaseRequest {
+  id          Int                   @id @default(autoincrement())
+  productId   Int
+  buyerId     Int
+  sellerId    Int
+  status      String                @default("PENDING") // PENDING, ACCEPTED, REJECTED, COMPLETED, CANCELLED
+  message     String?
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+
+  product     MarketplaceProduct    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  buyer       User                  @relation("BuyerRequests", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller      User                  @relation("SellerRequests", fields: [sellerId], references: [id], onDelete: Cascade)
+}
+
+model MarketplaceFavorite {
+  id          Int                @id @default(autoincrement())
+  productId   Int
+  userId      Int
+  createdAt   DateTime           @default(now())
+
+  product     MarketplaceProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, userId])
+}
+
+model Conversation {
+  id          Int                @id @default(autoincrement())
+  productId   Int
+  buyerId     Int
+  sellerId    Int
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  product     MarketplaceProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  buyer       User               @relation("BuyerConversations", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller      User               @relation("SellerConversations", fields: [sellerId], references: [id], onDelete: Cascade)
+  messages    Message[]
+
+  @@unique([productId, buyerId, sellerId])
+}
+
+model Message {
+  id              Int          @id @default(autoincrement())
+  conversationId  Int
+  senderId        Int
+  content         String
+  isRead          Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender          User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id          Int      @id @default(autoincrement())
+  reporterId  Int
+  targetType  String   // RESOURCE, PRODUCT, USER, CONVERSATION
+  targetId    String
+  reason      String
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+
+  reporter    User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+}
+
+model BlockedUser {
+  id          Int      @id @default(autoincrement())
+  blockerId   Int
+  blockedId   Int
+  createdAt   DateTime @default(now())
+
+  blocker     User     @relation("BlockInitiator", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked     User     @relation("BlockTarget", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+}
+
+model AuditLog {
+  id            Int      @id @default(autoincrement())
+  userId        Int?
+  action        String
+  resourceType  String
+  resourceId    String?
+  ipAddress     String?
+  details       String?  // JSON string
+  createdAt     DateTime @default(now())
+
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  title       String
+  message     String
+  type        String   @default("SYSTEM") // ACADEMIC, MODERATION, ASSIGNMENT, MARKETPLACE, CHAT, SYSTEM
+  link        String?
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
