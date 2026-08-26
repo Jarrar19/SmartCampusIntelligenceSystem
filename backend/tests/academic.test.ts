@@ -152,4 +152,125 @@ describe('Module 4: Academic Hub & Learning Management Tests', () => {
     expect(gradeRes.status).toBe(200);
     expect(gradeRes.body.data.marksAwarded).toBe(98);
   });
+
+  it('Faculty should be able to update own course details', async () => {
+    const res = await request(app)
+      .patch(`/api/v1/courses/${testCourseId}`)
+      .set('Authorization', `Bearer ${facultyToken}`)
+      .send({
+        title: 'Cloud Computing & Advanced Distributed Systems (Updated)',
+        semester: 8,
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.title).toContain('(Updated)');
+    expect(res.body.data.semester).toBe(8);
+  });
+
+  it('Student CANNOT edit a course (Role Guard)', async () => {
+    const res = await request(app)
+      .patch(`/api/v1/courses/${testCourseId}`)
+      .set('Authorization', `Bearer ${studentToken}`)
+      .send({
+        title: 'Hacked Course Title',
+      });
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+  });
+
+  it('Faculty should be able to update own assignment details', async () => {
+    // Create assignment to update
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 7);
+
+    const assignRes = await request(app)
+      .post('/api/v1/assignments')
+      .set('Authorization', `Bearer ${facultyToken}`)
+      .send({
+        courseId: testCourseId,
+        title: 'Docker Swarm Assignment',
+        description: 'Configure overlay network',
+        maxMarks: 50,
+        dueDate: dueDate.toISOString(),
+      });
+
+    const assignmentId = assignRes.body.data.id;
+
+    // Update assignment
+    const updateRes = await request(app)
+      .patch(`/api/v1/assignments/${assignmentId}`)
+      .set('Authorization', `Bearer ${facultyToken}`)
+      .send({
+        title: 'Docker Swarm Assignment (Updated)',
+        maxMarks: 75,
+      });
+
+    expect(updateRes.status).toBe(200);
+    expect(updateRes.body.success).toBe(true);
+    expect(updateRes.body.data.maxMarks).toBe(75);
+
+    // Delete assignment
+    const delRes = await request(app)
+      .delete(`/api/v1/assignments/${assignmentId}`)
+      .set('Authorization', `Bearer ${facultyToken}`);
+
+    expect(delRes.status).toBe(200);
+    expect(delRes.body.success).toBe(true);
+  });
+
+  it('Student CANNOT moderate a resource (Role Guard)', async () => {
+    const res = await request(app)
+      .patch('/api/v1/resources/1/moderate')
+      .set('Authorization', `Bearer ${studentToken}`)
+      .send({ status: 'APPROVED' });
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+  });
+
+  it('Faculty rejection must require constructive reason and update status to REJECTED', async () => {
+    const fileBuffer = Buffer.from('Low quality submission');
+    const uploadRes = await request(app)
+      .post('/api/v1/resources')
+      .set('Authorization', `Bearer ${studentToken}`)
+      .field('title', 'Blurry Exam Notes Upload')
+      .field('category', 'NOTES')
+      .field('courseId', testCourseId)
+      .attach('file', fileBuffer, 'blurry_notes.pdf');
+
+    const resourceId = uploadRes.body.data.id;
+
+    // Rejection without reason fails
+    const failRes = await request(app)
+      .patch(`/api/v1/resources/${resourceId}/moderate`)
+      .set('Authorization', `Bearer ${facultyToken}`)
+      .send({ status: 'REJECTED' });
+
+    expect(failRes.status).toBe(400);
+
+    // Rejection with reason succeeds
+    const rejectRes = await request(app)
+      .patch(`/api/v1/resources/${resourceId}/moderate`)
+      .set('Authorization', `Bearer ${facultyToken}`)
+      .send({
+        status: 'REJECTED',
+        rejectionReason: 'Scan quality is illegible. Please re-upload as a clear PDF scan.',
+      });
+
+    expect(rejectRes.status).toBe(200);
+    expect(rejectRes.body.data.approvalStatus).toBe('REJECTED');
+    expect(rejectRes.body.data.rejectionReason).toContain('Scan quality is illegible');
+  });
+
+  it('Faculty should be able to delete course and cascade associations', async () => {
+    const res = await request(app)
+      .delete(`/api/v1/courses/${testCourseId}`)
+      .set('Authorization', `Bearer ${facultyToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+  });
 });
+

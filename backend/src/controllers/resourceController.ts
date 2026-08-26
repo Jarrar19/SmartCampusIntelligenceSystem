@@ -6,9 +6,10 @@ import { logAuditEvent } from '../services/audit';
 import { emitToUser } from '../services/socket';
 
 const ModerationActionSchema = z.object({
-  status: z.enum(['APPROVED', 'REJECTED']),
+  status: z.enum(['APPROVED', 'REJECTED', 'CHANGES_REQUESTED']),
   rejectionReason: z.string().optional(),
 });
+
 
 export async function uploadResource(req: Request, res: Response) {
   if (!req.user) return res.status(401).json({ success: false, message: 'Unauthorized' });
@@ -317,15 +318,15 @@ export async function moderateResource(req: Request, res: Response) {
 
   const parsed = ModerationActionSchema.parse(req.body);
 
-  if (parsed.status === 'REJECTED' && (!parsed.rejectionReason || parsed.rejectionReason.trim().length === 0)) {
-    return res.status(400).json({ success: false, message: 'Rejection reason is required when rejecting a resource' });
+  if ((parsed.status === 'REJECTED' || parsed.status === 'CHANGES_REQUESTED') && (!parsed.rejectionReason || parsed.rejectionReason.trim().length === 0)) {
+    return res.status(400).json({ success: false, message: `Feedback / reason is required when status is set to ${parsed.status}` });
   }
 
   const updated = await prisma.resource.update({
     where: { id },
     data: {
       approvalStatus: parsed.status,
-      rejectionReason: parsed.status === 'REJECTED' ? parsed.rejectionReason : null,
+      rejectionReason: parsed.status !== 'APPROVED' ? parsed.rejectionReason : null,
       reviewerId: req.user.id,
       reviewedAt: new Date(),
     },
@@ -341,29 +342,35 @@ export async function moderateResource(req: Request, res: Response) {
   });
 
   // Notify student uploader
+  const actionTitle = parsed.status === 'APPROVED' ? 'Approved' : parsed.status === 'CHANGES_REQUESTED' ? 'Revision Requested' : 'Rejected';
+  const actionMsg = parsed.status === 'APPROVED'
+    ? `Your upload "${resource.title}" has been verified and published to the academic hub.`
+    : parsed.status === 'CHANGES_REQUESTED'
+    ? `Revision requested for "${resource.title}". Feedback: ${parsed.rejectionReason}`
+    : `Your upload "${resource.title}" was rejected. Reason: ${parsed.rejectionReason}`;
+
   await prisma.notification.create({
     data: {
       userId: resource.uploaderId,
-      title: `Resource ${parsed.status === 'APPROVED' ? 'Approved' : 'Rejected'}: ${resource.title}`,
-      message: parsed.status === 'APPROVED'
-        ? `Your upload "${resource.title}" has been verified and published to the academic hub.`
-        : `Your upload "${resource.title}" was rejected. Reason: ${parsed.rejectionReason}`,
+      title: `Resource ${actionTitle}: ${resource.title}`,
+      message: actionMsg,
       type: 'MODERATION',
       link: `/resources/${resource.id}`,
     },
   });
 
   emitToUser(resource.uploaderId, 'notification', {
-    title: `Resource ${parsed.status === 'APPROVED' ? 'Approved' : 'Rejected'}`,
+    title: `Resource ${actionTitle}`,
     message: resource.title,
   });
 
   return res.json({
     success: true,
-    message: `Resource has been successfully ${parsed.status.toLowerCase()}`,
+    message: `Resource status has been updated to ${parsed.status}`,
     data: updated,
   });
 }
+
 
 export async function toggleRating(req: Request, res: Response) {
   if (!req.user) return res.status(401).json({ success: false, message: 'Unauthorized' });

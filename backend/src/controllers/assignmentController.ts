@@ -21,6 +21,16 @@ const GradeSubmissionSchema = z.object({
   status: z.enum(['GRADED', 'RETURNED']).default('GRADED'),
 });
 
+const UpdateAssignmentSchema = z.object({
+  title: z.string().min(3).optional(),
+  description: z.string().min(5).optional(),
+  attachmentUrl: z.string().optional(),
+  maxMarks: z.number().positive().optional(),
+  dueDate: z.string().transform(str => new Date(str)).optional(),
+  allowLate: z.boolean().optional(),
+});
+
+
 export async function createAssignment(req: Request, res: Response) {
   if (!req.user || (req.user.role !== 'FACULTY' && req.user.role !== 'ADMIN')) {
     return res.status(403).json({ success: false, message: 'Only faculty and administrators can create assignments' });
@@ -126,6 +136,80 @@ export async function getAssignmentById(req: Request, res: Response) {
     },
   });
 }
+
+export async function updateAssignment(req: Request, res: Response) {
+  if (!req.user || (req.user.role !== 'FACULTY' && req.user.role !== 'ADMIN')) {
+    return res.status(403).json({ success: false, message: 'Only faculty and administrators can update assignments' });
+  }
+
+  const id = parseInt(req.params.id, 10);
+  const assignment = await prisma.assignment.findUnique({
+    where: { id },
+    include: { course: true },
+  });
+
+  if (!assignment) return res.status(404).json({ success: false, message: 'Assignment not found' });
+  if (assignment.course.facultyId !== req.user.id && req.user.role !== 'ADMIN') {
+    return res.status(403).json({ success: false, message: 'You can only edit assignments for your own courses' });
+  }
+
+  const parsed = UpdateAssignmentSchema.parse(req.body);
+  const updated = await prisma.assignment.update({
+    where: { id },
+    data: parsed,
+  });
+
+  await logAuditEvent({
+    userId: req.user.id,
+    action: 'ASSIGNMENT_UPDATE',
+    resourceType: 'ASSIGNMENT',
+    resourceId: id,
+    ipAddress: req.ip,
+    details: parsed,
+  });
+
+  return res.json({
+    success: true,
+    message: 'Assignment updated successfully',
+    data: updated,
+  });
+}
+
+export async function deleteAssignment(req: Request, res: Response) {
+  if (!req.user || (req.user.role !== 'FACULTY' && req.user.role !== 'ADMIN')) {
+    return res.status(403).json({ success: false, message: 'Only faculty and administrators can delete assignments' });
+  }
+
+  const id = parseInt(req.params.id, 10);
+  const assignment = await prisma.assignment.findUnique({
+    where: { id },
+    include: { course: true },
+  });
+
+  if (!assignment) return res.status(404).json({ success: false, message: 'Assignment not found' });
+  if (assignment.course.facultyId !== req.user.id && req.user.role !== 'ADMIN') {
+    return res.status(403).json({ success: false, message: 'You can only delete assignments for your own courses' });
+  }
+
+  await prisma.assignment.delete({
+    where: { id },
+  });
+
+  await logAuditEvent({
+    userId: req.user.id,
+    action: 'ASSIGNMENT_DELETE',
+    resourceType: 'ASSIGNMENT',
+    resourceId: id,
+    ipAddress: req.ip,
+    details: { title: assignment.title, courseId: assignment.courseId },
+  });
+
+  return res.json({
+    success: true,
+    message: 'Assignment deleted successfully',
+  });
+}
+
 
 export async function submitAssignment(req: Request, res: Response) {
   if (!req.user || req.user.role !== 'STUDENT') {

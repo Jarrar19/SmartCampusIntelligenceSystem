@@ -40,6 +40,7 @@ router.get('/courses', authenticate, asyncHandler(courseController.getCourses));
 router.get('/courses/:id', authenticate, asyncHandler(courseController.getCourseById));
 router.post('/courses', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(courseController.createCourse));
 router.patch('/courses/:id', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(courseController.updateCourse));
+router.delete('/courses/:id', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(courseController.deleteCourse));
 router.post('/courses/:id/enroll', authenticate, asyncHandler(courseController.enrollInCourse));
 router.delete('/courses/:id/unenroll', authenticate, asyncHandler(courseController.unenrollFromCourse));
 router.post('/courses/:id/announcements', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(courseController.createAnnouncement));
@@ -59,9 +60,12 @@ router.delete('/resources/:id', authenticate, asyncHandler(resourceController.de
 router.get('/assignments/faculty/submissions', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(assignmentController.getFacultySubmissions));
 router.post('/assignments', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(assignmentController.createAssignment));
 router.get('/assignments/:id', authenticate, asyncHandler(assignmentController.getAssignmentById));
+router.patch('/assignments/:id', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(assignmentController.updateAssignment));
+router.delete('/assignments/:id', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(assignmentController.deleteAssignment));
 router.post('/assignments/:id/submit', authenticate, requireRole(['STUDENT']), memoryUpload.single('file'), asyncHandler(assignmentController.submitAssignment));
 router.patch('/assignments/submissions/:submissionId/grade', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(assignmentController.gradeSubmission));
 router.get('/assignments/submissions/:submissionId/download', authenticate, asyncHandler(assignmentController.downloadSubmissionFile));
+
 
 // Marketplace & Purchase Routes
 router.get('/marketplace/products', authenticate, asyncHandler(marketplaceController.getProducts));

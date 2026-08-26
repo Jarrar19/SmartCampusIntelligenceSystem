@@ -14,13 +14,15 @@ const CreateCourseSchema = z.object({
 });
 
 const UpdateCourseSchema = z.object({
+  courseCode: z.string().min(2).optional(),
   title: z.string().min(3).optional(),
   description: z.string().optional(),
   department: z.string().optional(),
-  semester: z.number().int().optional(),
+  semester: z.number().int().min(1).max(8).optional(),
   academicYear: z.string().optional(),
   isArchived: z.boolean().optional(),
 });
+
 
 const CreateAnnouncementSchema = z.object({
   title: z.string().min(2),
@@ -208,15 +210,15 @@ export async function createCourse(req: Request, res: Response) {
 }
 
 export async function updateCourse(req: Request, res: Response) {
-  if (!req.user || req.user.role !== 'FACULTY') {
-    return res.status(403).json({ success: false, message: 'Only faculty members can update courses' });
+  if (!req.user || (req.user.role !== 'FACULTY' && req.user.role !== 'ADMIN')) {
+    return res.status(403).json({ success: false, message: 'Only faculty members and administrators can update courses' });
   }
 
   const id = parseInt(req.params.id, 10);
   const course = await prisma.course.findUnique({ where: { id } });
   if (!course) return res.status(404).json({ success: false, message: 'Course not found' });
 
-  if (course.facultyId !== req.user.id) {
+  if (course.facultyId !== req.user.id && req.user.role !== 'ADMIN') {
     return res.status(403).json({ success: false, message: 'You can only edit your own courses' });
   }
 
@@ -241,6 +243,39 @@ export async function updateCourse(req: Request, res: Response) {
     data: updated,
   });
 }
+
+export async function deleteCourse(req: Request, res: Response) {
+  if (!req.user || (req.user.role !== 'FACULTY' && req.user.role !== 'ADMIN')) {
+    return res.status(403).json({ success: false, message: 'Only faculty members and administrators can delete courses' });
+  }
+
+  const id = parseInt(req.params.id, 10);
+  const course = await prisma.course.findUnique({ where: { id } });
+  if (!course) return res.status(404).json({ success: false, message: 'Course not found' });
+
+  if (course.facultyId !== req.user.id && req.user.role !== 'ADMIN') {
+    return res.status(403).json({ success: false, message: 'You can only delete your own courses' });
+  }
+
+  await prisma.course.delete({
+    where: { id },
+  });
+
+  await logAuditEvent({
+    userId: req.user.id,
+    action: 'COURSE_DELETE',
+    resourceType: 'COURSE',
+    resourceId: id,
+    ipAddress: req.ip,
+    details: { courseCode: course.courseCode, title: course.title },
+  });
+
+  return res.json({
+    success: true,
+    message: 'Course deleted successfully',
+  });
+}
+
 
 export async function enrollInCourse(req: Request, res: Response) {
   if (!req.user) return res.status(401).json({ success: false, message: 'Unauthorized' });
