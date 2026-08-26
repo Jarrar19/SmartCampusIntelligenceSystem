@@ -3,9 +3,16 @@ import path from 'path';
 
 dotenv.config();
 
+const isProduction = process.env.NODE_ENV === 'production';
+const jwtSecretFromEnv = process.env.JWT_SECRET;
+
+if (isProduction && (!jwtSecretFromEnv || jwtSecretFromEnv === 'smart-campus-jwt-super-secret-key-production-ready-2026-safe')) {
+  throw new Error('FATAL SECURITY ERROR: process.env.JWT_SECRET must be explicitly configured with a strong secret in production environment!');
+}
+
 export const config = {
   PORT: parseInt(process.env.PORT || '5000', 10),
-  JWT_SECRET: process.env.JWT_SECRET || 'smart-campus-jwt-super-secret-key-production-ready-2026-safe',
+  JWT_SECRET: jwtSecretFromEnv || 'smart-campus-jwt-super-secret-key-production-ready-2026-safe',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '24h',
   JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   
@@ -23,7 +30,8 @@ export const config = {
   ALLOWED_IMAGE_EXTENSIONS: ['png', 'jpg', 'jpeg', 'webp'],
 
   // Dev Mode
-  DEV_MODE: process.env.DEV_MODE === 'true',
+  DEV_MODE: process.env.DEV_MODE === 'true' || !isProduction,
   AUTO_VERIFY_EMAILS_IN_DEV: process.env.AUTO_VERIFY_EMAILS_IN_DEV === 'true',
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173'
 };
+

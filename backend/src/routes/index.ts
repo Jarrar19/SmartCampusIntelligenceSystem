@@ -25,6 +25,8 @@ router.post('/auth/forgot-password', authLimiter, asyncHandler(authController.fo
 router.post('/auth/reset-password', authLimiter, asyncHandler(authController.resetPassword));
 router.get('/auth/me', authenticate, asyncHandler(authController.getMe));
 router.post('/auth/change-password', authenticate, asyncHandler(authController.changePassword));
+router.post('/auth/logout', authenticate, asyncHandler(authController.logout));
+router.post('/auth/promote-role', authenticate, requireRole(['ADMIN']), asyncHandler(authController.promoteUserRole));
 
 // User & Notification Routes
 router.patch('/users/profile', authenticate, asyncHandler(userController.updateProfile));

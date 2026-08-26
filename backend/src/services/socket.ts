@@ -16,10 +16,12 @@ const userSockets = new Map<number, Set<string>>();
 export function initSocketServer(server: HttpServer): SocketIOServer {
   io = new SocketIOServer(server, {
     cors: {
-      origin: '*',
+      origin: [config.CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000'],
       methods: ['GET', 'POST'],
+      credentials: true,
     },
   });
+
 
   io.use((socket: Socket, next) => {
     const token = socket.handshake.auth.token || socket.handshake.query.token;

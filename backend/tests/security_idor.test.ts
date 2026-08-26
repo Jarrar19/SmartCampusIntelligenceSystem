@@ -103,4 +103,23 @@ describe('Security & IDOR Defenses Test Suite', () => {
     expect(res.status).toBe(403);
     expect(res.body.success).toBe(false);
   });
+
+  it('File Storage Guard: Direct unauthenticated static HTTP access to /storage/assignments/ is denied (404/403)', async () => {
+    const res = await request(app).get('/storage/assignments/secret_submission.pdf');
+    expect(res.status).toBe(404);
+  });
+
+  it('File Storage Guard: Direct unauthenticated static HTTP access to /storage/resources/ is denied (404/403)', async () => {
+    const res = await request(app).get('/storage/resources/exam_paper.pdf');
+    expect(res.status).toBe(404);
+  });
+
+  it('IDOR Defense: Student 1 CANNOT download Student 2 submission file', async () => {
+    const res = await request(app)
+      .get('/api/v1/assignments/submissions/99999/download')
+      .set('Authorization', `Bearer ${student1Token}`);
+
+    expect(res.status).toBe(404);
+  });
 });
+

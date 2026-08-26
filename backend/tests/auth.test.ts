@@ -114,4 +114,37 @@ describe('Module 1: Authentication & Role Management Tests', () => {
     expect(meRes.status).toBe(200);
     expect(meRes.body.data.email).toBe('student1@sbjit.edu.in');
   });
+
+  it('Privilege Guard: Public registration sending role FACULTY must be overridden to STUDENT', async () => {
+    const randomSuffix = Math.floor(Math.random() * 100000);
+    const email = `attacker_fac${randomSuffix}@sbjit.edu.in`;
+
+    const res = await request(app)
+      .post('/api/v1/auth/register')
+      .send({
+        email,
+        fullName: 'Attacker Fake Faculty',
+        password: 'Password@123',
+        role: 'FACULTY',
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body.data.user.role).toBe('STUDENT');
+  });
+
+  it('Role Promotion: Non-admin CANNOT promote user roles', async () => {
+    const s1Res = await request(app)
+      .post('/api/v1/auth/login')
+      .send({ email: 'student1@sbjit.edu.in', password: 'Password@123' });
+    const token = s1Res.body.data.accessToken;
+
+    const res = await request(app)
+      .post('/api/v1/auth/promote-role')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ targetUserId: 1, newRole: 'ADMIN' });
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+  });
 });
+

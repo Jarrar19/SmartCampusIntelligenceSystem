@@ -10,16 +10,30 @@ const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: '*',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, postman) or matching allowed origins
+    const allowedOrigins = [config.CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000'];
+    if (!origin || allowedOrigins.includes(origin) || config.DEV_MODE) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy: Access denied for this origin'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
+
 
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
-// Static file serving for uploads (authenticated preview route is also supported)
-app.use('/storage', express.static(config.STORAGE_DIR));
+// Static file serving ONLY for public marketplace images and user avatars.
+// Protected academic resources (resources/) and student submissions (assignments/) MUST be accessed via authenticated API download routes.
+app.use('/storage/marketplace', express.static(path.join(config.STORAGE_DIR, 'marketplace')));
+app.use('/storage/avatars', express.static(path.join(config.STORAGE_DIR, 'avatars')));
+app.use('/storage/general', express.static(path.join(config.STORAGE_DIR, 'general')));
+
 
 // General API rate limiter
 app.use('/api', apiLimiter);

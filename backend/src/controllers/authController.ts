@@ -15,10 +15,9 @@ function validateCollegeEmail(email: string): boolean {
 }
 
 const RegisterSchema = z.object({
-  email: z.string().email(),
-  fullName: z.string().min(2),
-  password: z.string().min(6),
-  role: z.enum(['STUDENT', 'FACULTY']).optional().default('STUDENT'),
+  email: z.string().email('Invalid email address format'),
+  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
   department: z.string().optional(),
   semester: z.number().int().optional(),
 });
@@ -30,12 +29,12 @@ const LoginSchema = z.object({
 
 const ResetPasswordSchema = z.object({
   token: z.string().min(1),
-  newPassword: z.string().min(6),
+  newPassword: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
 const ChangePasswordSchema = z.object({
   currentPassword: z.string().min(1),
-  newPassword: z.string().min(6),
+  newPassword: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
 export async function register(req: Request, res: Response, next: any) {
@@ -70,12 +69,16 @@ export async function register(req: Request, res: Response, next: any) {
     // In dev mode, can auto-verify if configured
     const isVerified = config.AUTO_VERIFY_EMAILS_IN_DEV;
 
+    // SECURITY ENFORCEMENT: Public registration ALWAYS defaults to STUDENT role.
+    // Privileged roles (FACULTY, ADMIN) cannot be self-assigned via public registration APIs.
+    const assignedRole = 'STUDENT';
+
     const newUser = await prisma.user.create({
       data: {
         email,
         fullName: parsed.fullName,
         passwordHash,
-        role: parsed.role,
+        role: assignedRole,
         department: parsed.department,
         semester: parsed.semester,
         isVerified,
@@ -132,6 +135,7 @@ export async function register(req: Request, res: Response, next: any) {
     next(error);
   }
 }
+
 
 export async function login(req: Request, res: Response, next: any) {
   try {
@@ -442,3 +446,77 @@ export async function getMe(req: Request, res: Response) {
     data: user,
   });
 }
+
+export async function logout(req: Request, res: Response, next: any) {
+  try {
+    if (req.user) {
+      await logAuditEvent({
+        userId: req.user.id,
+        action: 'AUTH_LOGOUT',
+        resourceType: 'USER',
+        resourceId: req.user.id,
+        ipAddress: req.ip,
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: 'Logged out successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function promoteUserRole(req: Request, res: Response, next: any) {
+  try {
+    const { targetUserId, newRole } = req.body;
+    const numericId = parseInt(String(targetUserId), 10);
+
+    if (isNaN(numericId) || !['STUDENT', 'FACULTY', 'ADMIN'].includes(newRole)) {
+      return res.status(400).json({ success: false, message: 'Invalid targetUserId or newRole specified' });
+    }
+
+    const targetUser = await prisma.user.findUnique({
+      where: { id: numericId },
+    });
+
+    if (!targetUser) {
+      return res.status(404).json({ success: false, message: 'Target user account not found' });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: numericId },
+      data: { role: newRole },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        role: true,
+        department: true,
+        semester: true,
+      },
+    });
+
+    if (req.user) {
+      await logAuditEvent({
+        userId: req.user.id,
+        action: 'AUTH_ROLE_PROMOTED',
+        resourceType: 'USER',
+        resourceId: updatedUser.id,
+        ipAddress: req.ip,
+        details: { targetUserId: updatedUser.id, previousRole: targetUser.role, newRole: updatedUser.role },
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: `User role successfully updated to ${newRole}`,
+      data: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+
