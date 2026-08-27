@@ -53,14 +53,24 @@ export const CampusHeroCanvas: React.FC<CampusHeroCanvasProps> = ({
 
       window.addEventListener('resize', handleResize);
 
-      const nodes = Array.from({ length: nodeCount }, () => ({
+      const tricolorPalette = [
+        'rgba(249, 115, 22,', // Saffron
+        'rgba(37, 99, 235,',  // Chakra Blue
+        'rgba(22, 163, 74,',  // India Green
+        'rgba(249, 115, 22,', // Saffron
+        'rgba(37, 99, 235,',  // Chakra Blue
+        'rgba(22, 163, 74,',  // India Green
+      ];
+
+      const nodes = Array.from({ length: nodeCount }, (_, i) => ({
         x: Math.random() * (width || 800),
         y: Math.random() * (height || 240),
         vx: (Math.random() - 0.5) * 0.4,
         vy: (Math.random() - 0.5) * 0.4,
         baseRadius: Math.random() * 2 + 1.2,
         radius: Math.random() * 2 + 1.2,
-        opacity: Math.random() * 0.45 + 0.25,
+        opacity: Math.random() * 0.45 + 0.35,
+        colorPrefix: tricolorPalette[i % tricolorPalette.length],
       }));
 
       let isVisible = true;
@@ -88,9 +98,9 @@ export const CampusHeroCanvas: React.FC<CampusHeroCanvasProps> = ({
               const dy = a.y - b.y;
               const dist = Math.sqrt(dx * dx + dy * dy);
 
-              if (dist < 120) {
-                const alpha = (1 - dist / 120) * 0.24;
-                ctx.strokeStyle = `rgba(99, 102, 241, ${alpha})`;
+              if (dist < 110) {
+                const alpha = (1 - dist / 110) * 0.18;
+                ctx.strokeStyle = `rgba(37, 99, 235, ${alpha})`;
                 ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(a.x, a.y);
@@ -120,7 +130,7 @@ export const CampusHeroCanvas: React.FC<CampusHeroCanvasProps> = ({
             if (n.x < 0 || n.x > width) n.vx *= -1;
             if (n.y < 0 || n.y > height) n.vy *= -1;
 
-            ctx.fillStyle = `rgba(129, 140, 248, ${n.opacity})`;
+            ctx.fillStyle = `${n.colorPrefix} ${n.opacity})`;
             ctx.beginPath();
             ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
             ctx.fill();

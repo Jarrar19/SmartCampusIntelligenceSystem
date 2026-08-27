@@ -65,65 +65,58 @@ export const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#030712] flex flex-col justify-center py-10 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300 bg-dot-pattern">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center py-10 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-200 bg-dot-pattern">
       {/* Top Bar with Theme Toggle */}
       <div className="absolute top-6 right-6 z-30">
         <button
           onClick={toggleTheme}
-          className="p-3 rounded-2xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-white/15 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 shadow-lg backdrop-blur-xl transition cursor-pointer active:scale-95 hover:bg-white/60 dark:hover:bg-slate-800/60"
+          className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-xs transition cursor-pointer active:scale-95 hover:bg-slate-100 dark:hover:bg-slate-800"
           title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           aria-label="Toggle theme"
         >
-          {isDark ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-indigo-600" />}
+          {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
         </button>
-      </div>
-
-      {/* Vibrant Ambient Glass Background Orbs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
-        <div className="absolute top-[10%] left-[20%] w-[550px] h-[550px] bg-gradient-to-tr from-indigo-600/30 via-purple-600/25 to-pink-500/20 rounded-full blur-[140px] animate-float-glow" />
-        <div className="absolute bottom-[10%] right-[15%] w-[600px] h-[600px] bg-gradient-to-br from-sky-500/25 via-indigo-600/30 to-emerald-500/20 rounded-full blur-[150px] animate-float-glow-reverse" />
-        <div className="absolute top-[45%] left-[5%] w-[400px] h-[400px] bg-gradient-to-tr from-purple-500/20 via-pink-500/15 to-amber-500/15 rounded-full blur-[120px] animate-float-glow" />
       </div>
 
       {/* Hero Header */}
       <div className="sm:mx-auto sm:w-full sm:max-w-xl text-center relative z-10 px-4">
-        <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-purple-600 text-white shadow-2xl shadow-indigo-500/40 mb-4 border border-white/40 animate-pulse-subtle">
-          <GraduationCap className="w-11 h-11" />
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 via-blue-600 to-emerald-600 text-white shadow-md shadow-orange-500/20 mb-3 border border-orange-400/30">
+          <GraduationCap className="w-8 h-8" />
         </div>
-        <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
-          Smart Campus <span className="text-gradient">Intelligence</span>
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+          Smart Campus <span className="text-gradient-tricolor">Intelligence</span>
         </h1>
-        <p className="mt-2 text-xs sm:text-base text-slate-600 dark:text-slate-300 font-extrabold max-w-md mx-auto">
+        <p className="mt-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-semibold max-w-md mx-auto">
           {config?.collegeName || 'Student Digital Ecosystem & Academic Hub'}
         </p>
 
-        {/* Feature Pills with Glass Styling */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 mt-4">
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl text-indigo-700 dark:text-indigo-300 border border-white/60 dark:border-white/15 shadow-sm">
-            <BookOpen className="w-3.5 h-3.5 text-indigo-500" /> Course LMS
+        {/* Feature Pills with Tricolor Accents */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-3.5">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-orange-50 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800 shadow-2xs">
+            <BookOpen className="w-3.5 h-3.5 text-orange-500" /> Course LMS
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl text-emerald-700 dark:text-emerald-300 border border-white/60 dark:border-white/15 shadow-sm">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 shadow-2xs">
+            <ShieldCheck className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" /> Verified @{collegeDomain}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shadow-2xs">
             <ShoppingBag className="w-3.5 h-3.5 text-emerald-500" /> ₹0 Marketplace
-          </span>
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl text-purple-700 dark:text-purple-300 border border-white/60 dark:border-white/15 shadow-sm">
-            <ShieldCheck className="w-3.5 h-3.5 text-purple-500" /> Verified Institutional Domain
           </span>
         </div>
       </div>
 
-      {/* Main Glass Card Form Container */}
-      <div className="mt-7 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
-        <div className="glass-card-hero p-6 sm:p-8 rounded-3xl border border-white/70 dark:border-white/15 shadow-2xl backdrop-blur-2xl">
+      {/* Main Form Container */}
+      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
+        <div className="glass-card-hero p-6 sm:p-7 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md">
           
           {/* Sign In vs Register Switcher */}
-          <div className="flex rounded-2xl bg-white/30 dark:bg-slate-900/40 p-1 mb-6 border border-white/40 dark:border-white/10 backdrop-blur-md">
+          <div className="flex rounded-xl bg-slate-100 dark:bg-slate-950 p-1 mb-5 border border-slate-200/80 dark:border-slate-800">
             <button
               type="button"
               onClick={() => setIsLogin(true)}
-              className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 ${
+              className={`flex-1 py-2 rounded-lg text-xs font-extrabold transition-all cursor-pointer active:scale-95 ${
                 isLogin
-                  ? 'bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-indigo-500/25 border border-indigo-400/30'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/60 dark:border-slate-700'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Sign In
@@ -131,10 +124,10 @@ export const AuthPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsLogin(false)}
-              className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer active:scale-95 ${
+              className={`flex-1 py-2 rounded-lg text-xs font-extrabold transition-all cursor-pointer active:scale-95 ${
                 !isLogin
-                  ? 'bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-md shadow-indigo-500/25 border border-indigo-400/30'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs border border-slate-200/60 dark:border-slate-700'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Register
@@ -154,7 +147,7 @@ export const AuthPage: React.FC = () => {
                 />
 
                 <div className="space-y-1.5 text-left">
-                  <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
                     Campus Role <span className="text-rose-500">*</span>
                   </label>
                   <div className="grid grid-cols-2 gap-2">
@@ -163,10 +156,10 @@ export const AuthPage: React.FC = () => {
                         key={r}
                         type="button"
                         onClick={() => setRole(r)}
-                        className={`py-2 rounded-2xl text-xs font-extrabold transition cursor-pointer active:scale-95 ${
+                        className={`py-2 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
                           role === r
-                            ? 'bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-sm border border-indigo-400/30'
-                            : 'bg-white/40 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 border border-white/50 dark:border-white/10'
+                            ? 'bg-brand-600 text-white shadow-xs border border-brand-500'
+                            : 'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
                         }`}
                       >
                         {r === 'STUDENT' ? 'Student' : 'Faculty Member'}
@@ -176,13 +169,13 @@ export const AuthPage: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5 text-left">
-                  <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
                     Academic Department <span className="text-rose-500">*</span>
                   </label>
                   <select
                     value={department}
                     onChange={(e) => setDepartment(e.target.value)}
-                    className="w-full glass-input rounded-2xl text-xs font-bold px-3.5 py-2.5 focus:outline-none"
+                    className="w-full glass-input rounded-xl text-xs font-semibold px-3.5 py-2.5 focus:outline-none"
                   >
                     <option value="Computer Science & Engineering">Computer Science & Engineering</option>
                     <option value="Information Technology">Information Technology</option>
@@ -194,13 +187,13 @@ export const AuthPage: React.FC = () => {
 
                 {role === 'STUDENT' && (
                   <div className="space-y-1.5 text-left">
-                    <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
                       Semester <span className="text-rose-500">*</span>
                     </label>
                     <select
                       value={semester}
                       onChange={(e) => setSemester(Number(e.target.value))}
-                      className="w-full glass-input rounded-2xl text-xs font-bold px-3.5 py-2.5 focus:outline-none"
+                      className="w-full glass-input rounded-xl text-xs font-semibold px-3.5 py-2.5 focus:outline-none"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
                         <option key={s} value={s}>
@@ -261,9 +254,9 @@ export const AuthPage: React.FC = () => {
 
             <Button
               type="submit"
-              variant="primary"
+              variant="tricolor"
               size="md"
-              className="w-full mt-2 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-lg shadow-indigo-500/30 border border-indigo-400/30"
+              className="w-full mt-2"
               isLoading={isLoading}
               rightIcon={<ArrowRight className="w-4 h-4" />}
             >
@@ -272,49 +265,49 @@ export const AuthPage: React.FC = () => {
           </form>
 
           {/* Quick Demo Logins Container */}
-          <div className="mt-6 pt-5 border-t border-white/50 dark:border-white/10">
-            <p className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 text-center mb-2.5">
+          <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-center mb-2">
               1-Click Institutional Demo Profiles
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('rajurkude.aiml23@sbjit.edu.in')}
-                className="p-2 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/60 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-600 hover:text-white transition text-center cursor-pointer active:scale-95 group backdrop-blur-md shadow-xs"
+                className="p-2 rounded-xl bg-orange-50/50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/60 text-slate-800 dark:text-slate-200 hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/40 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
               >
-                <User className="w-3.5 h-3.5 mx-auto mb-0.5 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-black block">Raj (Student)</span>
-                <span className="text-[9px] opacity-75 block">PRN: CM23001</span>
+                <User className="w-3.5 h-3.5 mx-auto mb-0.5 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-extrabold block">Raj (Student)</span>
+                <span className="text-[9px] text-orange-700/80 dark:text-orange-400/80 block">PRN: CM23001</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('bhushanmanjrekar@sbjit.edu.in')}
-                className="p-2 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-600 hover:text-white transition text-center cursor-pointer active:scale-95 group backdrop-blur-md shadow-xs"
+                className="p-2 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/60 text-slate-800 dark:text-slate-200 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
               >
-                <BookOpen className="w-3.5 h-3.5 mx-auto mb-0.5 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-black block">Prof. Bhushan</span>
-                <span className="text-[9px] opacity-75 block">Deep Learning</span>
+                <BookOpen className="w-3.5 h-3.5 mx-auto mb-0.5 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-extrabold block">Prof. Bhushan</span>
+                <span className="text-[9px] text-blue-700/80 dark:text-blue-400/80 block">Deep Learning</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('sujatasardare@sbjit.edu.in')}
-                className="p-2 rounded-2xl bg-cyan-50/70 dark:bg-cyan-950/40 border border-cyan-200/60 dark:border-cyan-800/60 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-600 hover:text-white transition text-center cursor-pointer active:scale-95 group backdrop-blur-md shadow-xs"
+                className="p-2 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/60 text-slate-800 dark:text-slate-200 hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
               >
-                <BookOpen className="w-3.5 h-3.5 mx-auto mb-0.5 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-black block">Prof. Sujata</span>
-                <span className="text-[9px] opacity-75 block">Vision & Lab</span>
+                <BookOpen className="w-3.5 h-3.5 mx-auto mb-0.5 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-extrabold block">Prof. Sujata</span>
+                <span className="text-[9px] text-emerald-700/80 dark:text-emerald-400/80 block">Vision & Lab</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('admin@sbjit.edu.in')}
-                className="p-2 rounded-2xl bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200/60 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 hover:bg-rose-600 hover:text-white transition text-center cursor-pointer active:scale-95 group backdrop-blur-md shadow-xs"
+                className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
               >
-                <ShieldCheck className="w-3.5 h-3.5 mx-auto mb-0.5 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-black block">Admin Portal</span>
-                <span className="text-[9px] opacity-75 block">Dean Academics</span>
+                <ShieldCheck className="w-3.5 h-3.5 mx-auto mb-0.5 text-blue-700 dark:text-blue-400 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-extrabold block">Admin Portal</span>
+                <span className="text-[9px] text-slate-500 dark:text-slate-400 block">Dean Academics</span>
               </button>
             </div>
           </div>

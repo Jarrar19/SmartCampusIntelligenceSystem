@@ -128,27 +128,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       aria-label="Sidebar Navigation"
-      className={`flex-shrink-0 hidden lg:flex flex-col justify-between border-r border-white/10 bg-[#061512]/75 backdrop-blur-2xl min-h-[calc(100vh-4rem)] p-3.5 transition-all duration-300 select-none shadow-xl shadow-emerald-950/40 ${
+      className={`flex-shrink-0 hidden lg:flex flex-col justify-between border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 min-h-[calc(100vh-4rem)] p-3.5 transition-all duration-200 select-none shadow-2xs ${
         isCollapsed ? 'w-20' : 'w-64'
       }`}
     >
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* User Context Strip */}
         {!isCollapsed && (
-          <div className="p-3 rounded-2xl bg-[#0B2921]/80 border border-white/10 flex items-center justify-between shadow-2xs backdrop-blur-md">
+          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-2xs">
             <div className="truncate pr-2">
-              <p className="text-xs font-black text-[#ECFDF5] truncate flex items-center gap-1.5">
+              <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate flex items-center gap-1.5">
                 <span>{user?.fullName}</span>
-                {user?.isVerified && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />}
+                {user?.isVerified && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />}
               </p>
-              <p className="text-[10px] text-[#94A3A8] font-bold truncate mt-0.5">
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">
                 {user?.department || 'Engineering'} • {isFaculty ? user?.role : `Sem ${user?.semester || 6}`}
               </p>
             </div>
             {onToggleCollapse && (
               <button
                 onClick={onToggleCollapse}
-                className="p-1.5 rounded-xl text-[#94A3A8] hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-90"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition cursor-pointer active:scale-90"
                 title="Collapse Sidebar"
                 aria-label="Collapse Sidebar"
               >
@@ -162,7 +162,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex justify-center">
             <button
               onClick={onToggleCollapse}
-              className="p-2.5 rounded-2xl text-[#94A3A8] hover:text-white hover:bg-white/10 transition cursor-pointer active:scale-90"
+              className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer active:scale-90"
               title="Expand Sidebar"
               aria-label="Expand Sidebar"
             >
@@ -172,18 +172,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
 
         {/* Categorized Navigation */}
-        <div className="space-y-6">
+        <div className="space-y-5">
           {sections.map((section, idx) => (
-            <div key={idx} className="space-y-1.5">
+            <div key={idx} className="space-y-1">
               {!isCollapsed && (
-                <h4 className="px-3 text-[10px] font-black text-[#94A3A8] uppercase tracking-wider">
+                <h4 className="px-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                   {section.title}
                 </h4>
               )}
               {isCollapsed && idx > 0 && (
-                <div className="my-2 border-t border-white/10" />
+                <div className="my-2 border-t border-slate-200 dark:border-slate-800" />
               )}
-              <nav className="space-y-1">
+              <nav className="space-y-0.5">
                 {section.items.map((item) => {
                   const Icon = item.icon;
                   const isActive = currentTab === item.id;
@@ -192,26 +192,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       key={item.id}
                       onClick={() => onSelectTab(item.id)}
                       title={isCollapsed ? item.label : undefined}
-                      className={`w-full flex items-center rounded-2xl text-xs transition-all duration-200 cursor-pointer active:scale-[0.98] ${
-                        isCollapsed ? 'justify-center p-3' : 'justify-between px-3.5 py-2.5'
+                      className={`w-full flex items-center rounded-xl text-xs transition-all duration-150 cursor-pointer active:scale-[0.98] ${
+                        isCollapsed ? 'justify-center p-2.5' : 'justify-between px-3 py-2'
                       } ${
                         isActive
-                          ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-black shadow-lg shadow-emerald-500/30 border border-emerald-400/30'
-                          : 'text-[#94A3A8] hover:text-[#ECFDF5] hover:bg-white/10 font-bold hover:backdrop-blur-md border border-transparent hover:border-white/10'
+                          ? 'bg-brand-600 text-white font-bold shadow-xs'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 font-medium'
                       }`}
                     >
-                      <div className="flex items-center space-x-3">
-                        <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500'}`} />
+                      <div className="flex items-center space-x-2.5">
+                        <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                         {!isCollapsed && <span>{item.label}</span>}
                       </div>
 
                       {item.badge !== undefined && (
                         isCollapsed ? (
-                          <span className="w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900 animate-pulse" />
+                          <span className="w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900" />
                         ) : (
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             isActive
-                              ? 'bg-white/25 text-white'
+                              ? 'bg-white/20 text-white'
                               : 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-700/50'
                           }`}>
                             {item.badge}
@@ -228,14 +228,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {!isCollapsed && (
-        <div className="px-3.5 py-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 flex items-center justify-between shadow-2xs">
+        <div className="px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="w-3.5 h-3.5 text-brand-500 flex-shrink-0" />
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
               Smart Campus Intelligence
             </span>
           </div>
-          <span className="text-[9px] font-black text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-1.5 py-0.5 rounded-md border border-brand-200 dark:border-brand-800/80">
+          <span className="text-[9px] font-bold text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950 px-1.5 py-0.5 rounded border border-brand-200 dark:border-brand-800">
             v2.1
           </span>
         </div>

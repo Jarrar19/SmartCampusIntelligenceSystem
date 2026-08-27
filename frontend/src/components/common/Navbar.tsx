@@ -64,14 +64,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#061512]/80 backdrop-blur-2xl transition-colors duration-200 shadow-xl shadow-emerald-950/40">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-[1500px] mx-auto gap-4">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md transition-colors duration-200 shadow-2xs">
+      {/* Tricolor Top Highlight Line */}
+      <div className="h-[2.5px] w-full tricolor-top-bar" />
+
+      <div className="flex h-15 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-[1500px] mx-auto gap-4">
         {/* Left: Branding & Navigation Toggle */}
         <div className="flex items-center space-x-3 flex-shrink-0">
           {onOpenMobileMenu && (
             <button
               onClick={onOpenMobileMenu}
-              className="lg:hidden p-2 text-emerald-100/70 hover:text-white rounded-2xl hover:bg-white/10 transition cursor-pointer"
+              className="lg:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
               aria-label="Open Mobile Menu"
             >
               <Menu className="w-5 h-5" />
@@ -81,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
-              className="hidden lg:flex p-2 text-emerald-100/70 hover:text-white rounded-2xl hover:bg-white/10 transition cursor-pointer active:scale-95"
+              className="hidden lg:flex p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer active:scale-95"
               title={isSidebarCollapsed ? 'Expand Navigation Sidebar' : 'Collapse Navigation Sidebar'}
               aria-label="Toggle Sidebar"
             >
@@ -90,15 +93,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
 
           <div className="flex items-center space-x-2.5">
-            <div className="flex items-center justify-center w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-500/30 border border-emerald-300/30">
+            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 via-blue-600 to-emerald-600 text-white shadow-xs border border-orange-400/30">
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
                 <span className="font-black text-slate-900 dark:text-white text-base sm:text-lg leading-tight tracking-tight">
-                  Smart Campus
+                  Smart Campus <span className="text-orange-500">I</span><span className="text-blue-600 dark:text-blue-400">N</span>
                 </span>
-                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-brand-50 dark:bg-brand-950/80 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800/80">
+                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-orange-50 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800">
                   {config?.collegeShortName || 'SBJIT'}
                 </span>
               </div>

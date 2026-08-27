@@ -94,13 +94,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-slate-900 dark:text-slate-100 flex flex-col selection:bg-brand-500 selection:text-white transition-colors duration-200 pb-16 lg:pb-0 relative overflow-hidden bg-dot-pattern">
-      {/* Ambient Emerald + Black Glassmorphism Glow Background Orbs */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-[10%] left-[15%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-emerald-500/35 via-emerald-600/30 to-teal-500/20 blur-[130px] animate-float-glow" />
-        <div className="absolute top-[35%] right-[5%] w-[650px] h-[650px] rounded-full bg-gradient-to-br from-teal-400/30 via-emerald-500/25 to-emerald-700/20 blur-[150px] animate-float-glow-reverse" />
-        <div className="absolute -bottom-[10%] left-[25%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-emerald-600/30 via-teal-500/25 to-emerald-400/20 blur-[140px] animate-float-glow" />
-      </div>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-brand-500 selection:text-white transition-colors duration-200 pb-16 lg:pb-0 relative bg-dot-pattern">
 
       {/* Top Navbar */}
       <Navbar 

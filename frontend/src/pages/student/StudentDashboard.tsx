@@ -177,10 +177,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             </p>
           </div>
 
-          {/* Quick Action Shortcuts */}
+          {/* Quick Action Shortcuts with Tricolor Accents */}
           <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
             <Button
-              variant="primary"
+              variant="saffron"
               size="sm"
               onClick={onOpenUploadResource}
               leftIcon={<Upload className="w-3.5 h-3.5" />}
@@ -188,7 +188,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               Upload Notes
             </Button>
             <Button
-              variant="secondary"
+              variant="emerald"
               size="sm"
               onClick={onOpenCreateProduct}
               leftIcon={<Plus className="w-3.5 h-3.5" />}
@@ -196,7 +196,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               List Item
             </Button>
             <Button
-              variant="outline"
+              variant="navy"
               size="sm"
               onClick={() => onNavigate('courses')}
               rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
@@ -207,16 +207,16 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
         </div>
       </div>
 
-      {/* 2. Key Metric Stat Cards */}
+      {/* 2. Key Metric Stat Cards with Tricolor Theme Harmony */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Enrolled Courses */}
+        {/* Enrolled Courses - Chakra Navy */}
         <div 
           onClick={() => onNavigate('courses')}
-          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer group"
+          className="p-5 rounded-2xl glass-panel glass-panel-hover border border-slate-200 dark:border-slate-800 cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Enrolled Courses</span>
-            <div className="p-2.5 rounded-2xl bg-indigo-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 group-hover:scale-110 transition-transform">
+            <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 group-hover:scale-110 transition-transform">
               <BookOpen className="w-4 h-4" />
             </div>
           </div>
@@ -224,21 +224,21 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
               {enrolledCourses.length || stats.enrolledCoursesCount || 0}
             </span>
-            <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400">Active</span>
+            <Badge variant="navy" size="xs">Active</Badge>
           </div>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1">
             Current Academic Term
           </p>
         </div>
 
-        {/* Pending Assignments */}
+        {/* Pending Assignments - Saffron */}
         <div 
           onClick={() => onNavigate('assignments')}
-          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer group"
+          className="p-5 rounded-2xl glass-panel glass-panel-hover border border-slate-200 dark:border-slate-800 cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Pending Tasks</span>
-            <div className="p-2.5 rounded-2xl bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 group-hover:scale-110 transition-transform">
+            <div className="p-2.5 rounded-xl bg-orange-50 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
               <CheckSquare className="w-4 h-4" />
             </div>
           </div>
@@ -246,7 +246,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
               {pendingAssignmentsCount}
             </span>
-            <Badge variant={pendingAssignmentsCount > 0 ? 'rose' : 'emerald'} size="xs" dot>
+            <Badge variant={pendingAssignmentsCount > 0 ? 'saffron' : 'emerald'} size="xs" dot>
               {pendingAssignmentsCount > 0 ? 'Action Req' : 'Clear'}
             </Badge>
           </div>
@@ -255,14 +255,14 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
           </p>
         </div>
 
-        {/* Available Notes & PYQs */}
+        {/* Available Notes & PYQs - India Green */}
         <div 
           onClick={() => onNavigate('resources')}
-          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer group"
+          className="p-5 rounded-2xl glass-panel glass-panel-hover border border-slate-200 dark:border-slate-800 cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Notes & PYQs</span>
-            <div className="p-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+            <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
               <FileText className="w-4 h-4" />
             </div>
           </div>
@@ -270,34 +270,35 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
               {stats.resourcesCount || '140+'}
             </span>
-            <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">Verified</span>
+            <Badge variant="emerald" size="xs">Verified</Badge>
           </div>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1">
             Faculty moderated catalog
           </p>
         </div>
 
-        {/* Marketplace Listings */}
+        {/* Marketplace Listings - Clean White/Slate with Chakra Blue badge */}
         <div 
           onClick={() => onNavigate('marketplace')}
-          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer group"
+          className="p-5 rounded-2xl glass-panel glass-panel-hover border border-slate-200 dark:border-slate-800 cursor-pointer group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Marketplace Deals</span>
-            <div className="p-2.5 rounded-2xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Campus Marketplace</span>
+            <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
               <ShoppingBag className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-3 flex items-baseline space-x-2">
             <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-              {marketplaceProducts.length || '25+'}
+              {stats.activeListingsCount || marketplaceProducts.length || '65+'}
             </span>
-            <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">Active</span>
+            <Badge variant="tricolor" size="xs">₹0 Exchange</Badge>
           </div>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1">
-            Zero-fee student trading
+            Peer student circular market
           </p>
         </div>
+
       </div>
 
       {/* 2.5. Academic Intelligence & CGPA Trajectory Curve */}

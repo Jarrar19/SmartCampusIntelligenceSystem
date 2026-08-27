@@ -2,7 +2,7 @@ import React from 'react';
 
 export interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'emerald' | 'amber' | 'rose' | 'indigo' | 'slate' | 'blue' | 'purple' | 'sky';
+  variant?: 'emerald' | 'amber' | 'rose' | 'indigo' | 'slate' | 'blue' | 'purple' | 'sky' | 'saffron' | 'orange' | 'navy' | 'tricolor';
   size?: 'xs' | 'sm' | 'md' | 'lg';
   dot?: boolean;
   glow?: boolean;
@@ -18,28 +18,40 @@ export const Badge: React.FC<BadgeProps> = ({
   className = '',
 }) => {
   const variantStyles = {
-    emerald: 'bg-emerald-50 text-emerald-700 border-emerald-200/90 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30',
-    amber: 'bg-amber-50 text-amber-700 border-amber-200/90 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30',
-    rose: 'bg-rose-50 text-rose-700 border-rose-200/90 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30',
-    indigo: 'bg-indigo-50 text-indigo-700 border-indigo-200/90 dark:bg-indigo-500/15 dark:text-indigo-300 dark:border-indigo-500/30',
-    blue: 'bg-blue-50 text-blue-700 border-blue-200/90 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-500/30',
-    purple: 'bg-purple-50 text-purple-700 border-purple-200/90 dark:bg-purple-500/15 dark:text-purple-300 dark:border-purple-500/30',
-    sky: 'bg-sky-50 text-sky-700 border-sky-200/90 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-500/30',
-    slate: 'bg-slate-100 text-slate-700 border-slate-200/90 dark:bg-slate-800/80 dark:text-slate-300 dark:border-slate-700',
+    saffron: 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/60 dark:text-orange-300 dark:border-orange-800/80',
+    orange: 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/60 dark:text-orange-300 dark:border-orange-800/80',
+    navy: 'bg-blue-50 text-blue-900 border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800/80',
+    tricolor: 'bg-gradient-to-r from-orange-50 via-white to-emerald-50 text-slate-800 border-orange-200/80 dark:from-orange-950/50 dark:via-blue-950/50 dark:to-emerald-950/50 dark:text-slate-200 dark:border-orange-800/50',
+    emerald: 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/80',
+    amber: 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800/80',
+    rose: 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800/80',
+    indigo: 'bg-indigo-50 text-indigo-800 border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800/80',
+    blue: 'bg-blue-50 text-blue-800 border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800/80',
+    purple: 'bg-purple-50 text-purple-800 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800/80',
+    sky: 'bg-sky-50 text-sky-800 border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/80',
+    slate: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
   };
 
   const glowStyles = {
+    saffron: 'badge-glow-amber',
+    orange: 'badge-glow-amber',
+    navy: '',
+    tricolor: '',
     emerald: 'badge-glow-emerald',
     amber: 'badge-glow-amber',
     rose: 'badge-glow-rose',
-    indigo: 'badge-glow',
-    blue: 'badge-glow',
-    purple: 'badge-glow',
-    sky: 'badge-glow',
+    indigo: '',
+    blue: '',
+    purple: '',
+    sky: '',
     slate: '',
   };
 
   const dotColors = {
+    saffron: 'bg-orange-500 shadow-xs shadow-orange-500/50',
+    orange: 'bg-orange-500 shadow-xs shadow-orange-500/50',
+    navy: 'bg-blue-700 shadow-xs shadow-blue-700/50',
+    tricolor: 'bg-orange-500',
     emerald: 'bg-emerald-500 shadow-xs shadow-emerald-500/50',
     amber: 'bg-amber-500 shadow-xs shadow-amber-500/50',
     rose: 'bg-rose-500 shadow-xs shadow-rose-500/50',
