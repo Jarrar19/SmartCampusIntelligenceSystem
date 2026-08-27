@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
+import { asyncHandler } from '../middleware/asyncHandler';
 import {
   getPerformanceAnalysis,
   tutorChat,
@@ -10,8 +11,8 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get('/performance-analysis', getPerformanceAnalysis);
-router.post('/tutor-chat', tutorChat);
-router.post('/generate-study-plan', generateStudyPlan);
+router.get('/performance-analysis', asyncHandler(getPerformanceAnalysis));
+router.post('/tutor-chat', asyncHandler(tutorChat));
+router.post('/generate-study-plan', asyncHandler(generateStudyPlan));
 
 export default router;
