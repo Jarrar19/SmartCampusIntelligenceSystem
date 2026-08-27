@@ -181,6 +181,8 @@ export interface Submission {
   facultyFeedback?: string | null;
   gradedAt?: string | null;
   status: SubmissionStatus;
+  similarityScore?: number;
+  matchedWithStudentName?: string;
 }
 
 export type ProductCategory = 'TEXTBOOK' | 'CALCULATOR' | 'LAB_COAT' | 'STATIONERY' | 'ELECTRONICS' | 'HOSTEL_ITEM' | 'SPORTS' | 'ACADEMIC_MATERIAL' | 'OTHER';

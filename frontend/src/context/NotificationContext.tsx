@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { api } from '../services/api';
+import { io, Socket } from 'socket.io-client';
+import { api, SOCKET_URL } from '../services/api';
 import { Notification } from '../types';
 import { useAuth } from './AuthContext';
 import { useToast } from './ToastContext';
@@ -33,15 +34,36 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }, [user]);
 
   useEffect(() => {
-    if (user) {
-      fetchNotifications();
-      const interval = setInterval(fetchNotifications, 15000);
-      return () => clearInterval(interval);
-    } else {
+    if (!user) {
       setNotifications([]);
       setUnreadCount(0);
+      return;
     }
-  }, [user, fetchNotifications]);
+
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 20000);
+
+    const token = localStorage.getItem('token');
+    let socket: Socket | null = null;
+    if (token) {
+      socket = io(SOCKET_URL, {
+        auth: { token },
+        transports: ['websocket', 'polling'],
+      });
+
+      socket.on('notification', (data: any) => {
+        if (data?.title) {
+          info(`🔔 ${data.title}: ${data.message || ''}`);
+        }
+        fetchNotifications();
+      });
+    }
+
+    return () => {
+      clearInterval(interval);
+      if (socket) socket.disconnect();
+    };
+  }, [user, fetchNotifications, info]);
 
   const markAsRead = async (id: number | 'all') => {
     try {

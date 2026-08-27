@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   CheckSquare, Award, Download, Clock, User, 
   CheckCircle, AlertCircle, BookOpen, Plus, Sparkles,
-  FileText, Calendar, Edit3, Trash2
+  FileText, Calendar, Edit3, Trash2, Eye
 } from 'lucide-react';
 import { api, extractErrorMessage } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
@@ -14,6 +14,7 @@ import { ListRowSkeleton } from '../../components/common/Skeleton';
 import { GradingModal } from '../../components/academic/GradingModal';
 import { CreateAssignmentModal } from '../../components/academic/CreateAssignmentModal';
 import { EditAssignmentModal } from '../../components/academic/EditAssignmentModal';
+import { DocumentPreviewModal } from '../../components/common/DocumentPreviewModal';
 
 interface GradingCenterPageProps {
   onNavigate?: (tab: string, courseId?: number) => void;
@@ -29,6 +30,7 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingAssignments, setIsLoadingAssignments] = useState(false);
   const [selectedItem, setSelectedItem] = useState<{ submission: Submission; assignment: Assignment } | null>(null);
+  const [previewItem, setPreviewItem] = useState<{ submission: Submission; assignment: Assignment } | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState<Assignment | null>(null);
 
@@ -233,43 +235,52 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
               return (
                 <div
                   key={submission.id}
-                  className="p-6 rounded-3xl glass-panel border border-white/12 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-5 backdrop-blur-2xl"
+                  className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5 transition hover:border-slate-300 dark:hover:border-slate-700"
                 >
-                  <div className="space-y-2 min-w-0 flex-1">
-                    <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+                  <div className="space-y-2.5 min-w-0 flex-1">
+                    <div className="flex items-center space-x-2 flex-wrap gap-y-1.5">
                       <Badge variant={isGraded ? 'emerald' : 'amber'} size="xs" dot>
                         {isGraded ? `Graded: ${submission.marksAwarded}/${assignment.maxMarks}` : 'Awaiting Grade'}
                       </Badge>
-                      <span className="text-xs font-black text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-lg border border-emerald-500/30">
+                      <span className="text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/60 px-2.5 py-0.5 rounded-lg border border-orange-200 dark:border-orange-800/80">
                         {assignment.course?.courseCode || 'COURSE'}
                       </span>
-                      <span className="text-xs font-bold text-[#ECFDF5]">
+                      <span className="text-xs font-bold text-slate-900 dark:text-white">
                         {assignment.title}
                       </span>
+                      {submission.similarityScore !== undefined && (
+                        <Badge
+                          variant={submission.similarityScore > 50 ? 'rose' : submission.similarityScore > 25 ? 'amber' : 'emerald'}
+                          size="xs"
+                          dot
+                        >
+                          {submission.similarityScore}% Similarity
+                        </Badge>
+                      )}
                     </div>
 
-                    <div className="flex items-center space-x-3 pt-1">
-                      <div className="w-8 h-8 rounded-xl bg-emerald-600/20 text-emerald-400 font-black text-xs flex items-center justify-center border border-emerald-500/30">
+                    <div className="flex items-center space-x-3 pt-0.5">
+                      <div className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 font-bold text-xs flex items-center justify-center border border-orange-200 dark:border-orange-800/80">
                         {submission.student?.fullName.charAt(0) || 'S'}
                       </div>
                       <div>
-                        <h4 className="text-xs sm:text-sm font-black text-[#ECFDF5]">
+                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                           {submission.student?.fullName || 'Student'}
                         </h4>
-                        <p className="text-[10px] text-[#94A3A8]">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
                           {submission.student?.department || 'Student'} • Sem {submission.student?.semester || 6} • Submitted {new Date(submission.submittedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })} at {new Date(submission.submittedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
                     </div>
 
                     {submission.submissionText && (
-                      <p className="text-xs text-[#ECFDF5]/90 bg-[#0B2921]/70 p-3 rounded-2xl border border-white/10 font-medium">
+                      <p className="text-xs text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/80 font-medium font-mono leading-relaxed">
                         "{submission.submissionText}"
                       </p>
                     )}
 
                     {isGraded && submission.facultyFeedback && (
-                      <p className="text-xs text-emerald-300 bg-emerald-950/50 p-3 rounded-2xl border border-emerald-500/40 font-medium">
+                      <p className="text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800/80 font-medium">
                         Feedback: "{submission.facultyFeedback}"
                       </p>
                     )}
@@ -277,23 +288,31 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
 
                   <div className="flex items-center space-x-2 flex-shrink-0 self-end md:self-center">
                     {submission.filePath && (
-                      <Button
-                        variant="glass"
-                        size="sm"
-                        onClick={() => handleDownloadFile(submission.id, submission.fileName || 'submission.pdf')}
-                        leftIcon={<Download className="w-3.5 h-3.5" />}
-                        className="bg-white/10 text-[#ECFDF5] border border-white/15"
-                      >
-                        Download File
-                      </Button>
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setPreviewItem({ submission, assignment })}
+                          leftIcon={<Eye className="w-3.5 h-3.5" />}
+                        >
+                          Preview
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDownloadFile(submission.id, submission.fileName || 'submission.pdf')}
+                          leftIcon={<Download className="w-3.5 h-3.5" />}
+                        >
+                          Download
+                        </Button>
+                      </>
                     )}
 
                     <Button
-                      variant="primary"
+                      variant="saffron"
                       size="sm"
                       onClick={() => setSelectedItem({ submission, assignment })}
                       leftIcon={<Award className="w-3.5 h-3.5" />}
-                      className="bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-black shadow-lg shadow-emerald-500/30 border border-emerald-400/30"
                     >
                       {isGraded ? 'Update Grade' : 'Grade Submission'}
                     </Button>
@@ -439,6 +458,21 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
             fetchAssignments();
             fetchSubmissions();
           }}
+        />
+      )}
+
+      {/* In-Browser Document Previewer Modal */}
+      {previewItem && previewItem.submission.fileName && (
+        <DocumentPreviewModal
+          isOpen={true}
+          onClose={() => setPreviewItem(null)}
+          title={`Submission — ${previewItem.submission.student?.fullName || 'Student'}`}
+          subtitle={previewItem.assignment.title}
+          previewUrl={`/assignments/submissions/${previewItem.submission.id}/download?preview=true`}
+          downloadUrl={`/assignments/submissions/${previewItem.submission.id}/download`}
+          fileName={previewItem.submission.fileName}
+          fileSize={previewItem.submission.fileSize || undefined}
+          similarityScore={previewItem.submission.similarityScore}
         />
       )}
     </div>

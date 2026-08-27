@@ -13,6 +13,7 @@ import { Button } from '../../components/common/Button';
 import { EmptyState } from '../../components/common/EmptyState';
 import { CardSkeleton } from '../../components/common/Skeleton';
 import { ResourceUploadModal } from '../../components/academic/ResourceUploadModal';
+import { DocumentPreviewModal } from '../../components/common/DocumentPreviewModal';
 
 export const ResourcesPage: React.FC = () => {
   const { user, config } = useAuth();
@@ -27,6 +28,7 @@ export const ResourcesPage: React.FC = () => {
   const [myUploadsOnly, setMyUploadsOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [previewingResource, setPreviewingResource] = useState<Resource | null>(null);
 
   const fetchResources = async () => {
     setIsLoading(true);
@@ -294,7 +296,7 @@ export const ResourcesPage: React.FC = () => {
                   <span>{res.subjectCode ? `${res.subjectCode} • ` : ''}Sem {res.semester || 6}</span>
                 </div>
 
-                <div className="flex items-center justify-between pt-1">
+                <div className="flex items-center justify-between pt-1 gap-2">
                   <button
                     onClick={() => handleToggleRating(res)}
                     className={`flex items-center space-x-1 px-2.5 py-1 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
@@ -307,14 +309,24 @@ export const ResourcesPage: React.FC = () => {
                     <span>{res.helpfulCount || 0}</span>
                   </button>
 
-                  <Button
-                    variant="primary"
-                    size="xs"
-                    onClick={() => handleDownload(res)}
-                    leftIcon={<Download className="w-3.5 h-3.5" />}
-                  >
-                    Download ({res.downloadsCount})
-                  </Button>
+                  <div className="flex items-center space-x-1.5">
+                    <Button
+                      variant="outline"
+                      size="xs"
+                      onClick={() => setPreviewingResource(res)}
+                      leftIcon={<Eye className="w-3.5 h-3.5" />}
+                    >
+                      Preview
+                    </Button>
+                    <Button
+                      variant="saffron"
+                      size="xs"
+                      onClick={() => handleDownload(res)}
+                      leftIcon={<Download className="w-3.5 h-3.5" />}
+                    >
+                      ({res.downloadsCount})
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -331,6 +343,20 @@ export const ResourcesPage: React.FC = () => {
             setShowUploadModal(false);
             fetchResources();
           }}
+        />
+      )}
+
+      {/* In-Browser Document Previewer Modal */}
+      {previewingResource && (
+        <DocumentPreviewModal
+          isOpen={true}
+          onClose={() => setPreviewingResource(null)}
+          title={previewingResource.title}
+          subtitle={`By ${previewingResource.uploader?.fullName || 'Campus Peer'} • ${previewingResource.subjectCode || 'General'}`}
+          previewUrl={`/resources/${previewingResource.id}/download?preview=true`}
+          downloadUrl={`/resources/${previewingResource.id}/download`}
+          fileName={previewingResource.fileName}
+          fileSize={previewingResource.fileSize}
         />
       )}
     </div>
