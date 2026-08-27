@@ -44,6 +44,7 @@ router.delete('/courses/:id', authenticate, requireRole(['FACULTY', 'ADMIN']), a
 router.post('/courses/:id/enroll', authenticate, asyncHandler(courseController.enrollInCourse));
 router.delete('/courses/:id/unenroll', authenticate, asyncHandler(courseController.unenrollFromCourse));
 router.post('/courses/:id/announcements', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(courseController.createAnnouncement));
+router.get('/courses/:id/roster', authenticate, asyncHandler(courseController.getCourseRoster));
 
 // Resource & Moderation Routes
 router.get('/resources', authenticate, asyncHandler(resourceController.getResources));

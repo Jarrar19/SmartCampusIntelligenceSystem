@@ -1,0 +1,5106 @@
+{
+  "faculties": [
+    {
+      "fullName": "Prof. Bhushan Manjrekar",
+      "email": "bhushanmanjrekar@sbjit.edu.in",
+      "department": "Artificial Intelligence & Machine Learning"
+    },
+    {
+      "fullName": "Prof. Sujata Sardare",
+      "email": "sujatasardare@sbjit.edu.in",
+      "department": "Artificial Intelligence & Machine Learning"
+    },
+    {
+      "fullName": "Prof. Nikhil Sakhare",
+      "email": "nikhilsakhare@sbjit.edu.in",
+      "department": "Artificial Intelligence & Machine Learning"
+    },
+    {
+      "fullName": "Prof. Shweta Bokade",
+      "email": "shwetabokade@sbjit.edu.in",
+      "department": "Artificial Intelligence & Machine Learning"
+    },
+    {
+      "fullName": "Prof. Rahul Pethe",
+      "email": "rahulpethe@sbjit.edu.in",
+      "department": "Artificial Intelligence & Machine Learning"
+    },
+    {
+      "fullName": "Prof. Prashant Sawarkar",
+      "email": "prashantsawarkar@sbjit.edu.in",
+      "department": "Artificial Intelligence & Machine Learning"
+    },
+    {
+      "fullName": "Prof. Mayuri Getme",
+      "email": "mayurigetmi@sbjit.edu.in",
+      "department": "Artificial Intelligence & Machine Learning"
+    },
+    {
+      "fullName": "Prof. Neha Gurnani",
+      "email": "nehagurnani@sbjit.edu.in",
+      "department": "Artificial Intelligence & Machine Learning"
+    }
+  ],
+  "students": [
+    {
+      "prn": "CM23001",
+      "fullName": "RAJ RAVINDRA URKUDE",
+      "email": "rajurkude.aiml23@sbjit.edu.in",
+      "tenthPercentage": 81.8,
+      "twelfthPercentage": 87.33,
+      "sem1Cgpa": 6.68,
+      "sem2Cgpa": 5.79,
+      "sem3Cgpa": 6.03,
+      "sem4Cgpa": 6.24,
+      "sem5Cgpa": 6.39,
+      "sem6Cgpa": 6.64,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23002",
+      "fullName": "CHAITANYA PRANESH BAGDE",
+      "email": "chaitanyabgde.aiml23@sbjit.edu.in",
+      "tenthPercentage": 79.0,
+      "twelfthPercentage": 69.0,
+      "sem1Cgpa": 7.5,
+      "sem2Cgpa": 6.49,
+      "sem3Cgpa": 6.42,
+      "sem4Cgpa": 6.37,
+      "sem5Cgpa": 6.21,
+      "sem6Cgpa": 6.1,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23003",
+      "fullName": "DHANSHREE MAHADEO BHORKAR",
+      "email": "dhanshreebhorkar.aiml23@sbjit.edu.in",
+      "tenthPercentage": 84.4,
+      "twelfthPercentage": 66.5,
+      "sem1Cgpa": 8.36,
+      "sem2Cgpa": 8.1,
+      "sem3Cgpa": 8.38,
+      "sem4Cgpa": 8.73,
+      "sem5Cgpa": 8.85,
+      "sem6Cgpa": 8.78,
+      "backlogs": null,
+      "internships": "Ai and data science internship",
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23004",
+      "fullName": "KANCHAN SURENDRA GAIKWAD",
+      "email": "kanchangaikwad.aiml23@sbjit.edu.in",
+      "tenthPercentage": 81.6,
+      "twelfthPercentage": 73.83,
+      "sem1Cgpa": 8.27,
+      "sem2Cgpa": 8.27,
+      "sem3Cgpa": 8.41,
+      "sem4Cgpa": 8.58,
+      "sem5Cgpa": 8.72,
+      "sem6Cgpa": 8.76,
+      "backlogs": null,
+      "internships": "U2U Internship, Python Full Stack\u2014 AICTE EduSkills",
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23005",
+      "fullName": "SUJAL DILIP SANGLE",
+      "email": "sujalsangle.aiml23@sbjit.edu.in",
+      "tenthPercentage": 66.6,
+      "twelfthPercentage": 65.0,
+      "sem1Cgpa": 8.68,
+      "sem2Cgpa": 8.29,
+      "sem3Cgpa": 8.03,
+      "sem4Cgpa": 7.87,
+      "sem5Cgpa": 7.74,
+      "sem6Cgpa": 7.63,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23006",
+      "fullName": "SHRUSHTI HEMANT ZOD",
+      "email": "shrushtihemantzod.aiml23@sbjit.edu.in",
+      "tenthPercentage": 84.14,
+      "twelfthPercentage": 56.8,
+      "sem1Cgpa": 8.05,
+      "sem2Cgpa": 8.11,
+      "sem3Cgpa": 7.86,
+      "sem4Cgpa": 7.72,
+      "sem5Cgpa": 7.68,
+      "sem6Cgpa": 7.59,
+      "backlogs": null,
+      "internships": "Bluestock Fintech",
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23007",
+      "fullName": "TANISHQ VILAS UKEY",
+      "email": "tanishqukey.aiml23@sbjit.edu.in",
+      "tenthPercentage": 84.0,
+      "twelfthPercentage": 69.0,
+      "sem1Cgpa": 7.95,
+      "sem2Cgpa": 7.4,
+      "sem3Cgpa": 7.2,
+      "sem4Cgpa": 7.08,
+      "sem5Cgpa": 6.94,
+      "sem6Cgpa": 6.92,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23008",
+      "fullName": "SUBODH DEEPAPRAKASH WALONDRE",
+      "email": "subodhwalondre.aiml23@sbjit.edu.in",
+      "tenthPercentage": 83.2,
+      "twelfthPercentage": 49.17,
+      "sem1Cgpa": 6.77,
+      "sem2Cgpa": 6.66,
+      "sem3Cgpa": 6.86,
+      "sem4Cgpa": 6.98,
+      "sem5Cgpa": 7.06,
+      "sem6Cgpa": 7.04,
+      "backlogs": null,
+      "internships": "AI Azure intern - Edunet Foundation",
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23009",
+      "fullName": "HIMANSHU SUNIL KAKDE",
+      "email": "himanshukakde.aiml23@sbjit.edu.in",
+      "tenthPercentage": 91.0,
+      "twelfthPercentage": 65.0,
+      "sem1Cgpa": 6.14,
+      "sem2Cgpa": 6.1,
+      "sem3Cgpa": 5.0,
+      "sem4Cgpa": null,
+      "sem5Cgpa": null,
+      "sem6Cgpa": null,
+      "backlogs": "4",
+      "internships": null,
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23010",
+      "fullName": "SHREYASH SUNIL KARDE",
+      "email": "shreyashkarde.aiml23@sbjit.edu.in",
+      "tenthPercentage": 77.6,
+      "twelfthPercentage": 50.83,
+      "sem1Cgpa": 5.86,
+      "sem2Cgpa": 5.2,
+      "sem3Cgpa": null,
+      "sem4Cgpa": 5.2,
+      "sem5Cgpa": null,
+      "sem6Cgpa": null,
+      "backlogs": "2",
+      "internships": null,
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23011",
+      "fullName": "PARTH RAJENDRA SONONE",
+      "email": "parthsonone.aiml23@sbjit.edu.in",
+      "tenthPercentage": 71.3,
+      "twelfthPercentage": 63.7,
+      "sem1Cgpa": 7.5,
+      "sem2Cgpa": 7.17,
+      "sem3Cgpa": 6.81,
+      "sem4Cgpa": 6.58,
+      "sem5Cgpa": 6.45,
+      "sem6Cgpa": 6.43,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23012",
+      "fullName": "SARA AMIT GANVIR",
+      "email": "saraganvir.aiml23@sbjit.edu.in",
+      "tenthPercentage": 88.4,
+      "twelfthPercentage": 79.13,
+      "sem1Cgpa": 7.55,
+      "sem2Cgpa": 8.53,
+      "sem3Cgpa": 9.43,
+      "sem4Cgpa": 8.52,
+      "sem5Cgpa": 9.25,
+      "sem6Cgpa": 8.68,
+      "backlogs": null,
+      "internships": "U2U Systems",
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23013",
+      "fullName": "SAHIL VIJAY BHOYAR",
+      "email": "sahilbhoyar.aiml23@sbjit.edu.in",
+      "tenthPercentage": 63.0,
+      "twelfthPercentage": 70.81,
+      "sem1Cgpa": 7.36,
+      "sem2Cgpa": 7.12,
+      "sem3Cgpa": 7.36,
+      "sem4Cgpa": 7.47,
+      "sem5Cgpa": 7.44,
+      "sem6Cgpa": 7.21,
+      "backlogs": null,
+      "internships": "GenAI Powered Data Analytics by tata",
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23015",
+      "fullName": "VEDANT MANISH TIWADE",
+      "email": "vedanttiwade.aiml23@sbjit.edu.in",
+      "tenthPercentage": 81.6,
+      "twelfthPercentage": 64.0,
+      "sem1Cgpa": 7.68,
+      "sem2Cgpa": 6.95,
+      "sem3Cgpa": 7.02,
+      "sem4Cgpa": 6.66,
+      "sem5Cgpa": 6.41,
+      "sem6Cgpa": 6.22,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM23016",
+      "fullName": "SANSKRUTI ARUN MISHRA",
+      "email": "sanskrutimishra.aiml23@sbjit.edu.in",
+      "tenthPercentage": 0.65,
+      "twelfthPercentage": 0.7233,
+      "sem1Cgpa": 8.23,
+      "sem2Cgpa": 8.34,
+      "sem3Cgpa": null,
+      "sem4Cgpa": null,
+      "sem5Cgpa": null,
+      "sem6Cgpa": null,
+      "backlogs": null,
+      "internships": "IBM Skills",
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23017",
+      "fullName": "JASVEER VIJAY RERWAR",
+      "email": "jasveerrerwar.aiml23@sbjit.edu.in",
+      "tenthPercentage": 84.0,
+      "twelfthPercentage": 53.0,
+      "sem1Cgpa": 7.27,
+      "sem2Cgpa": 6.85,
+      "sem3Cgpa": 6.97,
+      "sem4Cgpa": 7.09,
+      "sem5Cgpa": 6.92,
+      "sem6Cgpa": 6.92,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23018",
+      "fullName": "JARRAR ABRAR KHAN",
+      "email": "skhan.aiml23@sbjit.edu.in",
+      "tenthPercentage": 76.4,
+      "twelfthPercentage": 62.33,
+      "sem1Cgpa": 6.23,
+      "sem2Cgpa": 5.63,
+      "sem3Cgpa": 6.14,
+      "sem4Cgpa": 6.43,
+      "sem5Cgpa": 6.33,
+      "sem6Cgpa": 6.27,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23019",
+      "fullName": "ATUL JITENDRA GUPTA",
+      "email": "atulgupta.aiml23@sbjit.edu.in",
+      "tenthPercentage": 70.2,
+      "twelfthPercentage": 75.5,
+      "sem1Cgpa": 7.86,
+      "sem2Cgpa": 7.94,
+      "sem3Cgpa": 8.0,
+      "sem4Cgpa": 8.13,
+      "sem5Cgpa": 8.06,
+      "sem6Cgpa": 7.94,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23020",
+      "fullName": "TANVI MINTU BEER",
+      "email": "tanvibeer.aiml23@sbjit.edu.in",
+      "tenthPercentage": 81.0,
+      "twelfthPercentage": 57.33,
+      "sem1Cgpa": 8.45,
+      "sem2Cgpa": 9.07,
+      "sem3Cgpa": 8.75,
+      "sem4Cgpa": 9.0,
+      "sem5Cgpa": 9.06,
+      "sem6Cgpa": 9.07,
+      "backlogs": null,
+      "internships": "U2U internship",
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23021",
+      "fullName": "TANISH RAVINDRA KESHARWANI",
+      "email": "tanishkesharwani.aiml23@sbjit.edu.in",
+      "tenthPercentage": 89.57,
+      "twelfthPercentage": 62.83,
+      "sem1Cgpa": 8.95,
+      "sem2Cgpa": 9.11,
+      "sem3Cgpa": 8.84,
+      "sem4Cgpa": 8.94,
+      "sem5Cgpa": 9.1,
+      "sem6Cgpa": 9.11,
+      "backlogs": null,
+      "internships": "U2U internship",
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23022",
+      "fullName": "ARYA ANAND GUDGILLA",
+      "email": "baliojha.aiml23@sbjit.edu.in",
+      "tenthPercentage": 77.8,
+      "twelfthPercentage": 62.33,
+      "sem1Cgpa": 8.59,
+      "sem2Cgpa": 8.13,
+      "sem3Cgpa": 8.44,
+      "sem4Cgpa": 8.18,
+      "sem5Cgpa": 8.2,
+      "sem6Cgpa": 8.13,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23023",
+      "fullName": "VARUN KAILASHCHANDRA PATHAK",
+      "email": "varunpathak.aiml23@sbjit.edu.in",
+      "tenthPercentage": 80.6,
+      "twelfthPercentage": 51.0,
+      "sem1Cgpa": 7.05,
+      "sem2Cgpa": 6.27,
+      "sem3Cgpa": 6.38,
+      "sem4Cgpa": 6.4,
+      "sem5Cgpa": 6.31,
+      "sem6Cgpa": 6.26,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23024",
+      "fullName": "FAWWAZ IRSHAD AHMED",
+      "email": "fawwaz.aiml23@sbjit.edu.in",
+      "tenthPercentage": 84.0,
+      "twelfthPercentage": 55.0,
+      "sem1Cgpa": null,
+      "sem2Cgpa": null,
+      "sem3Cgpa": null,
+      "sem4Cgpa": null,
+      "sem5Cgpa": null,
+      "sem6Cgpa": null,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23025",
+      "fullName": "KHUSHBOO MAHENDRASINGH GAUTAM",
+      "email": "khushboogautam.aiml23@sbjit.edu.in",
+      "tenthPercentage": 77.0,
+      "twelfthPercentage": 52.0,
+      "sem1Cgpa": 6.0,
+      "sem2Cgpa": 5.93,
+      "sem3Cgpa": 5.96,
+      "sem4Cgpa": 5.96,
+      "sem5Cgpa": null,
+      "sem6Cgpa": 5.8,
+      "backlogs": "1",
+      "internships": null,
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23028",
+      "fullName": "ANUSHKA SUSHILKUMAR SAVITA",
+      "email": "as.aiml23@sbjit.edu.in",
+      "tenthPercentage": 80.6,
+      "twelfthPercentage": 60.0,
+      "sem1Cgpa": 8.05,
+      "sem2Cgpa": 7.77,
+      "sem3Cgpa": 7.89,
+      "sem4Cgpa": 7.83,
+      "sem5Cgpa": 7.78,
+      "sem6Cgpa": 7.77,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23029",
+      "fullName": "DIPANSHU UMESH MATHANKAR",
+      "email": "dipanshumathankar.aiml23@sbjit.edu.in",
+      "tenthPercentage": 73.8,
+      "twelfthPercentage": 57.33,
+      "sem1Cgpa": 7.14,
+      "sem2Cgpa": 6.78,
+      "sem3Cgpa": 7.0,
+      "sem4Cgpa": 6.81,
+      "sem5Cgpa": 6.65,
+      "sem6Cgpa": 6.66,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23030",
+      "fullName": "SHIVAM ANANTA JADHAV",
+      "email": "shivamaj.aiml23@sbjit.edu.in",
+      "tenthPercentage": 93.2,
+      "twelfthPercentage": 53.6,
+      "sem1Cgpa": 7.27,
+      "sem2Cgpa": null,
+      "sem3Cgpa": 7.38,
+      "sem4Cgpa": 7.43,
+      "sem5Cgpa": 7.53,
+      "sem6Cgpa": 7.53,
+      "backlogs": "NA",
+      "internships": "Android Developer Virtual Intern \u2014 AICTE EduSkills",
+      "tgMentorName": "Prof. Sujata Sardare"
+    },
+    {
+      "prn": "CM23031",
+      "fullName": "PRATHAM KASHINATH PIMPALIKAR",
+      "email": "pimpalikarpratham.aiml23@sbjit.edu.in",
+      "tenthPercentage": 70.0,
+      "twelfthPercentage": 50.0,
+      "sem1Cgpa": 7.18,
+      "sem2Cgpa": 6.98,
+      "sem3Cgpa": 7.18,
+      "sem4Cgpa": 6.96,
+      "sem5Cgpa": 6.77,
+      "sem6Cgpa": 6.79,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23032",
+      "fullName": "ARPIT ARVIND RANGARI",
+      "email": "arpitrangari.aiml23@sbjit.edu.in",
+      "tenthPercentage": 80.0,
+      "twelfthPercentage": 75.0,
+      "sem1Cgpa": 9.18,
+      "sem2Cgpa": 8.8,
+      "sem3Cgpa": null,
+      "sem4Cgpa": null,
+      "sem5Cgpa": 9.23,
+      "sem6Cgpa": 9.14,
+      "backlogs": null,
+      "internships": "scottsheldon",
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23033",
+      "fullName": "MITHILESH MANOJ KOSE",
+      "email": "mithileshkose.aiml23@sbjit.edu.in",
+      "tenthPercentage": 72.3,
+      "twelfthPercentage": 74.0,
+      "sem1Cgpa": 6.73,
+      "sem2Cgpa": 6.98,
+      "sem3Cgpa": 7.34,
+      "sem4Cgpa": 7.35,
+      "sem5Cgpa": null,
+      "sem6Cgpa": 7.14,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23034",
+      "fullName": "AMOGH ANIL SAMARTH",
+      "email": "samarthamogh.aiml23@sbjit.edu.in",
+      "tenthPercentage": 81.0,
+      "twelfthPercentage": 57.33,
+      "sem1Cgpa": 7.86,
+      "sem2Cgpa": 7.98,
+      "sem3Cgpa": 8.11,
+      "sem4Cgpa": 7.99,
+      "sem5Cgpa": 7.86,
+      "sem6Cgpa": 7.73,
+      "backlogs": null,
+      "internships": "Android Developer Virtual Intern \u2014 AICTE EduSkills",
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23035",
+      "fullName": "MEKSHA VIJAY TAJANE",
+      "email": "mekshatajane.aiml23@sbjit.edu.in",
+      "tenthPercentage": 91.8,
+      "twelfthPercentage": 68.33,
+      "sem1Cgpa": 8.09,
+      "sem2Cgpa": 8.32,
+      "sem3Cgpa": 8.5,
+      "sem4Cgpa": 8.3,
+      "sem5Cgpa": 8.17,
+      "sem6Cgpa": 8.22,
+      "backlogs": null,
+      "internships": "Infosys Springboard (AI intern),U2U internship ,Android Developer Virtual Intern \u2014 AICTE EduSkills",
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23036",
+      "fullName": "ASHVIN ISHWAR VAIDHYA",
+      "email": "ashvinvaidhya.aiml23@sbjit.edu.in",
+      "tenthPercentage": 86.0,
+      "twelfthPercentage": 65.0,
+      "sem1Cgpa": 8.64,
+      "sem2Cgpa": 8.56,
+      "sem3Cgpa": 8.86,
+      "sem4Cgpa": 8.61,
+      "sem5Cgpa": 8.61,
+      "sem6Cgpa": 8.47,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23037",
+      "fullName": "PURVAL SANJAY NAIK",
+      "email": "purvalnaik.aiml23@sbjit.edu.in",
+      "tenthPercentage": 82.8,
+      "twelfthPercentage": 69.17,
+      "sem1Cgpa": 7.27,
+      "sem2Cgpa": 7.2,
+      "sem3Cgpa": 7.56,
+      "sem4Cgpa": 7.48,
+      "sem5Cgpa": 7.47,
+      "sem6Cgpa": 7.56,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23038",
+      "fullName": "SAMIR SANJAY KHORGADE",
+      "email": "samirkhorgae.aiml23@sbjit.edu.in",
+      "tenthPercentage": 82.6,
+      "twelfthPercentage": 71.5,
+      "sem1Cgpa": 7.73,
+      "sem2Cgpa": 7.44,
+      "sem3Cgpa": 7.34,
+      "sem4Cgpa": 7.25,
+      "sem5Cgpa": 7.12,
+      "sem6Cgpa": 7.06,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23039",
+      "fullName": "GAYATRI ARUN VIDHATE",
+      "email": "gayatrividhate.aiml23@sbjit.edu.in",
+      "tenthPercentage": 87.0,
+      "twelfthPercentage": 53.0,
+      "sem1Cgpa": 8.09,
+      "sem2Cgpa": 8.0,
+      "sem3Cgpa": 8.11,
+      "sem4Cgpa": 8.17,
+      "sem5Cgpa": 7.99,
+      "sem6Cgpa": 7.84,
+      "backlogs": null,
+      "internships": "Eduskills Google developer virtual intership",
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23040",
+      "fullName": "PARTH SUJEET WADEKAR",
+      "email": "parthwadekar.aiml23@sbjit.edu.in",
+      "tenthPercentage": 93.0,
+      "twelfthPercentage": 73.17,
+      "sem1Cgpa": 8.09,
+      "sem2Cgpa": 8.27,
+      "sem3Cgpa": 8.52,
+      "sem4Cgpa": 8.54,
+      "sem5Cgpa": 8.49,
+      "sem6Cgpa": 8.39,
+      "backlogs": null,
+      "internships": "Android Developer Virtual Intern \u2014 AICTE EduSkills",
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23042",
+      "fullName": "YASH MAHENDRA KAPSE",
+      "email": "yk.aiml23@sbjit.edu.in",
+      "tenthPercentage": 80.0,
+      "twelfthPercentage": 67.2,
+      "sem1Cgpa": 7.45,
+      "sem2Cgpa": 7.59,
+      "sem3Cgpa": 8.09,
+      "sem4Cgpa": 8.52,
+      "sem5Cgpa": 8.61,
+      "sem6Cgpa": 8.5,
+      "backlogs": null,
+      "internships": "Android Developer Virtual Intern \u2014 AICTE EduSkills",
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23043",
+      "fullName": "SARANG RAVINDRA GHATULKAR",
+      "email": "sarangghatulkar.aiml23@sbjit.edu.in",
+      "tenthPercentage": 82.8,
+      "twelfthPercentage": 74.33,
+      "sem1Cgpa": 7.18,
+      "sem2Cgpa": 7.02,
+      "sem3Cgpa": 7.52,
+      "sem4Cgpa": 6.32,
+      "sem5Cgpa": 7.15,
+      "sem6Cgpa": 7.77,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23044",
+      "fullName": "REENA MANISH TRILOK",
+      "email": "reenatrilok.aiml23@sbjit.edu.in",
+      "tenthPercentage": 85.6,
+      "twelfthPercentage": 62.0,
+      "sem1Cgpa": 7.86,
+      "sem2Cgpa": 7.9,
+      "sem3Cgpa": 8.11,
+      "sem4Cgpa": 8.04,
+      "sem5Cgpa": 8.02,
+      "sem6Cgpa": 7.9,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23045",
+      "fullName": "TEJAS PURUSHOTTAM KAYARKAR",
+      "email": "tejaskayarkar.aiml23@sbjit.edu.in",
+      "tenthPercentage": 87.8,
+      "twelfthPercentage": 63.83,
+      "sem1Cgpa": 7.59,
+      "sem2Cgpa": 7.29,
+      "sem3Cgpa": 7.31,
+      "sem4Cgpa": 7.1,
+      "sem5Cgpa": null,
+      "sem6Cgpa": 6.98,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Nikhil Sakhare"
+    },
+    {
+      "prn": "CM23046",
+      "fullName": "KAUSTUBH SANJAY KOSE",
+      "email": "kaustubhkose.aiml23@sbjit.edu.in",
+      "tenthPercentage": 64.0,
+      "twelfthPercentage": 62.0,
+      "sem1Cgpa": 7.09,
+      "sem2Cgpa": 6.57,
+      "sem3Cgpa": 6.47,
+      "sem4Cgpa": 6.17,
+      "sem5Cgpa": 6.22,
+      "sem6Cgpa": 6.2,
+      "backlogs": null,
+      "internships": "PWC Mangement Consulting ,Baby Cloud Pvt.Ltd,Vista Equity Partners,Etc.",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23047",
+      "fullName": "GLORY RARATAN JAGJIWAN",
+      "email": "gloryjagjivan.aiml23@sbjit.edu.in",
+      "tenthPercentage": 92.3,
+      "twelfthPercentage": 71.0,
+      "sem1Cgpa": 7.95,
+      "sem2Cgpa": 8.08,
+      "sem3Cgpa": 8.25,
+      "sem4Cgpa": 8.08,
+      "sem5Cgpa": 8.07,
+      "sem6Cgpa": 8.02,
+      "backlogs": null,
+      "internships": "U2U internship, Eduskills Google developer virtual Internship",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23048",
+      "fullName": "ASHUTOSH MURLIDHAR BHULE",
+      "email": "ashubhule.aiml23@sbjit.edu.in",
+      "tenthPercentage": 84.83,
+      "twelfthPercentage": 58.0,
+      "sem1Cgpa": 6.77,
+      "sem2Cgpa": 6.77,
+      "sem3Cgpa": 6.58,
+      "sem4Cgpa": 6.62,
+      "sem5Cgpa": null,
+      "sem6Cgpa": 6.28,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23049",
+      "fullName": "SHOURYA CHOURE",
+      "email": "shouryachoure.aiml23@sbjit.edu.in",
+      "tenthPercentage": 73.5,
+      "twelfthPercentage": 63.5,
+      "sem1Cgpa": 7.14,
+      "sem2Cgpa": 6.17,
+      "sem3Cgpa": 6.84,
+      "sem4Cgpa": 6.96,
+      "sem5Cgpa": 6.84,
+      "sem6Cgpa": 6.76,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23050",
+      "fullName": "SRIYANSH SANJIB SHEEL",
+      "email": "sriyanshsheel.aiml23@sbjit.edu.in",
+      "tenthPercentage": 85.0,
+      "twelfthPercentage": 88.83,
+      "sem1Cgpa": 8.09,
+      "sem2Cgpa": 7.54,
+      "sem3Cgpa": 7.54,
+      "sem4Cgpa": 7.22,
+      "sem5Cgpa": 7.02,
+      "sem6Cgpa": 6.86,
+      "backlogs": null,
+      "internships": "Persistent Mentorship",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23051",
+      "fullName": "AYUSH DILIP BADWAIK",
+      "email": "ayushbadwaik.aiml23@sbjit.edu.in",
+      "tenthPercentage": 86.6,
+      "twelfthPercentage": 60.0,
+      "sem1Cgpa": 8.23,
+      "sem2Cgpa": null,
+      "sem3Cgpa": 8.27,
+      "sem4Cgpa": 9.39,
+      "sem5Cgpa": 10.0,
+      "sem6Cgpa": 9.02,
+      "backlogs": "9.11",
+      "internships": "Arithwise Solutions Pvt Ltd, Nagpur",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23053",
+      "fullName": "PRATHAMESH RAJENDRA MOWADE",
+      "email": "prathameshmowade.aiml23@sbjit.edu.in",
+      "tenthPercentage": 90.4,
+      "twelfthPercentage": 63.7,
+      "sem1Cgpa": 7.82,
+      "sem2Cgpa": null,
+      "sem3Cgpa": 8.19,
+      "sem4Cgpa": 8.3,
+      "sem5Cgpa": 8.3,
+      "sem6Cgpa": 8.34,
+      "backlogs": null,
+      "internships": "Android application development intern",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23054",
+      "fullName": "ADITYA UMESH MAHALLE",
+      "email": "adityamahalle.aiml23@sbjit.edu.in",
+      "tenthPercentage": 72.0,
+      "twelfthPercentage": 57.0,
+      "sem1Cgpa": 7.32,
+      "sem2Cgpa": 7.32,
+      "sem3Cgpa": 7.7,
+      "sem4Cgpa": 7.5,
+      "sem5Cgpa": 6.88,
+      "sem6Cgpa": 6.66,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23055",
+      "fullName": "UTKARSH SURESH PUNKAR",
+      "email": "utkarshpunkar.aiml23@sbjit.edu.in",
+      "tenthPercentage": 77.0,
+      "twelfthPercentage": 61.0,
+      "sem1Cgpa": 7.32,
+      "sem2Cgpa": 7.39,
+      "sem3Cgpa": 7.63,
+      "sem4Cgpa": 7.54,
+      "sem5Cgpa": 7.66,
+      "sem6Cgpa": 7.5,
+      "backlogs": null,
+      "internships": "Android Developer Virtual Intern \u2014 AICTE EduSkills,",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23056",
+      "fullName": "VANSHIKA SUNILJI KHARWADE",
+      "email": "kharwadevanshika.aiml23@sbjit.edu.in",
+      "tenthPercentage": 90.0,
+      "twelfthPercentage": 70.0,
+      "sem1Cgpa": 8.23,
+      "sem2Cgpa": 8.26,
+      "sem3Cgpa": 8.33,
+      "sem4Cgpa": 8.38,
+      "sem5Cgpa": 8.3,
+      "sem6Cgpa": 8.26,
+      "backlogs": null,
+      "internships": "U2U internship",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23057",
+      "fullName": "NEHA ASHOK MUSALE",
+      "email": "nehamusale.aiml23@sbjit.edu.in",
+      "tenthPercentage": 79.0,
+      "twelfthPercentage": 57.0,
+      "sem1Cgpa": 7.5,
+      "sem2Cgpa": 7.71,
+      "sem3Cgpa": 7.94,
+      "sem4Cgpa": 8.09,
+      "sem5Cgpa": 8.15,
+      "sem6Cgpa": 8.18,
+      "backlogs": null,
+      "internships": "EduSkills",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23058",
+      "fullName": "DIVYANI GANRAJ WATH",
+      "email": "wathdevyani.aiml23@sbjit.edu.in",
+      "tenthPercentage": 79.6,
+      "twelfthPercentage": 64.5,
+      "sem1Cgpa": 7.34,
+      "sem2Cgpa": 7.15,
+      "sem3Cgpa": null,
+      "sem4Cgpa": null,
+      "sem5Cgpa": 7.12,
+      "sem6Cgpa": 6.99,
+      "backlogs": null,
+      "internships": "Microsoft Azure",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23059",
+      "fullName": "DHANSHREE RAUT",
+      "email": "dhanshriraut.aiml23@sbjit.edu.in",
+      "tenthPercentage": 80.6,
+      "twelfthPercentage": 55.2,
+      "sem1Cgpa": 7.27,
+      "sem2Cgpa": 7.17,
+      "sem3Cgpa": 7.5,
+      "sem4Cgpa": 7.57,
+      "sem5Cgpa": 7.68,
+      "sem6Cgpa": 7.74,
+      "backlogs": null,
+      "internships": "U2U internship",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23060",
+      "fullName": "VEDANT ASHISH BHANARKAR",
+      "email": "vedant.aiml23@sbjit.edu.in",
+      "tenthPercentage": 87.33,
+      "twelfthPercentage": 62.17,
+      "sem1Cgpa": 7.14,
+      "sem2Cgpa": 7.42,
+      "sem3Cgpa": 7.5,
+      "sem4Cgpa": 7.6,
+      "sem5Cgpa": 7.51,
+      "sem6Cgpa": 7.51,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23061",
+      "fullName": "BURHANUDDIN ZOEB HUSAIN",
+      "email": "burhanuddinhusain.aiml23@sbjit.edu.in",
+      "tenthPercentage": 88.8,
+      "twelfthPercentage": 80.0,
+      "sem1Cgpa": 9.32,
+      "sem2Cgpa": 9.29,
+      "sem3Cgpa": 9.31,
+      "sem4Cgpa": 9.36,
+      "sem5Cgpa": 9.39,
+      "sem6Cgpa": 9.32,
+      "backlogs": null,
+      "internships": "Web Stack Academy Mern stack Internship , Infosys Springboard internship",
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23062",
+      "fullName": "OM RAJIV POLAKHARE",
+      "email": "ompolakhare.aiml23@sbjit.edu.in",
+      "tenthPercentage": 83.0,
+      "twelfthPercentage": 57.33,
+      "sem1Cgpa": 7.09,
+      "sem2Cgpa": 7.2,
+      "sem3Cgpa": 7.16,
+      "sem4Cgpa": 6.72,
+      "sem5Cgpa": 6.52,
+      "sem6Cgpa": 6.34,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM23063",
+      "fullName": "SOHAM UDAY GARGE",
+      "email": "sohamgarge.aiml23@sbjit.edu.in",
+      "tenthPercentage": 79.6,
+      "twelfthPercentage": 70.83,
+      "sem1Cgpa": 7.5,
+      "sem2Cgpa": 7.44,
+      "sem3Cgpa": 7.33,
+      "sem4Cgpa": 7.16,
+      "sem5Cgpa": 7.05,
+      "sem6Cgpa": 6.91,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Shweta Bokade"
+    },
+    {
+      "prn": "CM24D002",
+      "fullName": "JANMESH SHEDAME",
+      "email": "janmeshs.aiml23d@sbjit.edu.in",
+      "tenthPercentage": 77.0,
+      "twelfthPercentage": null,
+      "sem1Cgpa": null,
+      "sem2Cgpa": null,
+      "sem3Cgpa": 7.0,
+      "sem4Cgpa": 6.77,
+      "sem5Cgpa": 7.0,
+      "sem6Cgpa": 7.06,
+      "backlogs": null,
+      "internships": null,
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM24D003",
+      "fullName": "PHALGUNI DHABALE",
+      "email": "phalgunid.aiml23d@sbjit.edu.in",
+      "tenthPercentage": 69.0,
+      "twelfthPercentage": null,
+      "sem1Cgpa": null,
+      "sem2Cgpa": null,
+      "sem3Cgpa": 8.28,
+      "sem4Cgpa": 8.23,
+      "sem5Cgpa": 8.23,
+      "sem6Cgpa": 8.16,
+      "backlogs": "NA",
+      "internships": "NA",
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM24D004",
+      "fullName": "YASH RAJU MESHRAM",
+      "email": "yashm.aiml23d@sbjit.edu.in",
+      "tenthPercentage": 84.2,
+      "twelfthPercentage": null,
+      "sem1Cgpa": null,
+      "sem2Cgpa": null,
+      "sem3Cgpa": 7.09,
+      "sem4Cgpa": 7.19,
+      "sem5Cgpa": 7.07,
+      "sem6Cgpa": 7.08,
+      "backlogs": "NA",
+      "internships": "NA",
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    },
+    {
+      "prn": "CM24D006",
+      "fullName": "GAYATRI KRISHNA BORIKAR",
+      "email": "gayatri.aiml23d@sbjit.edu.in",
+      "tenthPercentage": 81.0,
+      "twelfthPercentage": null,
+      "sem1Cgpa": null,
+      "sem2Cgpa": null,
+      "sem3Cgpa": 7.09,
+      "sem4Cgpa": 6.96,
+      "sem5Cgpa": 6.79,
+      "sem6Cgpa": 6.96,
+      "backlogs": null,
+      "internships": "Microsoft Azure",
+      "tgMentorName": "Prof. Bhushan Manjrekar"
+    }
+  ],
+  "courses": [
+    {
+      "courseCode": "N-PCCCM701T",
+      "title": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyName": "Prof. Bhushan Manjrekar",
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-PCCCM702T",
+      "title": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyName": "Prof. Sujata Sardare",
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-PCCCM702P",
+      "title": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyName": "Prof. Sujata Sardare",
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-PECCM701T",
+      "title": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyName": "Prof. Nikhil Sakhare",
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-PECCM701P",
+      "title": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyName": "Prof. Nikhil Sakhare",
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-PECCM704T",
+      "title": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyName": "Prof. Shweta Bokade",
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-MDMIT701P",
+      "title": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyName": "Prof. Rahul Pethe",
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-PROJCM701",
+      "title": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyName": "Prof. Shweta Bokade",
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-MDMEF701T",
+      "title": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyName": "Prof. Prashant Sawarkar",
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-PECCM703T",
+      "title": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyName": "Prof. Mayuri Getme",
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-PECCM703P",
+      "title": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyName": "Prof. Mayuri Getme",
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "courseCode": "N-PECCM706T",
+      "title": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyName": "Prof. Neha Gurnani",
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    }
+  ],
+  "studentCourses": [
+    {
+      "prn": "CM23001",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23001",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23001",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23001",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23001",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23001",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23001",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23001",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23002",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23002",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23002",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23002",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23002",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23002",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23002",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23002",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23003",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23003",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23003",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23003",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23003",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23003",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23003",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23003",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23004",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23004",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23004",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23004",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23004",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23004",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23004",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23004",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23005",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23005",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23005",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23005",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23005",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23005",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23005",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23005",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23006",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23006",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23006",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23006",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23006",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23006",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23006",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23006",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23007",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23007",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23007",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23007",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23007",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23007",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23007",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23007",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23008",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23008",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23008",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23008",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23008",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23008",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23008",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23008",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23009",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23009",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23009",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23009",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23009",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23009",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23009",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23009",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23010",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23010",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23010",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23010",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23010",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23010",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23010",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23010",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23011",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23011",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23011",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23011",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23011",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23011",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23011",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23011",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23012",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23012",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23012",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23012",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23012",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23012",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23012",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23012",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23013",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23013",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23013",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23013",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23013",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23013",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23013",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23013",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23015",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23015",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23015",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23015",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23015",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23015",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23015",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23015",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23016",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23016",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23016",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23016",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23016",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23016",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23016",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23016",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23017",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23017",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23017",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23017",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23017",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23017",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23017",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23017",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23018",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23018",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23018",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23018",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23018",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23018",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23018",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23018",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23019",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23019",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23019",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23019",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23019",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23019",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23019",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23019",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23020",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23020",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23020",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23020",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23020",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23020",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23020",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23020",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23021",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23021",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23021",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23021",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23021",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23021",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23021",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23021",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23022",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23022",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23022",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23022",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23022",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23022",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23022",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23022",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23023",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23023",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23023",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23023",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23023",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23023",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23023",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23023",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23024",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23024",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23024",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23024",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23024",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23024",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23024",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23024",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23025",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23025",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23025",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23025",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23025",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23025",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23025",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23025",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23028",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23028",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23028",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23028",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23028",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23028",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23028",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23028",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23029",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23029",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23029",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23029",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23029",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23029",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23029",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23029",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23030",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23030",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23030",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23030",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23030",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23030",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23030",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23030",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23031",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23031",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23031",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23031",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23031",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23031",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23031",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23031",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23032",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23032",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23032",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23032",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23032",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23032",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23032",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23032",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23033",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23033",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23033",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23033",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23033",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23033",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23033",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23033",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23034",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23034",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23034",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23034",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23034",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23034",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23034",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23034",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23035",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23035",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23035",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23035",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23035",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23035",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23035",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23035",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23036",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23036",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23036",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23036",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23036",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23036",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23036",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23036",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23037",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23037",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23037",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23037",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23037",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23037",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23037",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23037",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23038",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23038",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23038",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23038",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23038",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23038",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23038",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23038",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23039",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23039",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23039",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23039",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23039",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23039",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23039",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23039",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23040",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23040",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23040",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23040",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23040",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23040",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23040",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23040",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23042",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23042",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23042",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23042",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23042",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23042",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23042",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23042",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23043",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23043",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23043",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23043",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23043",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23043",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23043",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23043",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23044",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23044",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23044",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23044",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23044",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23044",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23044",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23044",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23045",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23045",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23045",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23045",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23045",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23045",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23045",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23045",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23046",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23046",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23046",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23046",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23046",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23046",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23046",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23046",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23047",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23047",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23047",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23047",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23047",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23047",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23047",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23047",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23048",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23048",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23048",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23048",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23048",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23048",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23048",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23048",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23049",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23049",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23049",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23049",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23049",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23049",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23049",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23049",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23050",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23050",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23050",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23050",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23050",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23050",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23050",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23050",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23051",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23051",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23051",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23051",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23051",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23051",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23051",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23051",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23053",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23053",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23053",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23053",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23053",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23053",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23053",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23053",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23054",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23054",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23054",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23054",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23054",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23054",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23054",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23054",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23055",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23055",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23055",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23055",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23055",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23055",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23055",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23055",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23056",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23056",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23056",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23056",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23056",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23056",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23056",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23056",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23057",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23057",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23057",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23057",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23057",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23057",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23057",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23057",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23058",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23058",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23058",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23058",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23058",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23058",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23058",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23058",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23059",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23059",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23059",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23059",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23059",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23059",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23059",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23059",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23060",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23060",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23060",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23060",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23060",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23060",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23060",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23060",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23061",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23061",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23061",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23061",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23061",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23061",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23061",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23061",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23062",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23062",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23062",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23062",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23062",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23062",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23062",
+      "courseCode": "N-MDMIT701P",
+      "courseName": "Mini Project in IoT Product Development & Testing",
+      "courseType": "LAB",
+      "credits": 2,
+      "facultyEmail": "rahulpethe@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23062",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23063",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23063",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23063",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23063",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23063",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23063",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23063",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM23063",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D002",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D002",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D002",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D002",
+      "courseCode": "N-PECCM701T",
+      "courseName": "Introduction To Cyber Security",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D002",
+      "courseCode": "N-PECCM701P",
+      "courseName": "Introduction To Cyber Security Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "nikhilsakhare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D002",
+      "courseCode": "N-PECCM704T",
+      "courseName": "Cyber Forensics and Investigation",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D002",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D002",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D003",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D003",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D003",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D003",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D003",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D003",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D003",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D003",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D004",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D004",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D004",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D004",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D004",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D004",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D004",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D004",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D006",
+      "courseCode": "N-PCCCM701T",
+      "courseName": "Neural Networks and Deep Learning",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "bhushanmanjrekar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D006",
+      "courseCode": "N-PCCCM702T",
+      "courseName": "Machine Vision",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D006",
+      "courseCode": "N-PCCCM702P",
+      "courseName": "Machine Vision Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "sujatasardare@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D006",
+      "courseCode": "N-PECCM703T",
+      "courseName": "Pattern Recognition",
+      "courseType": "THEORY",
+      "credits": 3,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D006",
+      "courseCode": "N-PECCM703P",
+      "courseName": "Pattern Recognition Lab",
+      "courseType": "LAB",
+      "credits": 1,
+      "facultyEmail": "mayurigetmi@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D006",
+      "courseCode": "N-PECCM706T",
+      "courseName": "Explainable AI",
+      "courseType": "THEORY",
+      "credits": 4,
+      "facultyEmail": "nehagurnani@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D006",
+      "courseCode": "N-MDMEF701T",
+      "courseName": "Investment Analysis & Portfolio Management",
+      "courseType": "THEORY",
+      "credits": 2,
+      "facultyEmail": "prashantsawarkar@sbjit.edu.in"
+    },
+    {
+      "prn": "CM24D006",
+      "courseCode": "N-PROJCM701",
+      "courseName": "Project-I",
+      "courseType": "PROJECT",
+      "credits": 4,
+      "facultyEmail": "shwetabokade@sbjit.edu.in"
+    }
+  ]
+}

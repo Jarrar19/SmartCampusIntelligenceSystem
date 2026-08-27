@@ -18,7 +18,7 @@ const CreateAssignmentSchema = z.object({
 const GradeSubmissionSchema = z.object({
   marksAwarded: z.number().min(0),
   facultyFeedback: z.string().optional(),
-  status: z.enum(['GRADED', 'RETURNED']).default('GRADED'),
+  status: z.enum(['GRADED', 'RETURNED', 'SUBMITTED', 'PENDING']).optional().default('GRADED'),
 });
 
 const UpdateAssignmentSchema = z.object({
@@ -331,12 +331,14 @@ export async function gradeSubmission(req: Request, res: Response) {
     return res.status(403).json({ success: false, message: 'You can only grade submissions for your own courses' });
   }
 
+  const finalStatus = parsed.status === 'RETURNED' ? 'RETURNED' : 'GRADED';
+
   const updated = await prisma.submission.update({
     where: { id: submissionId },
     data: {
       marksAwarded: parsed.marksAwarded,
       facultyFeedback: parsed.facultyFeedback || null,
-      status: parsed.status,
+      status: finalStatus,
       gradedAt: new Date(),
       gradedById: req.user.id,
     },

@@ -1,4 +1,5 @@
 import express from 'express';
+import helmet from 'helmet';
 import cors from 'cors';
 import path from 'path';
 import routes from './routes';
@@ -7,6 +8,11 @@ import { apiLimiter } from './middleware/rateLimit';
 import { config } from './config';
 
 const app = express();
+
+// Security Headers (X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, HSTS)
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allows images/avatars to load in frontend
+}));
 
 // Middlewares
 app.use(cors({

@@ -16,6 +16,18 @@ model User {
   department            String?
   semester              Int?
   avatarUrl             String?
+  prn                   String?               @unique
+  tenthPercentage       Float?
+  twelfthPercentage     Float?
+  sem1Cgpa              Float?
+  sem2Cgpa              Float?
+  sem3Cgpa              Float?
+  sem4Cgpa              Float?
+  sem5Cgpa              Float?
+  sem6Cgpa              Float?
+  backlogs              String?
+  internships           String?
+  tgMentorName          String?
   isActive              Boolean               @default(true)
   isVerified            Boolean               @default(false)
   verificationToken     String?
@@ -59,6 +71,8 @@ model Course {
   semester      Int
   academicYear  String
   facultyId     Int
+  courseType    String         @default("THEORY") // THEORY, LAB, PROJECT
+  credits       Int            @default(3)
   isArchived    Boolean        @default(false)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
@@ -349,4 +363,42 @@ model Notification {
 
   @@index([userId, isRead])
 }
+
+model StudentRoster {
+  id                Int      @id @default(autoincrement())
+  prn               String   @unique
+  fullName          String
+  email             String   @unique
+  department        String?
+  semester          Int?
+  tenthPercentage   Float?
+  twelfthPercentage Float?
+  sem1Cgpa          Float?
+  sem2Cgpa          Float?
+  sem3Cgpa          Float?
+  sem4Cgpa          Float?
+  sem5Cgpa          Float?
+  sem6Cgpa          Float?
+  backlogs          String?
+  internships       String?
+  tgMentorName      String?
+  registered        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  @@index([email])
+}
+
+model RosterCourseRegistration {
+  id          Int      @id @default(autoincrement())
+  prn         String
+  courseCode  String
+  courseName  String
+  courseType  String   @default("THEORY") // THEORY, LAB, PROJECT
+  credits     Int      @default(3)
+  createdAt   DateTime @default(now())
+
+  @@unique([prn, courseCode])
+  @@index([prn])
+}
+
 

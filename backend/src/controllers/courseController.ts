@@ -11,6 +11,8 @@ const CreateCourseSchema = z.object({
   department: z.string().min(2),
   semester: z.number().int().min(1).max(8),
   academicYear: z.string().min(4),
+  courseType: z.enum(['THEORY', 'LAB', 'PROJECT']).default('THEORY'),
+  credits: z.number().int().min(1).max(10).default(3),
 });
 
 const UpdateCourseSchema = z.object({
@@ -20,6 +22,8 @@ const UpdateCourseSchema = z.object({
   department: z.string().optional(),
   semester: z.number().int().min(1).max(8).optional(),
   academicYear: z.string().optional(),
+  courseType: z.enum(['THEORY', 'LAB', 'PROJECT']).optional(),
+  credits: z.number().int().min(1).max(10).optional(),
   isArchived: z.boolean().optional(),
 });
 
@@ -33,11 +37,12 @@ const CreateAnnouncementSchema = z.object({
 export async function getCourses(req: Request, res: Response) {
   if (!req.user) return res.status(401).json({ success: false, message: 'Unauthorized' });
 
-  const { department, semester, search, myOnly } = req.query;
+  const { department, semester, search, myOnly, courseType } = req.query;
 
   const where: any = {};
   if (department) where.department = String(department);
   if (semester) where.semester = parseInt(String(semester), 10);
+  if (courseType) where.courseType = String(courseType).toUpperCase();
   if (search) {
     where.OR = [
       { courseCode: { contains: String(search) } },
@@ -402,4 +407,62 @@ export async function createAnnouncement(req: Request, res: Response) {
     message: 'Announcement posted successfully',
     data: announcement,
   });
+}
+
+export async function getCourseRoster(req: Request, res: Response, next: any) {
+  try {
+    if (!req.user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+    const courseId = parseInt(req.params.id, 10);
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+      include: {
+        enrollments: {
+          include: {
+            student: {
+              select: {
+                id: true,
+                fullName: true,
+                email: true,
+                prn: true,
+                department: true,
+                semester: true,
+                sem1Cgpa: true,
+                sem6Cgpa: true,
+                tenthPercentage: true,
+                twelfthPercentage: true,
+                createdAt: true,
+              },
+            },
+          },
+          orderBy: { enrolledAt: 'asc' },
+        },
+      },
+    });
+
+    if (!course) {
+      return res.status(404).json({ success: false, message: 'Course not found' });
+    }
+
+    const roster = course.enrollments.map(e => ({
+      enrollmentId: e.id,
+      enrolledAt: e.enrolledAt,
+      ...e.student,
+    }));
+
+    return res.json({
+      success: true,
+      data: {
+        courseId: course.id,
+        courseCode: course.courseCode,
+        title: course.title,
+        courseType: course.courseType,
+        credits: course.credits,
+        totalStudents: roster.length,
+        students: roster,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 }

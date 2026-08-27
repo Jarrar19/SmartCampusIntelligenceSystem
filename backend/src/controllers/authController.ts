@@ -18,6 +18,7 @@ const RegisterSchema = z.object({
   email: z.string().email('Invalid email address format'),
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
+  role: z.enum(['STUDENT', 'FACULTY']).optional(),
   department: z.string().optional(),
   semester: z.number().int().optional(),
 });
@@ -69,18 +70,43 @@ export async function register(req: Request, res: Response, next: any) {
     // In dev mode, can auto-verify if configured
     const isVerified = config.AUTO_VERIFY_EMAILS_IN_DEV;
 
-    // SECURITY ENFORCEMENT: Public registration ALWAYS defaults to STUDENT role.
-    // Privileged roles (FACULTY, ADMIN) cannot be self-assigned via public registration APIs.
-    const assignedRole = 'STUDENT';
+    // Allow STUDENT or FACULTY registration from frontend (defaults to STUDENT).
+    // Privileged role ADMIN cannot be self-assigned via public registration APIs.
+    const assignedRole = parsed.role === 'FACULTY' ? 'FACULTY' : 'STUDENT';
+
+    let rosterData: any = null;
+    let autoEnrolledCount = 0;
+
+    if (assignedRole === 'STUDENT') {
+      rosterData = await prisma.studentRoster.findUnique({
+        where: { email },
+      });
+    }
+
+    const finalFullName = rosterData?.fullName || parsed.fullName;
+    const finalDepartment = rosterData?.department || parsed.department || 'Computer Science & Engineering';
+    const finalSemester = assignedRole === 'STUDENT' ? (rosterData?.semester || parsed.semester || 6) : null;
 
     const newUser = await prisma.user.create({
       data: {
         email,
-        fullName: parsed.fullName,
+        fullName: finalFullName,
         passwordHash,
         role: assignedRole,
-        department: parsed.department,
-        semester: parsed.semester,
+        department: finalDepartment,
+        semester: finalSemester,
+        prn: rosterData?.prn || null,
+        tenthPercentage: rosterData?.tenthPercentage ?? null,
+        twelfthPercentage: rosterData?.twelfthPercentage ?? null,
+        sem1Cgpa: rosterData?.sem1Cgpa ?? null,
+        sem2Cgpa: rosterData?.sem2Cgpa ?? null,
+        sem3Cgpa: rosterData?.sem3Cgpa ?? null,
+        sem4Cgpa: rosterData?.sem4Cgpa ?? null,
+        sem5Cgpa: rosterData?.sem5Cgpa ?? null,
+        sem6Cgpa: rosterData?.sem6Cgpa ?? null,
+        backlogs: rosterData?.backlogs ?? null,
+        internships: rosterData?.internships ?? null,
+        tgMentorName: rosterData?.tgMentorName ?? 'Prof. Sarah Jenkins',
         isVerified,
         verificationToken: isVerified ? null : verificationToken,
       },
@@ -91,11 +117,57 @@ export async function register(req: Request, res: Response, next: any) {
         role: true,
         department: true,
         semester: true,
+        prn: true,
+        tenthPercentage: true,
+        twelfthPercentage: true,
+        sem1Cgpa: true,
+        sem2Cgpa: true,
+        sem3Cgpa: true,
+        sem4Cgpa: true,
+        sem5Cgpa: true,
+        sem6Cgpa: true,
+        backlogs: true,
+        internships: true,
+        tgMentorName: true,
         isVerified: true,
         isActive: true,
         createdAt: true,
       },
     });
+
+    // Auto-enroll student into their official registered courses if on roster
+    if (rosterData && rosterData.prn) {
+      await prisma.studentRoster.update({
+        where: { prn: rosterData.prn },
+        data: { registered: true },
+      });
+
+      const registrations = await prisma.rosterCourseRegistration.findMany({
+        where: { prn: rosterData.prn },
+      });
+
+      for (const reg of registrations) {
+        const matchingCourse = await prisma.course.findFirst({
+          where: { courseCode: reg.courseCode },
+        });
+        if (matchingCourse) {
+          await prisma.enrollment.upsert({
+            where: {
+              courseId_studentId: {
+                courseId: matchingCourse.id,
+                studentId: newUser.id,
+              },
+            },
+            update: {},
+            create: {
+              courseId: matchingCourse.id,
+              studentId: newUser.id,
+            },
+          });
+          autoEnrolledCount++;
+        }
+      }
+    }
 
     await logAuditEvent({
       userId: newUser.id,
@@ -103,7 +175,12 @@ export async function register(req: Request, res: Response, next: any) {
       resourceType: 'USER',
       resourceId: newUser.id,
       ipAddress: req.ip,
-      details: { email: newUser.email, role: newUser.role },
+      details: {
+        email: newUser.email,
+        role: newUser.role,
+        prn: newUser.prn,
+        autoEnrolledCourses: autoEnrolledCount,
+      },
     });
 
     // Generate tokens
@@ -119,11 +196,13 @@ export async function register(req: Request, res: Response, next: any) {
       { expiresIn: config.JWT_REFRESH_EXPIRES_IN as any }
     );
 
+    const welcomeMsg = rosterData
+      ? `Registration successful! Welcome ${newUser.fullName} (${newUser.prn}). Auto-enrolled into ${autoEnrolledCount} registered subjects.`
+      : (isVerified ? 'Registration successful! You are now logged in.' : `Registration successful! Verification token: ${verificationToken}`);
+
     return res.status(201).json({
       success: true,
-      message: isVerified
-        ? 'Registration successful! You are now logged in.'
-        : `Registration successful! Verification token: ${verificationToken}`,
+      message: welcomeMsg,
       data: {
         user: newUser,
         accessToken,
@@ -210,6 +289,18 @@ export async function login(req: Request, res: Response, next: any) {
       department: user.department,
       semester: user.semester,
       avatarUrl: user.avatarUrl,
+      prn: user.prn,
+      tenthPercentage: user.tenthPercentage,
+      twelfthPercentage: user.twelfthPercentage,
+      sem1Cgpa: user.sem1Cgpa,
+      sem2Cgpa: user.sem2Cgpa,
+      sem3Cgpa: user.sem3Cgpa,
+      sem4Cgpa: user.sem4Cgpa,
+      sem5Cgpa: user.sem5Cgpa,
+      sem6Cgpa: user.sem6Cgpa,
+      backlogs: user.backlogs,
+      internships: user.internships,
+      tgMentorName: user.tgMentorName || 'Prof. Sarah Jenkins',
       isActive: user.isActive,
       isVerified: user.isVerified,
       createdAt: user.createdAt,
@@ -435,6 +526,18 @@ export async function getMe(req: Request, res: Response) {
       department: true,
       semester: true,
       avatarUrl: true,
+      prn: true,
+      tenthPercentage: true,
+      twelfthPercentage: true,
+      sem1Cgpa: true,
+      sem2Cgpa: true,
+      sem3Cgpa: true,
+      sem4Cgpa: true,
+      sem5Cgpa: true,
+      sem6Cgpa: true,
+      backlogs: true,
+      internships: true,
+      tgMentorName: true,
       isActive: true,
       isVerified: true,
       createdAt: true,

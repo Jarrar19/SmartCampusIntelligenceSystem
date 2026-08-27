@@ -31,7 +31,12 @@ async function main() {
   // 1. Create Users
   const faculty = await prisma.user.upsert({
     where: { email: 'faculty1@sbjit.edu.in' },
-    update: {},
+    update: {
+      passwordHash,
+      role: 'FACULTY',
+      isActive: true,
+      isVerified: true,
+    },
     create: {
       email: 'faculty1@sbjit.edu.in',
       fullName: 'Prof. Sarah Jenkins',
@@ -44,9 +49,34 @@ async function main() {
     },
   });
 
+  await prisma.user.upsert({
+    where: { email: 'faculty@sbjit.edu.in' },
+    update: {
+      passwordHash,
+      role: 'FACULTY',
+      isActive: true,
+      isVerified: true,
+    },
+    create: {
+      email: 'faculty@sbjit.edu.in',
+      fullName: 'Prof. Sarah Jenkins',
+      passwordHash,
+      role: 'FACULTY',
+      department: 'Computer Science & Engineering',
+      isActive: true,
+      isVerified: true,
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+    },
+  });
+
   const student1 = await prisma.user.upsert({
     where: { email: 'student1@sbjit.edu.in' },
-    update: {},
+    update: {
+      passwordHash,
+      role: 'STUDENT',
+      isActive: true,
+      isVerified: true,
+    },
     create: {
       email: 'student1@sbjit.edu.in',
       fullName: 'Alex Rivera',
@@ -60,9 +90,35 @@ async function main() {
     },
   });
 
+  await prisma.user.upsert({
+    where: { email: 'student@sbjit.edu.in' },
+    update: {
+      passwordHash,
+      role: 'STUDENT',
+      isActive: true,
+      isVerified: true,
+    },
+    create: {
+      email: 'student@sbjit.edu.in',
+      fullName: 'Alex Rivera',
+      passwordHash,
+      role: 'STUDENT',
+      department: 'Computer Science & Engineering',
+      semester: 6,
+      isActive: true,
+      isVerified: true,
+      avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
+    },
+  });
+
   const student2 = await prisma.user.upsert({
     where: { email: 'student2@sbjit.edu.in' },
-    update: {},
+    update: {
+      passwordHash,
+      role: 'STUDENT',
+      isActive: true,
+      isVerified: true,
+    },
     create: {
       email: 'student2@sbjit.edu.in',
       fullName: 'Rohan Sharma',
@@ -78,7 +134,12 @@ async function main() {
 
   const admin = await prisma.user.upsert({
     where: { email: 'admin@sbjit.edu.in' },
-    update: {},
+    update: {
+      passwordHash,
+      role: 'ADMIN',
+      isActive: true,
+      isVerified: true,
+    },
     create: {
       email: 'admin@sbjit.edu.in',
       fullName: 'Dean of Academics',
@@ -159,7 +220,239 @@ async function main() {
     create: { courseId: course3.id, studentId: student2.id },
   });
 
+  const studentAlias = await prisma.user.findUnique({ where: { email: 'student@sbjit.edu.in' } });
+  if (studentAlias) {
+    await prisma.enrollment.upsert({
+      where: { courseId_studentId: { courseId: course1.id, studentId: studentAlias.id } },
+      update: {},
+      create: { courseId: course1.id, studentId: studentAlias.id },
+    });
+    await prisma.enrollment.upsert({
+      where: { courseId_studentId: { courseId: course2.id, studentId: studentAlias.id } },
+      update: {},
+      create: { courseId: course2.id, studentId: studentAlias.id },
+    });
+  }
+
   console.log('✅ Enrollments seeded');
+
+  // 3.1. Seed Institutional Student Roster & Excel Courses
+  const rosterPath = path.resolve(__dirname, '../storage/roster_data.json');
+  if (fs.existsSync(rosterPath)) {
+    try {
+      const rosterData = JSON.parse(fs.readFileSync(rosterPath, 'utf-8'));
+      
+      // 3.1. Upsert All Real Faculty Members
+      const facultyMap: { [email: string]: any } = {};
+      if (rosterData.faculties) {
+        for (const f of rosterData.faculties) {
+          const facultyUser = await prisma.user.upsert({
+            where: { email: f.email },
+            update: {
+              fullName: f.fullName,
+              role: 'FACULTY',
+              department: f.department || 'Artificial Intelligence & Machine Learning',
+              isActive: true,
+              isVerified: true,
+            },
+            create: {
+              email: f.email,
+              fullName: f.fullName,
+              passwordHash,
+              role: 'FACULTY',
+              department: f.department || 'Artificial Intelligence & Machine Learning',
+              isActive: true,
+              isVerified: true,
+            },
+          });
+          facultyMap[f.email] = facultyUser;
+        }
+      }
+
+      // 3.2. Upsert Student Roster
+      for (const student of rosterData.students) {
+        await prisma.studentRoster.upsert({
+          where: { prn: student.prn },
+          update: {
+            fullName: student.fullName,
+            email: student.email,
+            tenthPercentage: student.tenthPercentage,
+            twelfthPercentage: student.twelfthPercentage,
+            sem1Cgpa: student.sem1Cgpa,
+            sem2Cgpa: student.sem2Cgpa,
+            sem3Cgpa: student.sem3Cgpa,
+            sem4Cgpa: student.sem4Cgpa,
+            sem5Cgpa: student.sem5Cgpa,
+            sem6Cgpa: student.sem6Cgpa,
+            backlogs: student.backlogs,
+            internships: student.internships,
+            tgMentorName: student.tgMentorName || 'Prof. Bhushan Manjrekar',
+            department: 'Artificial Intelligence & Machine Learning',
+            semester: 6,
+          },
+          create: {
+            prn: student.prn,
+            fullName: student.fullName,
+            email: student.email,
+            tenthPercentage: student.tenthPercentage,
+            twelfthPercentage: student.twelfthPercentage,
+            sem1Cgpa: student.sem1Cgpa,
+            sem2Cgpa: student.sem2Cgpa,
+            sem3Cgpa: student.sem3Cgpa,
+            sem4Cgpa: student.sem4Cgpa,
+            sem5Cgpa: student.sem5Cgpa,
+            sem6Cgpa: student.sem6Cgpa,
+            backlogs: student.backlogs,
+            internships: student.internships,
+            tgMentorName: student.tgMentorName || 'Prof. Bhushan Manjrekar',
+            department: 'Artificial Intelligence & Machine Learning',
+            semester: 6,
+          },
+        });
+      }
+
+      // 3.3. Upsert Excel Courses mapped to their actual Instructor
+      for (const c of rosterData.courses) {
+        const assignedFaculty = facultyMap[c.facultyEmail] || faculty;
+        const existingCourse = await prisma.course.findFirst({
+          where: { courseCode: c.courseCode },
+        });
+        if (!existingCourse) {
+          const newCourse = await prisma.course.create({
+            data: {
+              courseCode: c.courseCode,
+              title: c.title,
+              description: `${c.title} - Official registered academic curriculum course instructed by ${c.facultyName || 'Faculty'}.`,
+              department: 'Artificial Intelligence & Machine Learning',
+              semester: 6,
+              academicYear: '2026-2027',
+              courseType: c.courseType || 'THEORY',
+              credits: c.credits || 3,
+              facultyId: assignedFaculty.id,
+            },
+          });
+
+          // Seed default course welcome announcement from instructor
+          await prisma.announcement.create({
+            data: {
+              courseId: newCourse.id,
+              authorId: assignedFaculty.id,
+              title: `Welcome to ${c.title}`,
+              content: `Welcome students to ${c.title} (${c.courseCode}). Please review the syllabus and lab guidelines. My office hours are available on your student dashboard.`,
+            },
+          });
+        } else {
+          await prisma.course.update({
+            where: { id: existingCourse.id },
+            data: {
+              courseType: c.courseType || 'THEORY',
+              credits: c.credits || 3,
+              facultyId: assignedFaculty.id,
+            },
+          });
+        }
+      }
+
+      // 3.4. Upsert Course Registrations
+      for (const reg of rosterData.studentCourses) {
+        await prisma.rosterCourseRegistration.upsert({
+          where: {
+            prn_courseCode: {
+              prn: reg.prn,
+              courseCode: reg.courseCode,
+            },
+          },
+          update: {
+            courseName: reg.courseName,
+            courseType: reg.courseType || 'THEORY',
+            credits: reg.credits || 3,
+          },
+          create: {
+            prn: reg.prn,
+            courseCode: reg.courseCode,
+            courseName: reg.courseName,
+            courseType: reg.courseType || 'THEORY',
+            credits: reg.credits || 3,
+          },
+        });
+      }
+
+      // 3.5. Pre-create all 62 students as active User accounts with default password 'Password@123'
+      for (const student of rosterData.students) {
+        const u = await prisma.user.upsert({
+          where: { email: student.email },
+          update: {
+            fullName: student.fullName,
+            passwordHash,
+            role: 'STUDENT',
+            department: 'Artificial Intelligence & Machine Learning',
+            semester: 6,
+            prn: student.prn,
+            tenthPercentage: student.tenthPercentage,
+            twelfthPercentage: student.twelfthPercentage,
+            sem1Cgpa: student.sem1Cgpa,
+            sem2Cgpa: student.sem2Cgpa,
+            sem3Cgpa: student.sem3Cgpa,
+            sem4Cgpa: student.sem4Cgpa,
+            sem5Cgpa: student.sem5Cgpa,
+            sem6Cgpa: student.sem6Cgpa,
+            backlogs: student.backlogs,
+            internships: student.internships,
+            tgMentorName: student.tgMentorName || 'Prof. Bhushan Manjrekar',
+            isActive: true,
+            isVerified: true,
+          },
+          create: {
+            email: student.email,
+            fullName: student.fullName,
+            passwordHash,
+            role: 'STUDENT',
+            department: 'Artificial Intelligence & Machine Learning',
+            semester: 6,
+            prn: student.prn,
+            tenthPercentage: student.tenthPercentage,
+            twelfthPercentage: student.twelfthPercentage,
+            sem1Cgpa: student.sem1Cgpa,
+            sem2Cgpa: student.sem2Cgpa,
+            sem3Cgpa: student.sem3Cgpa,
+            sem4Cgpa: student.sem4Cgpa,
+            sem5Cgpa: student.sem5Cgpa,
+            sem6Cgpa: student.sem6Cgpa,
+            backlogs: student.backlogs,
+            internships: student.internships,
+            tgMentorName: student.tgMentorName || 'Prof. Bhushan Manjrekar',
+            isActive: true,
+            isVerified: true,
+          },
+        });
+
+        // Auto-enroll in all courses registered in Excel for this PRN
+        const myRegs = rosterData.studentCourses.filter((sc: any) => sc.prn === student.prn);
+        for (const reg of myRegs) {
+          const course = await prisma.course.findFirst({ where: { courseCode: reg.courseCode } });
+          if (course) {
+            await prisma.enrollment.upsert({
+              where: {
+                courseId_studentId: {
+                  courseId: course.id,
+                  studentId: u.id,
+                },
+              },
+              update: {},
+              create: {
+                courseId: course.id,
+                studentId: u.id,
+              },
+            });
+          }
+        }
+      }
+
+      console.log(`✅ Loaded & pre-activated ${Object.keys(facultyMap).length} real Faculty accounts, ${rosterData.students.length} students & ${rosterData.courses.length} courses`);
+    } catch (err) {
+      console.error('⚠️ Could not load roster_data.json:', err);
+    }
+  }
 
   // 4. Announcements
   await prisma.announcement.createMany({
