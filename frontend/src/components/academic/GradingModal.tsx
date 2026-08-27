@@ -28,7 +28,7 @@ export const GradingModal: React.FC<GradingModalProps> = ({
 
   const [marks, setMarks] = useState<number>(submission.marksAwarded ?? maxMarks);
   const [feedback, setFeedback] = useState(submission.facultyFeedback || '');
-  const [status, setStatus] = useState<SubmissionStatus>(submission.status || 'GRADED');
+  const [status, setStatus] = useState<SubmissionStatus>(submission.status === 'RETURNED' ? 'RETURNED' : 'GRADED');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {

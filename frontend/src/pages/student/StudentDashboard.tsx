@@ -13,6 +13,8 @@ import { Button } from '../../components/common/Button';
 import { StatWidgetSkeleton, CardSkeleton, ListRowSkeleton } from '../../components/common/Skeleton';
 import { SubmissionModal } from '../../components/academic/SubmissionModal';
 import { ProductDetailModal } from '../../components/marketplace/ProductDetailModal';
+import { CgpaProgressionChart } from '../../components/academic/CgpaProgressionChart';
+import { FacultyMentorCard } from '../../components/academic/FacultyMentorCard';
 
 interface StudentDashboardProps {
   onNavigate: (tab: string, courseId?: number) => void;
@@ -150,6 +152,16 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
                 Semester {user?.semester || 6} • {user?.department || 'Engineering'}
               </span>
+              {user?.prn && (
+                <span className="text-[11px] font-black text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-800">
+                  PRN: {user.prn}
+                </span>
+              )}
+              {user?.sem1Cgpa && (
+                <span className="text-[11px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                  CGPA: {user.sem1Cgpa.toFixed(2)}
+                </span>
+              )}
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -285,6 +297,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
           </p>
         </div>
       </div>
+
+      {/* 2.5. Academic Intelligence & CGPA Trajectory Curve */}
+      {user && <CgpaProgressionChart user={user} />}
 
       {/* 3. Main Workspace Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -442,11 +457,14 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Marketplace Highlights & Activity (5 cols) */}
+        {/* Right Column: Faculty Mentor (TG) & Quick Actions & Marketplace (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
           
-          {/* Quick Action Center Card */}
-          <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3.5 bg-gradient-to-br from-indigo-500/5 via-transparent to-brand-500/5">
+          {/* Teacher Guardian (TG) Mentor Card */}
+          {user && <FacultyMentorCard user={user} onOpenChat={() => onNavigate('chat')} />}
+
+          {/* Quick Actions Card */}
+          <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4 bg-gradient-to-br from-indigo-500/5 via-transparent to-brand-500/5">
             <div className="flex items-center space-x-2.5">
               <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400" />
               <h3 className="text-sm font-black text-slate-900 dark:text-white">

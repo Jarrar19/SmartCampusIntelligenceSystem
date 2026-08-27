@@ -8,6 +8,18 @@ export interface User {
   department?: string | null;
   semester?: number | null;
   avatarUrl?: string | null;
+  prn?: string | null;
+  tenthPercentage?: number | null;
+  twelfthPercentage?: number | null;
+  sem1Cgpa?: number | null;
+  sem2Cgpa?: number | null;
+  sem3Cgpa?: number | null;
+  sem4Cgpa?: number | null;
+  sem5Cgpa?: number | null;
+  sem6Cgpa?: number | null;
+  backlogs?: string | null;
+  internships?: string | null;
+  tgMentorName?: string | null;
   isActive: boolean;
   isVerified: boolean;
   createdAt: string;
@@ -32,6 +44,8 @@ export interface Course {
   department: string;
   semester: number;
   academicYear: string;
+  courseType?: 'THEORY' | 'LAB' | 'PROJECT';
+  credits?: number;
   facultyId: number;
   faculty?: {
     id: number;

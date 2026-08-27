@@ -271,25 +271,37 @@ export const AuthPage: React.FC = () => {
           {/* Quick Demo Logins Container */}
           <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-slate-800">
             <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 text-center mb-2.5">
-              1-Click Demo Profiles
+              1-Click Institutional Demo Profiles
             </p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('student@sbjit.edu.in')}
+                onClick={() => handleQuickDemoLogin('rajurkude.aiml23@sbjit.edu.in')}
                 className="p-2 rounded-2xl bg-indigo-50 dark:bg-brand-950/60 border border-indigo-100 dark:border-brand-800/60 text-brand-600 dark:text-brand-300 hover:bg-brand-600 hover:text-white transition text-center cursor-pointer active:scale-95 group"
               >
-                <User className="w-3.5 h-3.5 mx-auto mb-1 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-black block">Student</span>
+                <User className="w-3.5 h-3.5 mx-auto mb-0.5 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-black block">Raj (Student)</span>
+                <span className="text-[9px] opacity-75 block">PRN: CM23001</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('faculty@sbjit.edu.in')}
+                onClick={() => handleQuickDemoLogin('bhushanmanjrekar@sbjit.edu.in')}
                 className="p-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-300 hover:bg-emerald-600 hover:text-white transition text-center cursor-pointer active:scale-95 group"
               >
-                <BookOpen className="w-3.5 h-3.5 mx-auto mb-1 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-black block">Faculty</span>
+                <BookOpen className="w-3.5 h-3.5 mx-auto mb-0.5 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-black block">Prof. Bhushan</span>
+                <span className="text-[9px] opacity-75 block">Deep Learning</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickDemoLogin('sujatasardare@sbjit.edu.in')}
+                className="p-2 rounded-2xl bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-100 dark:border-cyan-800/60 text-cyan-600 dark:text-cyan-300 hover:bg-cyan-600 hover:text-white transition text-center cursor-pointer active:scale-95 group"
+              >
+                <BookOpen className="w-3.5 h-3.5 mx-auto mb-0.5 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-black block">Prof. Sujata</span>
+                <span className="text-[9px] opacity-75 block">Vision & Lab</span>
               </button>
 
               <button
@@ -297,8 +309,9 @@ export const AuthPage: React.FC = () => {
                 onClick={() => handleQuickDemoLogin('admin@sbjit.edu.in')}
                 className="p-2 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-100 dark:border-rose-800/60 text-rose-600 dark:text-rose-300 hover:bg-rose-600 hover:text-white transition text-center cursor-pointer active:scale-95 group"
               >
-                <ShieldCheck className="w-3.5 h-3.5 mx-auto mb-1 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-black block">Admin</span>
+                <ShieldCheck className="w-3.5 h-3.5 mx-auto mb-0.5 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-black block">Admin Portal</span>
+                <span className="text-[9px] opacity-75 block">Dean Academics</span>
               </button>
             </div>
           </div>
