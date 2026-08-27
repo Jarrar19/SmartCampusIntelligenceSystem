@@ -35,6 +35,53 @@ export const memoryUpload = multer({
   },
 });
 
+/**
+ * Deep inspection of file buffer header magic numbers to prevent MIME spoofing
+ */
+export function validateMagicBytes(buffer: Buffer, ext: string): boolean {
+  if (!buffer || buffer.length < 4) return false;
+
+  const hexHeader = buffer.slice(0, 12).toString('hex').toUpperCase();
+
+  switch (ext) {
+    case 'pdf':
+      // %PDF- => 25 50 44 46
+      return hexHeader.startsWith('25504446');
+    case 'png':
+      // 89 50 4E 47
+      return hexHeader.startsWith('89504E47');
+    case 'jpg':
+    case 'jpeg':
+      // FF D8 FF
+      return hexHeader.startsWith('FFD8FF');
+    case 'webp':
+      // RIFF....WEBP => 52 49 46 46 .... 57 45 42 50
+      return buffer.slice(0, 4).toString('ascii') === 'RIFF' && buffer.slice(8, 12).toString('ascii') === 'WEBP';
+    case 'docx':
+    case 'pptx':
+    case 'xlsx':
+    case 'zip':
+      // PK.. => 50 4B 03 04 or 50 4B 05 06
+      return hexHeader.startsWith('504B0304') || hexHeader.startsWith('504B0506');
+    case 'txt':
+    case 'csv':
+    case 'py':
+    case 'cpp':
+    case 'c':
+    case 'java':
+    case 'js':
+    case 'ts':
+    case 'json':
+      // Text files should contain valid UTF-8/ASCII characters without binary null bytes
+      for (let i = 0; i < Math.min(buffer.length, 512); i++) {
+        if (buffer[i] === 0x00) return false; // Null byte indicates binary executable
+      }
+      return true;
+    default:
+      return true;
+  }
+}
+
 export function saveBufferToFile(
   buffer: Buffer,
   categoryFolder: string,
@@ -52,6 +99,11 @@ export function saveBufferToFile(
 
   if (!ext || !allowed.includes(ext)) {
     throw new Error(`File extension .${ext} is not allowed. Allowed: ${allowed.join(', ')}`);
+  }
+
+  // Deep Magic Byte Signature Inspection
+  if (!validateMagicBytes(buffer, ext)) {
+    throw new Error(`File integrity verification failed: Content signature does not match claimed .${ext} extension.`);
   }
 
   const fileHash = calculateFileHash(buffer);

@@ -261,11 +261,18 @@ export async function downloadResource(req: Request, res: Response) {
   try {
     const fullPath = resolveFilePath(resource.filePath);
 
-    // Increment download count
+    // Increment download/view count
     await prisma.resource.update({
       where: { id },
       data: { downloadsCount: { increment: 1 } },
     });
+
+    const isPreview = req.query.preview === 'true' || req.query.inline === 'true';
+    if (isPreview) {
+      res.setHeader('Content-Type', resource.mimeType || 'application/pdf');
+      res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(resource.fileName)}"`);
+      return res.sendFile(fullPath);
+    }
 
     return res.download(fullPath, resource.fileName);
   } catch (error: any) {

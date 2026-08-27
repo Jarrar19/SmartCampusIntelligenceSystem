@@ -12,6 +12,7 @@ export interface AuthUser {
   semester?: number | null;
   isActive: boolean;
   isVerified: boolean;
+  tokenVersion?: number;
 }
 
 declare global {
@@ -37,6 +38,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
       userId: number;
       email: string;
       role: string;
+      tokenVersion?: number;
     };
 
     const user = await prisma.user.findUnique({
@@ -50,6 +52,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
         semester: true,
         isActive: true,
         isVerified: true,
+        tokenVersion: true,
       },
     });
 
@@ -64,6 +67,14 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
       return res.status(403).json({
         success: false,
         message: 'Account is deactivated. Please contact administrator.',
+      });
+    }
+
+    // Check token version to invalidate revoked tokens (after password change/logout)
+    if (decoded.tokenVersion !== undefined && user.tokenVersion !== decoded.tokenVersion) {
+      return res.status(401).json({
+        success: false,
+        message: 'Session has been invalidated. Please login again.',
       });
     }
 

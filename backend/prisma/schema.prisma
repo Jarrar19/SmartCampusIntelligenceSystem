@@ -33,6 +33,7 @@ model User {
   verificationToken     String?
   resetToken            String?
   resetTokenExpiresAt   DateTime?
+  tokenVersion          Int                   @default(1)
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
 

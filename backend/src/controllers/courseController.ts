@@ -385,20 +385,23 @@ export async function createAnnouncement(req: Request, res: Response) {
     },
   });
 
-  // Notify all enrolled students
-  for (const enrollment of course.enrollments) {
-    await prisma.notification.create({
-      data: {
+  // Batch notify all enrolled students in a single DB operation
+  if (course.enrollments.length > 0) {
+    await prisma.notification.createMany({
+      data: course.enrollments.map((enrollment) => ({
         userId: enrollment.studentId,
         title: `New Announcement in ${course.courseCode}`,
         message: `${announcement.title}: ${announcement.content.substring(0, 80)}...`,
         type: 'ACADEMIC',
         link: `/courses/${course.id}`,
-      },
+      })),
     });
-    emitToUser(enrollment.studentId, 'notification', {
-      title: `New Announcement in ${course.courseCode}`,
-      message: announcement.title,
+
+    course.enrollments.forEach((enrollment) => {
+      emitToUser(enrollment.studentId, 'notification', {
+        title: `New Announcement in ${course.courseCode}`,
+        message: announcement.title,
+      });
     });
   }
 

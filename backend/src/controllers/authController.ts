@@ -131,6 +131,7 @@ export async function register(req: Request, res: Response, next: any) {
         tgMentorName: true,
         isVerified: true,
         isActive: true,
+        tokenVersion: true,
         createdAt: true,
       },
     });
@@ -183,15 +184,15 @@ export async function register(req: Request, res: Response, next: any) {
       },
     });
 
-    // Generate tokens
+    // Generate tokens with tokenVersion for revocation capability
     const accessToken = jwt.sign(
-      { userId: newUser.id, email: newUser.email, role: newUser.role },
+      { userId: newUser.id, email: newUser.email, role: newUser.role, tokenVersion: newUser.tokenVersion },
       config.JWT_SECRET,
       { expiresIn: config.JWT_EXPIRES_IN as any }
     );
 
     const refreshToken = jwt.sign(
-      { userId: newUser.id, email: newUser.email, role: newUser.role, type: 'refresh' },
+      { userId: newUser.id, email: newUser.email, role: newUser.role, tokenVersion: newUser.tokenVersion, type: 'refresh' },
       config.JWT_SECRET,
       { expiresIn: config.JWT_REFRESH_EXPIRES_IN as any }
     );
@@ -270,13 +271,13 @@ export async function login(req: Request, res: Response, next: any) {
     });
 
     const accessToken = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role },
+      { userId: user.id, email: user.email, role: user.role, tokenVersion: user.tokenVersion },
       config.JWT_SECRET,
       { expiresIn: config.JWT_EXPIRES_IN as any }
     );
 
     const refreshToken = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role, type: 'refresh' },
+      { userId: user.id, email: user.email, role: user.role, tokenVersion: user.tokenVersion, type: 'refresh' },
       config.JWT_SECRET,
       { expiresIn: config.JWT_REFRESH_EXPIRES_IN as any }
     );
@@ -442,6 +443,7 @@ export async function resetPassword(req: Request, res: Response, next: any) {
         passwordHash,
         resetToken: null,
         resetTokenExpiresAt: null,
+        tokenVersion: { increment: 1 },
       },
     });
 
@@ -491,7 +493,10 @@ export async function changePassword(req: Request, res: Response, next: any) {
 
     await prisma.user.update({
       where: { id: user.id },
-      data: { passwordHash },
+      data: {
+        passwordHash,
+        tokenVersion: { increment: 1 },
+      },
     });
 
     await logAuditEvent({
@@ -553,6 +558,11 @@ export async function getMe(req: Request, res: Response) {
 export async function logout(req: Request, res: Response, next: any) {
   try {
     if (req.user) {
+      await prisma.user.update({
+        where: { id: req.user.id },
+        data: { tokenVersion: { increment: 1 } },
+      });
+
       await logAuditEvent({
         userId: req.user.id,
         action: 'AUTH_LOGOUT',
