@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   ShoppingBag, Heart, MessageSquare, ShieldCheck, 
   MapPin, User, Tag, CheckCircle2, ShieldAlert, ArrowRight,
-  ChevronLeft, ChevronRight, Check
+  ChevronLeft, ChevronRight, Check, Trash2
 } from 'lucide-react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
@@ -96,6 +96,23 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
       }
     } catch (err: any) {
       error(err.response?.data?.message || 'Report failed');
+    }
+  };
+
+  const handleDeleteProduct = async () => {
+    if (!window.confirm('Are you sure you want to delete this listing from the marketplace?')) return;
+    setIsSubmitting(true);
+    try {
+      const res = await api.delete(`/marketplace/products/${product.id}`);
+      if (res.data.success) {
+        success('Listing deleted permanently');
+        onRefresh();
+        onClose();
+      }
+    } catch (err: any) {
+      error(err.response?.data?.message || 'Delete failed');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -268,7 +285,17 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             </button>
           </div>
 
-          {!isMine && (
+          {isMine ? (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDeleteProduct}
+              isLoading={isSubmitting}
+              leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+            >
+              Delete My Listing
+            </Button>
+          ) : (
             <div className="flex items-center space-x-2">
               <Button
                 variant="secondary"

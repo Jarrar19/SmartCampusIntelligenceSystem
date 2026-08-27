@@ -20,12 +20,14 @@ interface StudentDashboardProps {
   onNavigate: (tab: string, courseId?: number) => void;
   onOpenUploadResource: () => void;
   onOpenCreateProduct: () => void;
+  onOpenChat?: () => void;
 }
 
 export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   onNavigate,
   onOpenUploadResource,
   onOpenCreateProduct,
+  onOpenChat,
 }) => {
   const { user } = useAuth();
   const [stats, setStats] = useState<any>({});
@@ -461,7 +463,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
         <div className="lg:col-span-5 space-y-6">
           
           {/* Teacher Guardian (TG) Mentor Card */}
-          {user && <FacultyMentorCard user={user} onOpenChat={() => onNavigate('chat')} />}
+          {user && <FacultyMentorCard user={user} onOpenChat={onOpenChat} />}
 
           {/* Quick Actions Card */}
           <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4 bg-gradient-to-br from-indigo-500/5 via-transparent to-brand-500/5">

@@ -10,7 +10,7 @@ interface CreateAssignmentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  courseId: number;
+  courseId?: number;
   courseCode?: string;
 }
 
@@ -18,11 +18,13 @@ export const CreateAssignmentModal: React.FC<CreateAssignmentModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
-  courseId,
+  courseId: initialCourseId,
   courseCode,
 }) => {
   const { success, error } = useToast();
 
+  const [selectedCourseId, setSelectedCourseId] = useState<number | ''>(initialCourseId || '');
+  const [courses, setCourses] = useState<Array<{ id: number; title: string; courseCode: string }>>([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [maxMarks, setMaxMarks] = useState<number>(100);
@@ -30,8 +32,27 @@ export const CreateAssignmentModal: React.FC<CreateAssignmentModalProps> = ({
   const [allowLate, setAllowLate] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  React.useEffect(() => {
+    if (!initialCourseId && isOpen) {
+      api.get('/courses').then((res) => {
+        if (res.data.success) {
+          setCourses(res.data.data);
+          if (res.data.data.length > 0) {
+            setSelectedCourseId(res.data.data[0].id);
+          }
+        }
+      }).catch(() => {});
+    }
+  }, [initialCourseId, isOpen]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const targetCourseId = initialCourseId || selectedCourseId;
+    if (!targetCourseId) {
+      error('Please select a target course.');
+      return;
+    }
+
     if (!title.trim() || !description.trim() || !dueDate) {
       error('Please complete all required fields.');
       return;
@@ -40,7 +61,7 @@ export const CreateAssignmentModal: React.FC<CreateAssignmentModalProps> = ({
     setIsSubmitting(true);
     try {
       const res = await api.post('/assignments', {
-        courseId,
+        courseId: Number(targetCourseId),
         title: title.trim(),
         description: description.trim(),
         maxMarks: Number(maxMarks),
@@ -72,6 +93,27 @@ export const CreateAssignmentModal: React.FC<CreateAssignmentModalProps> = ({
       maxWidth="lg"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
+        {!initialCourseId && (
+          <div className="space-y-1.5 text-left">
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+              Target Course <span className="text-rose-500">*</span>
+            </label>
+            <select
+              value={selectedCourseId}
+              onChange={(e) => setSelectedCourseId(Number(e.target.value))}
+              className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-medium focus:outline-none"
+              required
+            >
+              <option value="" className="bg-[#061512]">-- Select Course --</option>
+              {courses.map((c) => (
+                <option key={c.id} value={c.id} className="bg-[#061512]">
+                  {c.courseCode} - {c.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <Input
           label="Assignment Title"
           placeholder="e.g. Lab 3: Red-Black Tree Implementation & Benchmark"

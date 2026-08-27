@@ -64,14 +64,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl transition-colors duration-200 shadow-2xs">
+    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#061512]/80 backdrop-blur-2xl transition-colors duration-200 shadow-xl shadow-emerald-950/40">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-[1500px] mx-auto gap-4">
         {/* Left: Branding & Navigation Toggle */}
         <div className="flex items-center space-x-3 flex-shrink-0">
           {onOpenMobileMenu && (
             <button
               onClick={onOpenMobileMenu}
-              className="lg:hidden p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+              className="lg:hidden p-2 text-emerald-100/70 hover:text-white rounded-2xl hover:bg-white/10 transition cursor-pointer"
               aria-label="Open Mobile Menu"
             >
               <Menu className="w-5 h-5" />
@@ -81,7 +81,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
-              className="hidden lg:flex p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer active:scale-95"
+              className="hidden lg:flex p-2 text-emerald-100/70 hover:text-white rounded-2xl hover:bg-white/10 transition cursor-pointer active:scale-95"
               title={isSidebarCollapsed ? 'Expand Navigation Sidebar' : 'Collapse Navigation Sidebar'}
               aria-label="Toggle Sidebar"
             >
@@ -90,7 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
 
           <div className="flex items-center space-x-2.5">
-            <div className="flex items-center justify-center w-9 h-9 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-500 text-white shadow-md shadow-brand-500/25 border border-indigo-400/20">
+            <div className="flex items-center justify-center w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-500/30 border border-emerald-300/30">
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>

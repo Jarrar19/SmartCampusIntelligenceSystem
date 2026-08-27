@@ -57,6 +57,7 @@ model User {
   notifications         Notification[]
   blocksInitiated       BlockedUser[]         @relation("BlockInitiator")
   blocksReceived        BlockedUser[]         @relation("BlockTarget")
+  examRecords           ExamRecord[]
 
   @@index([email])
   @@index([role])
@@ -82,6 +83,7 @@ model Course {
   announcements Announcement[]
   resources     Resource[]
   assignments   Assignment[]
+  examRecords   ExamRecord[]
 
   @@index([facultyId])
   @@index([department, semester])
@@ -399,6 +401,21 @@ model RosterCourseRegistration {
 
   @@unique([prn, courseCode])
   @@index([prn])
+}
+
+model ExamRecord {
+  id            Int      @id @default(autoincrement())
+  studentId     Int
+  courseId      Int
+  examType      String   // MSE1, MSE2, ESE, UNIT_TEST
+  marksObtained Float
+  maxMarks      Float    @default(100.0)
+  examDate      DateTime @default(now())
+
+  student       User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([studentId, courseId])
 }
 
 

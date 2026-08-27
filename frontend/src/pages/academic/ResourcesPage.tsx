@@ -191,16 +191,16 @@ export const ResourcesPage: React.FC = () => {
         </div>
 
         {/* Category Pills & Saved Filters */}
-        <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+        <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-white/40 dark:border-white/10">
           <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 max-w-full">
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setCategoryFilter(cat.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer active:scale-95 ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition whitespace-nowrap cursor-pointer active:scale-95 ${
                   categoryFilter === cat.id
-                    ? 'bg-brand-600 text-white shadow-md shadow-brand-500/25'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30 border border-white/30 backdrop-blur-xl'
+                    : 'bg-white/40 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 border border-white/60 dark:border-white/10 hover:bg-white/70 dark:hover:bg-slate-700/60 backdrop-blur-md'
                 }`}
               >
                 {cat.label}
@@ -211,10 +211,10 @@ export const ResourcesPage: React.FC = () => {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setBookmarkedOnly(!bookmarkedOnly)}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer active:scale-95 ${
                 bookmarkedOnly
-                  ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/25'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-lg shadow-amber-500/30 border border-white/30'
+                  : 'bg-white/40 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 border border-white/60 dark:border-white/10 hover:bg-white/70 dark:hover:bg-slate-700/60 backdrop-blur-md'
               }`}
             >
               <Bookmark className="w-3.5 h-3.5" />
@@ -223,10 +223,10 @@ export const ResourcesPage: React.FC = () => {
 
             <button
               onClick={() => setMyUploadsOnly(!myUploadsOnly)}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition cursor-pointer active:scale-95 ${
                 myUploadsOnly
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/25'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-gradient-to-r from-brand-600 to-indigo-600 text-white font-black shadow-lg shadow-indigo-500/30 border border-white/30'
+                  : 'bg-white/40 dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 border border-white/60 dark:border-white/10 hover:bg-white/70 dark:hover:bg-slate-700/60 backdrop-blur-md'
               }`}
             >
               <User className="w-3.5 h-3.5" />
@@ -256,7 +256,7 @@ export const ResourcesPage: React.FC = () => {
           {resources.map((res) => (
             <div
               key={res.id}
-              className="p-6 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between space-y-4 shadow-sm"
+              className="p-6 rounded-3xl glass-panel glass-panel-hover border border-white/70 dark:border-white/15 flex flex-col justify-between space-y-4 shadow-lg backdrop-blur-2xl"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">

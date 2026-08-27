@@ -87,4 +87,8 @@ router.get('/chat/conversations/:id', authenticate, asyncHandler(chatController.
 router.post('/chat/conversations/:id/messages', authenticate, asyncHandler(chatController.sendMessage));
 router.post('/chat/block-user', authenticate, asyncHandler(chatController.blockUser));
 
+// AI Academic Advisor Routes
+import aiRoutes from './ai';
+router.use('/ai', aiRoutes);
+
 export default router;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShoppingBag, Search, Plus, Heart, Filter, 
   Tag, MapPin, Sparkles, MessageSquare, ArrowRight, ShieldCheck,
-  BookOpen, Laptop, Shirt, Activity
+  BookOpen, Laptop, Shirt, Activity, Trash2
 } from 'lucide-react';
 import { api, STORAGE_BASE_URL } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
@@ -73,6 +73,20 @@ export const MarketplacePage: React.FC = () => {
   const handleMessageSeller = async (e: React.MouseEvent, product: MarketplaceProduct) => {
     e.stopPropagation();
     await startConversationWithProduct(product.id, `Hi, is your listing "${product.title}" still available for campus handover?`);
+  };
+
+  const handleDeleteProduct = async (e: React.MouseEvent, productId: number) => {
+    e.stopPropagation();
+    if (!window.confirm('Are you sure you want to delete this listing from the marketplace?')) return;
+    try {
+      const res = await api.delete(`/marketplace/products/${productId}`);
+      if (res.data.success) {
+        success('Listing removed from marketplace');
+        fetchProducts();
+      }
+    } catch (err: any) {
+      error(err.response?.data?.message || 'Failed to delete listing');
+    }
   };
 
   const categories = [
@@ -259,13 +273,25 @@ export const MarketplacePage: React.FC = () => {
                     </p>
                   </div>
 
-                  <button
-                    onClick={(e) => handleMessageSeller(e, product)}
-                    className="p-2 rounded-xl bg-indigo-50 dark:bg-brand-500/15 text-brand-600 dark:text-brand-400 hover:bg-brand-600 hover:text-white dark:hover:bg-brand-600 transition cursor-pointer flex-shrink-0"
-                    title="Direct In-App Message"
-                  >
-                    <MessageSquare className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="flex items-center space-x-1.5 flex-shrink-0">
+                    {product.isMine && (
+                      <button
+                        onClick={(e) => handleDeleteProduct(e, product.id)}
+                        className="p-2 rounded-xl bg-rose-950/60 text-rose-400 hover:bg-rose-600 hover:text-white transition cursor-pointer border border-rose-500/30"
+                        title="Delete Listing"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+
+                    <button
+                      onClick={(e) => handleMessageSeller(e, product)}
+                      className="p-2 rounded-xl bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white transition cursor-pointer border border-emerald-500/30"
+                      title="Direct In-App Message"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             );

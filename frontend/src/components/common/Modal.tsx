@@ -56,13 +56,13 @@ export const Modal: React.FC<ModalProps> = ({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-slate-950/60 backdrop-blur-xl transition-opacity"
         onClick={onClose}
       />
 
       {/* Dialog Card */}
       <div
-        className={`relative z-10 w-full ${maxWidthClasses[maxWidth]} max-h-[92vh] flex flex-col rounded-3xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200/90 dark:border-slate-800 animate-fade-in-up my-auto overflow-hidden`}
+        className={`relative z-10 w-full ${maxWidthClasses[maxWidth]} max-h-[92vh] flex flex-col rounded-3xl glass-panel shadow-2xl border border-white/60 dark:border-white/15 animate-fade-in-up my-auto overflow-hidden`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

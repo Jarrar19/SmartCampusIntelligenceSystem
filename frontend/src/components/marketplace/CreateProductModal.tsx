@@ -27,7 +27,7 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<ProductCategory>('TEXTBOOK');
   const [condition, setCondition] = useState<ProductCondition>('GOOD');
-  const [price, setPrice] = useState<number | string>(0);
+  const [price, setPrice] = useState<string>('0');
   const [campusInfo, setCampusInfo] = useState('Campus Library / Main Canteen');
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -152,12 +152,12 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
           </div>
 
           <Input
-            label="Price in ₹ (0 for Free item)"
+            label="Price in ₹ (Type 0 for Free item)"
             type="number"
             min="0"
-            step="10"
+            placeholder="e.g. 250"
             value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
+            onChange={(e) => setPrice(e.target.value)}
             isRequired
           />
         </div>
