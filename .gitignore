@@ -19,7 +19,10 @@ backend/.env
 backend/prisma/dev.db
 backend/storage/resources/*
 backend/storage/assignments/*
-backend/storage/products/*
+backend/storage/marketplace/*
+backend/storage/avatars/*
+backend/storage/general/*
+!backend/storage/roster_data.json
 !backend/storage/.gitkeep
 
 # System & OS Files
