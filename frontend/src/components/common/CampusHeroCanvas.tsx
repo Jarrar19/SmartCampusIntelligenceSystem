@@ -7,7 +7,7 @@ interface CampusHeroCanvasProps {
 
 export const CampusHeroCanvas: React.FC<CampusHeroCanvasProps> = ({
   className = '',
-  nodeCount = 28,
+  nodeCount = 36,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -25,24 +25,42 @@ export const CampusHeroCanvas: React.FC<CampusHeroCanvasProps> = ({
       if (!ctx) return;
 
       let animationFrameId: number;
-      let width = (canvas.width = canvas.offsetWidth || 600);
-      let height = (canvas.height = canvas.offsetHeight || 200);
+      let width = (canvas.width = canvas.offsetWidth || 800);
+      let height = (canvas.height = canvas.offsetHeight || 240);
+
+      let mouseX = -1000;
+      let mouseY = -1000;
+
+      const handleMouseMove = (e: MouseEvent) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+      };
+
+      const handleMouseLeave = () => {
+        mouseX = -1000;
+        mouseY = -1000;
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+      canvas.addEventListener('mouseleave', handleMouseLeave);
 
       const handleResize = () => {
         if (!canvas) return;
-        width = canvas.width = canvas.offsetWidth || 600;
-        height = canvas.height = canvas.offsetHeight || 200;
+        width = canvas.width = canvas.offsetWidth || 800;
+        height = canvas.height = canvas.offsetHeight || 240;
       };
 
       window.addEventListener('resize', handleResize);
 
       const nodes = Array.from({ length: nodeCount }, () => ({
-        x: Math.random() * (width || 600),
-        y: Math.random() * (height || 200),
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45,
+        x: Math.random() * (width || 800),
+        y: Math.random() * (height || 240),
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        baseRadius: Math.random() * 2 + 1.2,
         radius: Math.random() * 2 + 1.2,
-        opacity: Math.random() * 0.5 + 0.2,
+        opacity: Math.random() * 0.45 + 0.25,
       }));
 
       let isVisible = true;
@@ -61,6 +79,7 @@ export const CampusHeroCanvas: React.FC<CampusHeroCanvasProps> = ({
         if (isVisible && ctx && width > 0 && height > 0) {
           ctx.clearRect(0, 0, width, height);
 
+          // Draw connections between close nodes
           for (let i = 0; i < nodes.length; i++) {
             const a = nodes[i];
             for (let j = i + 1; j < nodes.length; j++) {
@@ -69,8 +88,8 @@ export const CampusHeroCanvas: React.FC<CampusHeroCanvasProps> = ({
               const dy = a.y - b.y;
               const dist = Math.sqrt(dx * dx + dy * dy);
 
-              if (dist < 110) {
-                const alpha = (1 - dist / 110) * 0.22;
+              if (dist < 120) {
+                const alpha = (1 - dist / 120) * 0.24;
                 ctx.strokeStyle = `rgba(99, 102, 241, ${alpha})`;
                 ctx.lineWidth = 1;
                 ctx.beginPath();
@@ -81,8 +100,20 @@ export const CampusHeroCanvas: React.FC<CampusHeroCanvasProps> = ({
             }
           }
 
+          // Update and render nodes
           for (let i = 0; i < nodes.length; i++) {
             const n = nodes[i];
+            
+            // Mouse interactive parallax push
+            const mdx = n.x - mouseX;
+            const mdy = n.y - mouseY;
+            const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+            if (mdist < 80) {
+              const force = (1 - mdist / 80) * 2;
+              n.x += (mdx / mdist) * force;
+              n.y += (mdy / mdist) * force;
+            }
+
             n.x += n.vx;
             n.y += n.vy;
 
@@ -103,6 +134,8 @@ export const CampusHeroCanvas: React.FC<CampusHeroCanvasProps> = ({
 
       return () => {
         window.removeEventListener('resize', handleResize);
+        window.removeEventListener('mousemove', handleMouseMove);
+        canvas.removeEventListener('mouseleave', handleMouseLeave);
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
         if (observer) observer.disconnect();
       };

@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Image as ImageIcon, X, AlertCircle } from 'lucide-react';
+import { 
+  ShoppingBag, Upload, X, Tag, DollarSign, 
+  MapPin, AlertCircle, Image as ImageIcon, Sparkles, Check
+} from 'lucide-react';
 import { Modal } from '../common/Modal';
-import { api } from '../../services/api';
+import { Button } from '../common/Button';
+import { Input } from '../common/Input';
+import { api, extractErrorMessage } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import { ProductCategory, ProductCondition } from '../../types';
 
@@ -21,23 +26,41 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<ProductCategory>('TEXTBOOK');
-  const [price, setPrice] = useState<number>(0);
   const [condition, setCondition] = useState<ProductCondition>('GOOD');
-  const [campusInfo, setCampusInfo] = useState('');
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [price, setPrice] = useState<number | string>(0);
+  const [campusInfo, setCampusInfo] = useState('Campus Library / Main Canteen');
+  const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const filesArray = Array.from(e.target.files).slice(0, 4);
-      setSelectedFiles(filesArray);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const filesArray = Array.from(e.target.files);
+    
+    if (images.length + filesArray.length > 5) {
+      error('Maximum 5 images allowed per listing.');
+      return;
     }
+
+    const newFiles = [...images, ...filesArray].slice(0, 5);
+    setImages(newFiles);
+
+    // Generate local previews
+    const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
+    setImagePreviews(newPreviews);
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const updatedFiles = images.filter((_, idx) => idx !== index);
+    setImages(updatedFiles);
+    const updatedPreviews = imagePreviews.filter((_, idx) => idx !== index);
+    setImagePreviews(updatedPreviews);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) {
-      error('Title and description are required.');
+      error('Please enter a product title and description.');
       return;
     }
 
@@ -47,29 +70,23 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
       formData.append('title', title.trim());
       formData.append('description', description.trim());
       formData.append('category', category);
-      formData.append('price', String(price));
       formData.append('condition', condition);
-      if (campusInfo) formData.append('campusInfo', campusInfo.trim());
+      formData.append('price', String(price));
+      formData.append('campusInfo', campusInfo.trim());
 
-      selectedFiles.forEach((file) => {
+      images.forEach((file) => {
         formData.append('images', file);
       });
 
-      const res = await api.post('/marketplace/products', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
+      const res = await api.post('/marketplace/products', formData);
       if (res.data.success) {
-        success('Product successfully listed on Campus Marketplace!');
+        success('Marketplace listing published successfully!');
         onSuccess();
         onClose();
-        setTitle('');
-        setDescription('');
-        setPrice(0);
-        setSelectedFiles([]);
       }
     } catch (err: any) {
-      error(err.response?.data?.message || 'Failed to list product');
+      const msg = await extractErrorMessage(err, 'Failed to publish listing');
+      error(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -79,144 +96,139 @@ export const CreateProductModal: React.FC<CreateProductModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="List Item on Campus Marketplace"
-      subtitle="Sell or giveaway textbooks, calculators, lab coats, and engineering items."
+      title="Create Campus Marketplace Listing"
+      subtitle="Sell or give away textbooks, lab coats, calculators, or hostel essentials to verified peers."
       maxWidth="xl"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-            Item Title *
-          </label>
-          <input
-            type="text"
-            required
+        {/* Title & Category */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            label="Listing Title"
+            placeholder="e.g. Engineering Mathematics Vol II"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Higher Engineering Mathematics by B.S. Grewal (8th Edition)"
-            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
+            isRequired
           />
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Category</label>
+          <div className="space-y-1.5 text-left">
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+              Category <span className="text-rose-500">*</span>
+            </label>
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value as ProductCategory)}
-              className="w-full glass-input rounded-2xl px-3.5 py-2.5 text-xs font-bold cursor-pointer"
+              onChange={(e) => setCategory(e.target.value as any)}
+              className="w-full glass-input rounded-2xl text-xs font-bold px-3.5 py-2.5 focus:outline-none"
             >
-              <option value="TEXTBOOK">Textbook</option>
-              <option value="CALCULATOR">Calculator</option>
-              <option value="LAB_COAT">Lab Coat</option>
-              <option value="STATIONERY">Stationery</option>
-              <option value="ELECTRONICS">Electronics / Kits</option>
-              <option value="HOSTEL_ITEM">Hostel Item</option>
+              <option value="TEXTBOOK">Textbook / Book</option>
+              <option value="CALCULATOR">Scientific Calculator</option>
+              <option value="LAB_COAT">Lab Coat / Apron</option>
+              <option value="ELECTRONICS">Electronics / Gadget</option>
+              <option value="HOSTEL_ITEM">Hostel Essential</option>
               <option value="SPORTS">Sports Equipment</option>
-              <option value="ACADEMIC_MATERIAL">Academic Material</option>
+              <option value="STATIONERY">Stationery Material</option>
               <option value="OTHER">Other Campus Item</option>
             </select>
           </div>
+        </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-              Price (₹) * (0 for Free)
+        {/* Condition & Price */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1.5 text-left">
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+              Item Condition <span className="text-rose-500">*</span>
             </label>
-            <input
-              type="number"
-              required
-              min={0}
-              value={price}
-              onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
-              className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-black"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Condition</label>
             <select
               value={condition}
-              onChange={(e) => setCondition(e.target.value as ProductCondition)}
-              className="w-full glass-input rounded-2xl px-3.5 py-2.5 text-xs font-bold cursor-pointer"
+              onChange={(e) => setCondition(e.target.value as any)}
+              className="w-full glass-input rounded-2xl text-xs font-bold px-3.5 py-2.5 focus:outline-none"
             >
-              <option value="NEW">Brand New</option>
-              <option value="LIKE_NEW">Like New</option>
-              <option value="GOOD">Good Condition</option>
-              <option value="USED">Used</option>
+              <option value="NEW">Brand New (Unopened)</option>
+              <option value="LIKE_NEW">Like New (Minimal Use)</option>
+              <option value="GOOD">Good (Functional & Clean)</option>
+              <option value="USED">Fair / Used</option>
               <option value="HEAVILY_USED">Heavily Used</option>
             </select>
           </div>
-        </div>
 
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-            Handover Location / Preferred Spot
-          </label>
-          <input
-            type="text"
-            value={campusInfo}
-            onChange={(e) => setCampusInfo(e.target.value)}
-            placeholder="e.g. Hostel Block B, Main Library, or CSE Canteen"
-            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
+          <Input
+            label="Price in ₹ (0 for Free item)"
+            type="number"
+            min="0"
+            step="10"
+            value={price}
+            onChange={(e) => setPrice(Number(e.target.value))}
+            isRequired
           />
         </div>
 
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-            Description & Details *
+        {/* Description */}
+        <div className="space-y-1.5 text-left">
+          <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+            Description & Notes <span className="text-rose-500">*</span>
           </label>
           <textarea
-            rows={3}
-            required
+            placeholder="Provide condition details, edition/author info, or any accessories included..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Describe edition, working condition, accessories included, or notes..."
-            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
+            rows={3}
+            className="w-full glass-input rounded-2xl text-xs font-medium px-4 py-2.5 focus:outline-none"
+            required
           />
         </div>
 
-        {/* Image Upload */}
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-            Upload Item Photos (Up to 4)
+        {/* Meetup location */}
+        <Input
+          label="Preferred Campus Exchange Location"
+          placeholder="e.g. Near Central Library / Main Canteen Ground Floor"
+          value={campusInfo}
+          onChange={(e) => setCampusInfo(e.target.value)}
+        />
+
+        {/* Multi-Image Upload */}
+        <div className="space-y-2 text-left">
+          <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+            Product Photos (Up to 5)
           </label>
-          <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-500 rounded-3xl p-5 text-center cursor-pointer transition bg-slate-50/60 dark:bg-slate-800/40">
-            <input
-              type="file"
-              id="prod-image-upload"
-              multiple
-              className="hidden"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-            <label htmlFor="prod-image-upload" className="cursor-pointer block">
-              <ImageIcon className="w-9 h-9 text-brand-600 dark:text-brand-400 mx-auto mb-2" />
-              {selectedFiles.length > 0 ? (
-                <p className="text-xs font-black text-emerald-600 dark:text-emerald-400">
-                  {selectedFiles.length} photo(s) selected
-                </p>
-              ) : (
-                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Click or drag photos here (JPG, PNG, WebP)</p>
-              )}
-            </label>
+          
+          <div className="flex items-center gap-3 flex-wrap">
+            {imagePreviews.map((src, idx) => (
+              <div key={idx} className="relative w-20 h-20 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+                <img src={src} alt="Preview" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(idx)}
+                  className="absolute top-1 right-1 p-1 bg-slate-950/80 text-white rounded-full hover:bg-rose-600 transition cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+
+            {images.length < 5 && (
+              <label className="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-400 flex flex-col items-center justify-center text-slate-400 hover:text-brand-600 cursor-pointer transition">
+                <Upload className="w-5 h-5 mb-1" />
+                <span className="text-[10px] font-bold">+ Photo</span>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center justify-end space-x-2.5 pt-4 border-t border-slate-100 dark:border-slate-800">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-          >
+        {/* Footer */}
+        <div className="flex items-center justify-end space-x-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+          <Button variant="ghost" size="sm" onClick={onClose} disabled={isSubmitting}>
             Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="px-6 py-2.5 text-xs font-black text-white bg-brand-600 hover:bg-brand-500 rounded-2xl transition shadow-md shadow-brand-500/25 disabled:opacity-50 cursor-pointer active:scale-95"
-          >
-            {isSubmitting ? 'Listing...' : 'Create Listing'}
-          </button>
+          </Button>
+          <Button type="submit" variant="primary" size="sm" isLoading={isSubmitting}>
+            Publish Listing
+          </Button>
         </div>
       </form>
     </Modal>

@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { 
   ShoppingBag, Heart, MessageSquare, ShieldCheck, 
-  MapPin, User, Tag, CheckCircle2, ShieldAlert, ArrowRight 
+  MapPin, User, Tag, CheckCircle2, ShieldAlert, ArrowRight,
+  ChevronLeft, ChevronRight, Check
 } from 'lucide-react';
 import { Modal } from '../common/Modal';
+import { Button } from '../common/Button';
+import { Badge } from '../common/Badge';
 import { api, STORAGE_BASE_URL } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { useChat } from '../../context/ChatContext';
 import { MarketplaceProduct } from '../../types';
-import { Badge } from '../common/Badge';
 
 interface ProductDetailModalProps {
   isOpen: boolean;
@@ -37,6 +39,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
   const isMine = product.sellerId === user?.id;
   const currentImage = product.images?.[selectedImageIndex] || product.images?.[0];
+  const primaryImgUrl = currentImage?.imagePath 
+    ? (currentImage.imagePath.startsWith('http') ? currentImage.imagePath : `${STORAGE_BASE_URL}/${currentImage.imagePath}`)
+    : null;
 
   const handleFavorite = async () => {
     try {
@@ -94,205 +99,196 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     }
   };
 
-  const getStatusBadge = () => {
-    switch (product.status) {
-      case 'AVAILABLE':
-        return <Badge variant="emerald">Available for Handover</Badge>;
-      case 'RESERVED':
-        return <Badge variant="amber">Reserved</Badge>;
-      case 'SOLD':
-        return <Badge variant="slate">Sold</Badge>;
-      default:
-        return <Badge variant="slate">{product.status}</Badge>;
-    }
-  };
-
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       title={product.title}
-      subtitle={`Category: ${product.category} • Listed by verified university peer`}
+      subtitle={`Category: ${product.category} • Condition: ${product.condition}`}
       maxWidth="2xl"
     >
       <div className="space-y-6">
-        {/* Images & Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Images */}
-          <div className="space-y-3">
-            <div className="rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 aspect-square flex items-center justify-center relative shadow-inner">
-              {currentImage ? (
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          {/* Image Gallery Column (6 cols) */}
+          <div className="md:col-span-6 space-y-3">
+            <div className="relative w-full h-64 rounded-3xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center border border-slate-200/80 dark:border-slate-700/80">
+              {primaryImgUrl ? (
                 <img
-                  src={`${STORAGE_BASE_URL}/${currentImage.imagePath}`}
+                  src={primaryImgUrl}
                   alt={product.title}
-                  className="w-full h-full object-cover transition-all duration-300"
-                  onError={(e) => {
-                    (e.target as any).src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400';
-                  }}
+                  className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="text-center p-6 text-slate-400">
-                  <ShoppingBag className="w-16 h-16 mx-auto mb-2 text-slate-300 dark:text-slate-600" />
-                  <span className="text-xs font-semibold">No image provided</span>
+                <ShoppingBag className="w-16 h-16 text-slate-300 dark:text-slate-600" />
+              )}
+
+              <div className="absolute top-3 left-3">
+                <span className="px-3 py-1.5 rounded-xl text-xs font-black text-white bg-slate-950/80 backdrop-blur-md shadow-xs">
+                  {product.price === 0 ? 'FREE' : `₹${product.price}`}
+                </span>
+              </div>
+
+              {/* Multiple images thumbnail selector */}
+              {product.images && product.images.length > 1 && (
+                <div className="absolute bottom-3 inset-x-0 flex justify-center space-x-1.5">
+                  {product.images.map((img, idx) => (
+                    <button
+                      key={img.id}
+                      onClick={() => setSelectedImageIndex(idx)}
+                      className={`w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${
+                        selectedImageIndex === idx ? 'bg-brand-500 w-6' : 'bg-white/60 hover:bg-white'
+                      }`}
+                    />
+                  ))}
                 </div>
               )}
-              <div className="absolute top-3 left-3">
-                {getStatusBadge()}
-              </div>
-              <button
-                onClick={handleFavorite}
-                className={`absolute top-3 right-3 p-2 rounded-2xl backdrop-blur-md transition cursor-pointer shadow-xs active:scale-90 ${
-                  product.isFavorited
-                    ? 'bg-rose-50 dark:bg-rose-500/20 text-rose-500 dark:text-rose-400 border border-rose-200 dark:border-rose-500/40'
-                    : 'bg-white/85 dark:bg-slate-900/70 text-slate-600 dark:text-slate-300 hover:text-rose-500 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700'
-                }`}
-              >
-                <Heart className={`w-4 h-4 ${product.isFavorited ? 'fill-rose-500' : ''}`} />
-              </button>
             </div>
 
-            {/* Thumbnail Selector Strip */}
             {product.images && product.images.length > 1 && (
-              <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                {product.images.map((img, idx) => (
-                  <button
-                    key={img.id || idx}
-                    onClick={() => setSelectedImageIndex(idx)}
-                    className={`w-14 h-14 rounded-2xl overflow-hidden border-2 transition cursor-pointer flex-shrink-0 ${
-                      selectedImageIndex === idx
-                        ? 'border-brand-600 dark:border-brand-400 scale-105 shadow-xs'
-                        : 'border-transparent opacity-60 hover:opacity-100'
-                    }`}
-                  >
-                    <img
-                      src={`${STORAGE_BASE_URL}/${img.imagePath}`}
-                      alt={`Thumbnail ${idx + 1}`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as any).src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400';
-                      }}
-                    />
-                  </button>
-                ))}
+              <div className="flex items-center space-x-2 overflow-x-auto pb-1">
+                {product.images.map((img, idx) => {
+                  const url = img.imagePath.startsWith('http') ? img.imagePath : `${STORAGE_BASE_URL}/${img.imagePath}`;
+                  return (
+                    <button
+                      key={img.id}
+                      onClick={() => setSelectedImageIndex(idx)}
+                      className={`w-14 h-14 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition cursor-pointer ${
+                        selectedImageIndex === idx ? 'border-brand-500' : 'border-transparent opacity-60 hover:opacity-100'
+                      }`}
+                    >
+                      <img src={url} alt="" className="w-full h-full object-cover" />
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
 
-          {/* Details */}
-          <div className="flex flex-col justify-between space-y-4">
-            <div>
-              <div className="flex items-baseline justify-between mb-3">
-                <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
-                  {product.price === 0 ? 'Free Giveaway' : `₹${product.price}`}
-                </span>
-                <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                  Condition: {product.condition}
-                </span>
+          {/* Details Column (6 cols) */}
+          <div className="md:col-span-6 space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2 flex-wrap">
+                <Badge variant="emerald" size="xs">
+                  {product.status}
+                </Badge>
+                <Badge variant="indigo" size="xs">
+                  {product.condition}
+                </Badge>
+                <Badge variant="slate" size="xs">
+                  {product.category}
+                </Badge>
               </div>
 
-              <div className="space-y-2">
-                <p className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                  Description
-                </p>
-                <p className="text-xs text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-wrap font-medium">
-                  {product.description}
-                </p>
-              </div>
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">
+                {product.title}
+              </h2>
 
-              {product.campusInfo && (
-                <div className="mt-4 flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300 p-3.5 rounded-2xl bg-indigo-50/50 dark:bg-slate-800/40 border border-indigo-100 dark:border-slate-700/60 font-medium">
-                  <MapPin className="w-4 h-4 text-brand-600 dark:text-brand-400 flex-shrink-0" />
-                  <span>Handover spot: <strong className="text-slate-900 dark:text-white">{product.campusInfo}</strong></span>
-                </div>
-              )}
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                {product.description}
+              </p>
             </div>
 
-            {/* Seller Info (Privacy Preserving) */}
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 shadow-2xs">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-black text-xs shadow-xs">
-                    {product.seller?.fullName?.charAt(0) || 'S'}
-                  </div>
-                  <div>
-                    <p className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1">
-                      {product.seller?.fullName || 'Campus Seller'}
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                    </p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
-                      {product.seller?.semester ? `${product.seller.semester}th Sem • ` : ''}{product.seller?.department || 'Verified Student'}
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleReport}
-                  className="text-[10px] font-bold text-slate-400 hover:text-rose-600 flex items-center gap-1 transition cursor-pointer"
-                >
-                  <ShieldAlert className="w-3.5 h-3.5" />
-                  <span>Report</span>
-                </button>
+            {/* Meetup / Campus Handover Spot */}
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 flex items-start space-x-3">
+              <MapPin className="w-4 h-4 text-brand-600 dark:text-brand-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-xs font-black text-slate-900 dark:text-white">
+                  Campus Handover Spot
+                </p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                  {product.campusInfo || 'Campus Main Canteen / Library Ground Floor'}
+                </p>
               </div>
+            </div>
+
+            {/* Seller Information */}
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between">
+              <div className="flex items-center space-x-3 min-w-0">
+                <div className="w-9 h-9 rounded-2xl bg-brand-600 text-white font-black text-xs flex items-center justify-center flex-shrink-0">
+                  {product.seller?.fullName?.charAt(0) || 'S'}
+                </div>
+                <div className="truncate">
+                  <p className="text-xs font-black text-slate-900 dark:text-white truncate">
+                    {product.seller?.fullName || 'Campus Peer'}
+                  </p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                    {product.seller?.department || 'Student'} • Sem {product.seller?.semester || 6}
+                  </p>
+                </div>
+              </div>
+              <Badge variant="emerald" size="xs" dot>
+                Verified
+              </Badge>
             </div>
           </div>
         </div>
 
-        {/* Purchase Workflow / Contact Buttons */}
-        {!isMine && product.status === 'AVAILABLE' && (
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
-            {!showRequestInput ? (
-              <div className="flex flex-col sm:flex-row items-center gap-3">
-                <button
-                  onClick={handleStartChat}
-                  className="w-full sm:flex-1 py-3 px-4 rounded-2xl text-xs font-black text-slate-700 dark:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-95"
-                >
-                  <MessageSquare className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-                  <span>Message Seller Privately</span>
-                </button>
-                <button
-                  onClick={() => setShowRequestInput(true)}
-                  className="w-full sm:flex-1 py-3 px-4 rounded-2xl text-xs font-black text-white bg-brand-600 hover:bg-brand-500 transition flex items-center justify-center gap-2 shadow-lg shadow-brand-500/25 cursor-pointer active:scale-95"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>Request Handover (₹0 Platform Fee)</span>
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSendRequest} className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3 shadow-xs">
-                <p className="text-xs font-black text-slate-900 dark:text-white">Send Handover Request to Seller</p>
-                <input
-                  type="text"
-                  value={requestNote}
-                  onChange={(e) => setRequestNote(e.target.value)}
-                  placeholder="e.g. Can we meet outside library at 3 PM?"
-                  className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
-                />
-                <div className="flex items-center justify-end space-x-2.5">
-                  <button
-                    type="button"
-                    onClick={() => setShowRequestInput(false)}
-                    className="px-4 py-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-xl cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="px-5 py-2 text-xs font-black text-white bg-brand-600 hover:bg-brand-500 rounded-2xl shadow-md shadow-brand-500/25 disabled:opacity-50 cursor-pointer active:scale-95"
-                  >
-                    {isSubmitting ? 'Sending...' : 'Confirm Request'}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
+        {/* Purchase Request Input */}
+        {showRequestInput && !isMine && (
+          <form onSubmit={handleSendRequest} className="p-4 rounded-3xl bg-indigo-50/70 dark:bg-brand-950/40 border border-brand-200 dark:border-brand-800/60 space-y-3 animate-fade-in-up">
+            <h4 className="text-xs font-black text-slate-900 dark:text-white">
+              Send Official Purchase Request to Seller
+            </h4>
+            <textarea
+              placeholder="Hi, I would like to buy this item. Can we meet at the campus library tomorrow?"
+              value={requestNote}
+              onChange={(e) => setRequestNote(e.target.value)}
+              rows={2}
+              className="w-full glass-input rounded-2xl text-xs font-medium px-4 py-2.5 focus:outline-none"
+              required
+            />
+            <div className="flex justify-end space-x-2">
+              <Button variant="ghost" size="xs" onClick={() => setShowRequestInput(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" size="xs" isLoading={isSubmitting}>
+                Confirm Request
+              </Button>
+            </div>
+          </form>
         )}
 
-        {isMine && (
-          <div className="p-4 rounded-2xl bg-indigo-50 dark:bg-brand-500/10 border border-indigo-100 dark:border-brand-500/30 text-brand-700 dark:text-brand-300 text-xs text-center font-bold">
-            This is your active listing. You can manage incoming buyer requests from your "My Listings & Requests" tab.
+        {/* Action Buttons Row */}
+        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center space-x-2">
+            <Button
+              variant={product.isFavorited ? 'primary' : 'outline'}
+              size="sm"
+              onClick={handleFavorite}
+              leftIcon={<Heart className={`w-3.5 h-3.5 ${product.isFavorited ? 'fill-current' : ''}`} />}
+            >
+              {product.isFavorited ? 'Saved in Wishlist' : 'Save Item'}
+            </Button>
+            <button
+              onClick={handleReport}
+              className="p-2.5 rounded-2xl text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+              title="Report suspicious listing"
+            >
+              <ShieldAlert className="w-4 h-4" />
+            </button>
           </div>
-        )}
+
+          {!isMine && (
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleStartChat}
+                leftIcon={<MessageSquare className="w-3.5 h-3.5" />}
+              >
+                Chat with Seller
+              </Button>
+              <Button
+                variant="emerald"
+                size="sm"
+                onClick={() => setShowRequestInput(true)}
+                leftIcon={<ShoppingBag className="w-3.5 h-3.5" />}
+              >
+                Request to Buy
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </Modal>
   );

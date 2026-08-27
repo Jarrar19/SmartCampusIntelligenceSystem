@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { 
   CheckSquare, Award, Download, Clock, User, 
-  CheckCircle, AlertCircle, BookOpen, Plus, Sparkles 
+  CheckCircle, AlertCircle, BookOpen, Plus, Sparkles,
+  FileText
 } from 'lucide-react';
-import { api } from '../../services/api';
+import { api, extractErrorMessage } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import { Submission, Assignment } from '../../types';
 import { Badge } from '../../components/common/Badge';
+import { Button } from '../../components/common/Button';
 import { EmptyState } from '../../components/common/EmptyState';
 import { ListRowSkeleton } from '../../components/common/Skeleton';
 import { GradingModal } from '../../components/academic/GradingModal';
-
 
 interface GradingCenterPageProps {
   onNavigate?: (tab: string, courseId?: number) => void;
 }
 
-
-
 export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate }) => {
-  const { error } = useToast();
+  const { success, error } = useToast();
 
   const [submissions, setSubmissions] = useState<Array<{ submission: Submission; assignment: Assignment }>>([]);
   const [filter, setFilter] = useState<'all' | 'pending' | 'graded'>('pending');
@@ -44,6 +43,26 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
     fetchSubmissions();
   }, []);
 
+  const handleDownloadFile = async (submissionId: number, fileName: string) => {
+    try {
+      const response = await api.get(`/assignments/submissions/${submissionId}/download`, {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName || 'submission.pdf');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      success(`Downloading ${fileName}`);
+    } catch (err: any) {
+      const msg = await extractErrorMessage(err, 'Download failed');
+      error(msg);
+    }
+  };
+
   const filtered = submissions.filter((item) => {
     if (filter === 'pending') return item.submission.status !== 'GRADED';
     if (filter === 'graded') return item.submission.status === 'GRADED';
@@ -51,7 +70,8 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
   });
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-fade-in-up">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
@@ -67,9 +87,9 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
         <div className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 rounded-2xl">
           <button
             onClick={() => setFilter('pending')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition cursor-pointer active:scale-95 ${
               filter === 'pending'
-                ? 'bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/40 shadow-xs'
+                ? 'bg-amber-500 text-slate-950 shadow-xs'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
@@ -77,9 +97,9 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
           </button>
           <button
             onClick={() => setFilter('graded')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition cursor-pointer active:scale-95 ${
               filter === 'graded'
-                ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/40 shadow-xs'
+                ? 'bg-emerald-600 text-white shadow-xs'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
@@ -87,7 +107,7 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
           </button>
           <button
             onClick={() => setFilter('all')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition cursor-pointer active:scale-95 ${
               filter === 'all'
                 ? 'bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-xs'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -98,93 +118,111 @@ export const GradingCenterPage: React.FC<GradingCenterPageProps> = ({ onNavigate
         </div>
       </div>
 
+      {/* Submissions List */}
       {isLoading ? (
-        <div className="space-y-4">
-          <ListRowSkeleton />
+        <div className="space-y-3">
           <ListRowSkeleton />
           <ListRowSkeleton />
           <ListRowSkeleton />
         </div>
       ) : filtered.length === 0 ? (
-
         <EmptyState
           icon={CheckSquare}
-          title={`No ${filter === 'pending' ? 'Pending' : filter === 'graded' ? 'Graded' : ''} Submissions`}
-          description={
+          title={
             filter === 'pending'
-              ? "When enrolled students submit deliverables to your course assignments, their submissions will appear here for you to evaluate and grade."
-              : "No graded submissions found under this filter."
+              ? 'All Student Submissions Graded!'
+              : 'No Submissions Found'
           }
-          actionText={onNavigate ? "Go to Course Management" : undefined}
-          onAction={onNavigate ? () => onNavigate('courses') : undefined}
+          description="Student submissions for your course assignments will appear here for rubric evaluation."
         />
       ) : (
-        <div className="grid grid-cols-1 gap-4">
-          {filtered.map(({ submission, assignment }) => (
-            <div
-              key={submission.id}
-              className="p-6 rounded-3xl glass-panel glass-panel-hover flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden shadow-sm"
-            >
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-brand-500" />
-              <div className="space-y-2 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-black text-brand-600 dark:text-brand-400 bg-indigo-50 dark:bg-brand-500/10 px-3 py-1 rounded-xl border border-indigo-100 dark:border-brand-500/20 shadow-2xs">
-                    {assignment.course?.courseCode || 'Course'}
-                  </span>
-                  <span className="text-xs text-slate-900 dark:text-slate-200 font-extrabold">{assignment.title}</span>
-                  {submission.status === 'GRADED' ? (
-                    <Badge variant="emerald">
-                      Graded: {submission.marksAwarded}/{assignment.maxMarks}
+        <div className="space-y-4">
+          {filtered.map(({ submission, assignment }) => {
+            const isGraded = submission.status === 'GRADED';
+
+            return (
+              <div
+                key={submission.id}
+                className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5"
+              >
+                <div className="space-y-2 min-w-0 flex-1">
+                  <div className="flex items-center space-x-2 flex-wrap">
+                    <Badge variant={isGraded ? 'emerald' : 'amber'} size="xs" dot>
+                      {isGraded ? `Graded: ${submission.marksAwarded}/${assignment.maxMarks}` : 'Awaiting Grade'}
                     </Badge>
-                  ) : (
-                    <Badge variant="amber">Needs Grading</Badge>
-                  )}
-                  {submission.isLate && <Badge variant="rose">Late</Badge>}
-                </div>
-
-                <div className="flex items-center space-x-3 text-xs text-slate-500 dark:text-slate-400 font-semibold">
-                  <div className="flex items-center space-x-1.5">
-                    <User className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
-                    <span>Student: <strong className="text-slate-800 dark:text-slate-200">{submission.student?.fullName}</strong> ({submission.student?.email})</span>
+                    <span className="text-xs font-black text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/80 px-2 py-0.5 rounded-lg border border-brand-200 dark:border-brand-800">
+                      {assignment.course?.courseCode || 'COURSE'}
+                    </span>
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      {assignment.title}
+                    </span>
                   </div>
-                  <span>•</span>
-                  <span>Submitted: {new Date(submission.submittedAt).toLocaleDateString()}</span>
+
+                  <div className="flex items-center space-x-3 pt-1">
+                    <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-brand-500/15 text-brand-600 dark:text-brand-400 font-black text-xs flex items-center justify-center">
+                      {submission.student?.fullName.charAt(0) || 'S'}
+                    </div>
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                        {submission.student?.fullName || 'Student'}
+                      </h4>
+                      <p className="text-[10px] text-slate-400">
+                        {submission.student?.department || 'Student'} • Sem {submission.student?.semester || 6} • Submitted {new Date(submission.submittedAt).toLocaleDateString([], { month: 'short', day: 'numeric' })} at {new Date(submission.submittedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </div>
+
+                  {submission.submissionText && (
+                    <p className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/40 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 font-medium">
+                      "{submission.submissionText}"
+                    </p>
+                  )}
+
+                  {isGraded && submission.facultyFeedback && (
+                    <p className="text-xs text-emerald-800 dark:text-emerald-300 bg-emerald-50/70 dark:bg-emerald-950/30 p-3 rounded-2xl border border-emerald-200/80 dark:border-emerald-800/50 font-medium">
+                      Feedback: "{submission.facultyFeedback}"
+                    </p>
+                  )}
                 </div>
 
-                {submission.submissionText && (
-                  <p className="text-xs text-slate-700 dark:text-slate-300 line-clamp-2 italic bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-2xl border border-slate-200/70 dark:border-slate-700/40 font-medium">
-                    "{submission.submissionText}"
-                  </p>
-                )}
+                <div className="flex items-center space-x-2 flex-shrink-0 self-end md:self-center">
+                  {submission.filePath && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleDownloadFile(submission.id, submission.fileName || 'submission.pdf')}
+                      leftIcon={<Download className="w-3.5 h-3.5" />}
+                    >
+                      Download File
+                    </Button>
+                  )}
 
-                {submission.facultyFeedback && (
-                  <p className="text-xs text-brand-700 dark:text-indigo-300 font-medium">
-                    <strong>Your Feedback:</strong> "{submission.facultyFeedback}"
-                  </p>
-                )}
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => setSelectedItem({ submission, assignment })}
+                    leftIcon={<Award className="w-3.5 h-3.5" />}
+                  >
+                    {isGraded ? 'Update Grade' : 'Grade Submission'}
+                  </Button>
+                </div>
               </div>
-
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <button
-                  onClick={() => setSelectedItem({ submission, assignment })}
-                  className="px-5 py-2.5 rounded-2xl text-xs font-black text-white bg-brand-600 hover:bg-brand-500 shadow-md shadow-brand-500/25 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
-                >
-                  <Award className="w-4 h-4" />
-                  <span>{submission.status === 'GRADED' ? 'Edit Evaluation' : 'Grade Submission'}</span>
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
+      {/* Grading Modal */}
       {selectedItem && (
         <GradingModal
-          isOpen={!!selectedItem}
+          isOpen={true}
           onClose={() => setSelectedItem(null)}
-          onSuccess={fetchSubmissions}
           submission={selectedItem.submission}
-          maxMarks={selectedItem.assignment.maxMarks}
+          assignment={selectedItem.assignment}
+          onSuccess={() => {
+            setSelectedItem(null);
+            fetchSubmissions();
+          }}
         />
       )}
     </div>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { CheckSquare, Calendar, Award, AlertCircle } from 'lucide-react';
 import { Modal } from '../common/Modal';
+import { Button } from '../common/Button';
+import { Input } from '../common/Input';
 import { api } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 
@@ -9,7 +11,7 @@ interface CreateAssignmentModalProps {
   onClose: () => void;
   onSuccess: () => void;
   courseId: number;
-  courseCode: string;
+  courseCode?: string;
 }
 
 export const CreateAssignmentModal: React.FC<CreateAssignmentModalProps> = ({
@@ -65,28 +67,22 @@ export const CreateAssignmentModal: React.FC<CreateAssignmentModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Create Assignment (${courseCode})`}
+      title={`Create Assignment ${courseCode ? `(${courseCode})` : ''}`}
       subtitle="Publish coursework tasks with due dates and rubric parameters."
       maxWidth="lg"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-            Assignment Title *
-          </label>
-          <input
-            type="text"
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Lab 3: Red-Black Tree Implementation & Benchmark"
-            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
-          />
-        </div>
+        <Input
+          label="Assignment Title"
+          placeholder="e.g. Lab 3: Red-Black Tree Implementation & Benchmark"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          isRequired
+        />
 
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-            Instructions & Problem Statement *
+        <div className="space-y-1.5 text-left">
+          <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+            Instructions & Problem Statement <span className="text-rose-500">*</span>
           </label>
           <textarea
             rows={4}
@@ -94,37 +90,27 @@ export const CreateAssignmentModal: React.FC<CreateAssignmentModalProps> = ({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Specify problem constraints, submission format, and grading rubric..."
-            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
+            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-medium focus:outline-none"
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-              Max Marks *
-            </label>
-            <input
-              type="number"
-              required
-              min={1}
-              value={maxMarks}
-              onChange={(e) => setMaxMarks(Number(e.target.value))}
-              className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-black"
-            />
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            label="Max Marks"
+            type="number"
+            min={1}
+            value={maxMarks}
+            onChange={(e) => setMaxMarks(Number(e.target.value))}
+            isRequired
+          />
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-              Due Date & Time *
-            </label>
-            <input
-              type="datetime-local"
-              required
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-bold"
-            />
-          </div>
+          <Input
+            label="Due Date & Time"
+            type="datetime-local"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            isRequired
+          />
         </div>
 
         <div className="flex items-center space-x-2.5 pt-1">
@@ -135,26 +121,28 @@ export const CreateAssignmentModal: React.FC<CreateAssignmentModalProps> = ({
             onChange={(e) => setAllowLate(e.target.checked)}
             className="w-4 h-4 rounded-lg border-slate-300 text-brand-600 focus:ring-brand-500 bg-white dark:bg-slate-800 cursor-pointer"
           />
-          <label htmlFor="allow-late" className="text-xs text-slate-600 dark:text-slate-300 font-semibold cursor-pointer">
-            Allow late submissions (marked automatically with late flag)
+          <label htmlFor="allow-late" className="text-xs text-slate-600 dark:text-slate-300 font-bold cursor-pointer">
+            Allow late submissions (marked automatically with late status flag)
           </label>
         </div>
 
-        <div className="flex items-center justify-end space-x-2.5 pt-4 border-t border-slate-100 dark:border-slate-800">
-          <button
-            type="button"
+        <div className="flex items-center justify-end space-x-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
-            className="px-4 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            disabled={isSubmitting}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            disabled={isSubmitting}
-            className="px-6 py-2.5 text-xs font-black text-white bg-brand-600 hover:bg-brand-500 rounded-2xl transition shadow-md shadow-brand-500/25 disabled:opacity-50 cursor-pointer active:scale-95"
+            variant="primary"
+            size="sm"
+            isLoading={isSubmitting}
           >
-            {isSubmitting ? 'Publishing...' : 'Publish Assignment'}
-          </button>
+            Publish Assignment
+          </Button>
         </div>
       </form>
     </Modal>

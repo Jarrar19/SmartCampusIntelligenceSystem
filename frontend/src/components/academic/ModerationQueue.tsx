@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Inbox, CheckCircle, XCircle, Download, FileText, 
-  AlertCircle, Clock, User, Check, ShieldCheck, X
+  AlertCircle, Clock, User, Check, ShieldCheck, X, Sparkles
 } from 'lucide-react';
 import { api, extractErrorMessage } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import { Resource } from '../../types';
 import { Badge } from '../common/Badge';
+import { Button } from '../common/Button';
 import { EmptyState } from '../common/EmptyState';
 import { ModerationFeedbackModal } from './ModerationFeedbackModal';
 
@@ -47,8 +48,8 @@ export const ModerationQueue: React.FC = () => {
       });
 
       if (res.data.success) {
-        success(res.data.message);
-        setResources(prev => prev.filter(r => r.id !== resourceId));
+        success('Resource approved and cataloged successfully!');
+        setResources((prev) => prev.filter((r) => r.id !== resourceId));
       }
     } catch (err: any) {
       error(err.response?.data?.message || 'Moderation action failed');
@@ -70,7 +71,7 @@ export const ModerationQueue: React.FC = () => {
 
       if (res.data.success) {
         success(res.data.message);
-        setResources(prev => prev.filter(r => r.id !== resource.id));
+        setResources((prev) => prev.filter((r) => r.id !== resource.id));
         setFeedbackModalTarget(null);
       }
     } catch (err: any) {
@@ -79,7 +80,6 @@ export const ModerationQueue: React.FC = () => {
       setProcessingId(null);
     }
   };
-
 
   const handleDownload = async (resource: Resource) => {
     try {
@@ -101,7 +101,7 @@ export const ModerationQueue: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-fade-in-up">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -118,13 +118,13 @@ export const ModerationQueue: React.FC = () => {
         <div className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 rounded-2xl">
           {[
             { id: 'PENDING_REVIEW', label: 'Pending Review' },
-            { id: 'APPROVED', label: 'Approved' },
-            { id: 'REJECTED', label: 'Rejected' },
+            { id: 'APPROVED', label: 'Approved Catalog' },
+            { id: 'REJECTED', label: 'Rejected Uploads' },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition cursor-pointer active:scale-95 ${
                 activeTab === tab.id
                   ? 'bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -136,91 +136,86 @@ export const ModerationQueue: React.FC = () => {
         </div>
       </div>
 
-      {/* Review Queue Cards */}
+      {/* Moderation List */}
       {isLoading ? (
-        <div className="text-center py-16 text-xs text-slate-400">Loading moderation queue...</div>
+        <div className="space-y-3">
+          <div className="h-24 glass-panel rounded-2xl shimmer" />
+          <div className="h-24 glass-panel rounded-2xl shimmer" />
+          <div className="h-24 glass-panel rounded-2xl shimmer" />
+        </div>
       ) : resources.length === 0 ? (
         <EmptyState
           icon={ShieldCheck}
-          title="No Resources in Queue"
-          description={`There are currently no materials in the ${activeTab.toLowerCase().replace('_', ' ')} queue.`}
+          title={activeTab === 'PENDING_REVIEW' ? 'Moderation Queue is Clean!' : `No ${activeTab.toLowerCase()} items.`}
+          description={
+            activeTab === 'PENDING_REVIEW'
+              ? 'All student uploads and study materials have been reviewed by academic faculty.'
+              : 'No resources found in this review status.'
+          }
         />
       ) : (
-        <div className="grid grid-cols-1 gap-4">
-          {resources.map((r) => (
+        <div className="space-y-3">
+          {resources.map((res) => (
             <div
-              key={r.id}
-              className="p-6 rounded-3xl glass-panel flex flex-col lg:flex-row lg:items-center justify-between gap-5 shadow-sm relative overflow-hidden"
+              key={res.id}
+              className="p-5 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4"
             >
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-brand-500 to-indigo-500" />
-              <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant={r.category === 'PYQ' ? 'indigo' : 'emerald'}>{r.category}</Badge>
-                  {r.subjectCode && (
-                    <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
-                      {r.subjectCode}
-                    </span>
-                  )}
-                  <span className="text-[11px] font-bold text-slate-400">
-                    Uploaded {new Date(r.createdAt).toLocaleDateString()}
+              <div className="space-y-1.5 min-w-0 flex-1">
+                <div className="flex items-center space-x-2 flex-wrap">
+                  <Badge variant={res.approvalStatus === 'APPROVED' ? 'emerald' : res.approvalStatus === 'REJECTED' ? 'rose' : 'amber'} size="xs" dot>
+                    {res.approvalStatus}
+                  </Badge>
+                  <Badge variant="indigo" size="xs">
+                    {res.category}
+                  </Badge>
+                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                    Sem {res.semester || 6} • {res.department || 'Engineering'}
                   </span>
                 </div>
 
-                <h3 className="text-base font-black text-slate-900 dark:text-white">{r.title}</h3>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">
-                  {r.description || 'No description provided.'}
+                <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                  {res.title}
+                </h3>
+
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium line-clamp-2">
+                  {res.description || `File: ${res.fileName}`}
                 </p>
 
-                <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 pt-1 flex-wrap font-semibold">
-                  <span>Student: <strong>{r.uploader?.fullName}</strong> ({r.uploader?.department || 'Student'})</span>
-                  <span>File: <strong className="text-slate-700 dark:text-slate-300">{r.fileName}</strong> ({(r.fileSize / 1024 / 1024).toFixed(2)} MB)</span>
+                <div className="pt-1 flex items-center space-x-3 text-[11px] text-slate-400 font-bold">
+                  <span>Uploaded by: {res.uploader?.fullName || 'Student'}</span>
+                  <span>•</span>
+                  <span>Date: {new Date(res.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
                 </div>
-
-                {r.rejectionReason && (
-                  <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs">
-                    <strong>Rejection Feedback:</strong> {r.rejectionReason}
-                  </div>
-                )}
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex items-center gap-2.5 flex-shrink-0">
+              <div className="flex items-center space-x-2 flex-shrink-0 self-end md:self-center">
                 <button
-                  onClick={() => handleDownload(r)}
-                  className="px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition cursor-pointer active:scale-95"
+                  onClick={() => handleDownload(res)}
+                  className="p-2.5 rounded-2xl text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition cursor-pointer"
+                  title="Download File to Inspect"
                 >
                   <Download className="w-4 h-4" />
-                  <span>Inspect File</span>
                 </button>
 
                 {activeTab === 'PENDING_REVIEW' && (
                   <>
-                    <button
-                      onClick={() => handleApprove(r.id)}
-                      disabled={processingId === r.id}
-                      className="px-5 py-2.5 rounded-2xl text-xs font-black text-white bg-emerald-600 hover:bg-emerald-500 shadow-md shadow-emerald-500/25 flex items-center gap-1.5 transition cursor-pointer disabled:opacity-50 active:scale-95"
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setFeedbackModalTarget({ resource: res, status: 'REJECTED' })}
+                      leftIcon={<X className="w-3.5 h-3.5" />}
                     >
-                      <Check className="w-4 h-4" />
-                      <span>Approve</span>
-                    </button>
-
-                    <button
-                      onClick={() => setFeedbackModalTarget({ resource: r, status: 'CHANGES_REQUESTED' })}
-                      disabled={processingId === r.id}
-                      className="px-4 py-2.5 rounded-2xl text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/15 hover:bg-amber-100 dark:hover:bg-amber-500/25 border border-amber-200 dark:border-amber-500/30 flex items-center gap-1.5 transition cursor-pointer disabled:opacity-50 active:scale-95"
+                      Reject
+                    </Button>
+                    <Button
+                      variant="emerald"
+                      size="sm"
+                      isLoading={processingId === res.id}
+                      onClick={() => handleApprove(res.id)}
+                      leftIcon={<Check className="w-3.5 h-3.5" />}
                     >
-                      <AlertCircle className="w-4 h-4" />
-                      <span>Request Changes</span>
-                    </button>
-
-                    <button
-                      onClick={() => setFeedbackModalTarget({ resource: r, status: 'REJECTED' })}
-                      disabled={processingId === r.id}
-                      className="px-4 py-2.5 rounded-2xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 flex items-center gap-1.5 transition cursor-pointer disabled:opacity-50 active:scale-95"
-                    >
-                      <X className="w-4 h-4" />
-                      <span>Reject</span>
-                    </button>
+                      Approve & Publish
+                    </Button>
                   </>
                 )}
               </div>
@@ -232,28 +227,14 @@ export const ModerationQueue: React.FC = () => {
       {/* Moderation Feedback Modal */}
       {feedbackModalTarget && (
         <ModerationFeedbackModal
-          isOpen={!!feedbackModalTarget}
+          isOpen={true}
           onClose={() => setFeedbackModalTarget(null)}
-          onConfirm={handleFeedbackSubmit}
-          title={
-            feedbackModalTarget.status === 'CHANGES_REQUESTED'
-              ? `Request Revisions: ${feedbackModalTarget.resource.title}`
-              : `Reject Upload: ${feedbackModalTarget.resource.title}`
-          }
-          subtitle={
-            feedbackModalTarget.status === 'CHANGES_REQUESTED'
-              ? 'Specify what corrections the student must make before this resource can be approved.'
-              : 'Provide constructive feedback explaining why this upload cannot be accepted.'
-          }
-          actionText={
-            feedbackModalTarget.status === 'CHANGES_REQUESTED'
-              ? 'Submit Revision Request'
-              : 'Reject Resource'
-          }
-          isProcessing={processingId === feedbackModalTarget.resource.id}
+          resource={feedbackModalTarget.resource}
+          status={feedbackModalTarget.status}
+          onSubmit={handleFeedbackSubmit}
+          isSubmitting={processingId === feedbackModalTarget.resource.id}
         />
       )}
     </div>
   );
 };
-

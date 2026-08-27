@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   GraduationCap, Bell, MessageSquare, LogOut, 
   Menu, BookOpen, ShoppingBag, Sun, Moon, 
-  ShieldCheck, Inbox, PanelLeft, Search
+  ShieldCheck, Inbox, PanelLeft, Search, CheckCheck, X
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../../context/NotificationContext';
@@ -71,7 +71,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {onOpenMobileMenu && (
             <button
               onClick={onOpenMobileMenu}
-              className="lg:hidden p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+              className="lg:hidden p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
               aria-label="Open Mobile Menu"
             >
               <Menu className="w-5 h-5" />
@@ -81,7 +81,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
-              className="hidden lg:flex p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer active:scale-95"
+              className="hidden lg:flex p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer active:scale-95"
               title={isSidebarCollapsed ? 'Expand Navigation Sidebar' : 'Collapse Navigation Sidebar'}
               aria-label="Toggle Sidebar"
             >
@@ -90,147 +90,149 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
 
           <div className="flex items-center space-x-2.5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-brand-600 text-white shadow-md shadow-brand-500/25">
-              <GraduationCap className="w-4 h-4" />
+            <div className="flex items-center justify-center w-9 h-9 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-500 text-white shadow-md shadow-brand-500/25 border border-indigo-400/20">
+              <GraduationCap className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-black text-slate-900 dark:text-white text-base leading-tight tracking-tight">
+                <span className="font-black text-slate-900 dark:text-white text-base sm:text-lg leading-tight tracking-tight">
                   Smart Campus
                 </span>
-                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hidden sm:inline-block border border-slate-200/80 dark:border-slate-700/60">
-                  {config?.collegeShortName || 'SBIT'}
+                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-brand-50 dark:bg-brand-950/80 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800/80">
+                  {config?.collegeShortName || 'SBJIT'}
                 </span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Middle: Prominent Global Search Field */}
-        <div className="flex-1 max-w-md mx-2 hidden sm:block">
+        {/* Center: Global Search Bar */}
+        <div className="flex-1 max-w-md hidden md:block">
           <button
             onClick={onOpenSearch}
-            className="w-full flex items-center justify-between px-4 py-2 rounded-2xl bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/70 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700/60 text-slate-500 dark:text-slate-400 text-xs font-medium transition-all cursor-pointer shadow-2xs"
+            className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-slate-400 dark:text-slate-400 bg-slate-100/90 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl hover:border-brand-400 dark:hover:border-brand-500 transition-all cursor-pointer shadow-2xs group"
           >
-            <div className="flex items-center gap-2.5 truncate">
-              <Search className="w-3.5 h-3.5 text-slate-400" />
-              <span className="truncate">Search courses, notes, PYQs, marketplace...</span>
+            <div className="flex items-center space-x-2.5">
+              <Search className="w-4 h-4 text-slate-400 group-hover:text-brand-500 transition-colors" />
+              <span>Search courses, study notes, marketplace items...</span>
             </div>
-            <kbd className="hidden md:inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-2xs">
-              <span>Ctrl</span>
-              <span>K</span>
+            <kbd className="hidden lg:inline-flex items-center px-2 py-0.5 text-[10px] font-black text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-2xs">
+              Ctrl + K
             </kbd>
           </button>
         </div>
 
-        {/* Right: Actions, Search Icon (Mobile), Theme Switcher & User Profile */}
-        <div className="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
+        {/* Right: Action Shortcuts & User Menu */}
+        <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
           {/* Mobile Search Button */}
           <button
             onClick={onOpenSearch}
-            className="sm:hidden p-2 rounded-2xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition border border-slate-200/80 dark:border-slate-800 shadow-2xs"
-            title="Search Smart Campus"
+            className="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-brand-600 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
             aria-label="Search"
           >
-            <Search className="w-4 h-4" />
+            <Search className="w-5 h-5" />
           </button>
 
-          {/* Light / Dark Mode Toggle */}
+          {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2.5 rounded-2xl text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 flex items-center justify-center shadow-2xs cursor-pointer active:scale-95"
-            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            title={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
             aria-label="Toggle Theme"
           >
-            {isDark ? (
-              <Sun className="w-4 h-4 text-amber-400" />
-            ) : (
-              <Moon className="w-4 h-4 text-indigo-600" />
-            )}
+            {isDark ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-indigo-600" />}
           </button>
 
           {/* Realtime Chat Button */}
           <button
             onClick={onOpenChat}
-            className="relative p-2.5 rounded-2xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
-            title="Campus Marketplace Messenger"
-            aria-label="Open Messenger"
+            className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            title="Campus Marketplace Chat"
+            aria-label="Open Chat"
           >
-            <MessageSquare className="w-4 h-4" />
-            <span className="hidden md:inline text-xs font-bold">Messenger</span>
+            <MessageSquare className="w-5 h-5" />
             {unreadMessagesCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-[9px] font-black text-white bg-brand-600 rounded-full border-2 border-white dark:border-slate-900 animate-pulse badge-glow">
-                {unreadMessagesCount}
+              <span className="absolute top-1 right-1 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-black text-white ring-2 ring-white dark:ring-slate-900 animate-pulse">
+                {unreadMessagesCount > 9 ? '9+' : unreadMessagesCount}
               </span>
             )}
           </button>
 
-          {/* Notifications Center */}
+          {/* Notifications Dropdown Container */}
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2.5 rounded-2xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 shadow-2xs cursor-pointer active:scale-95"
+              className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
               title="Notifications"
-              aria-label="Notifications"
+              aria-label="View Notifications"
             >
-              <Bell className="w-4 h-4" />
+              <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 text-[9px] font-black text-white bg-rose-600 rounded-full border-2 border-white dark:border-slate-900 animate-pulse shadow-sm">
-                  {unreadCount}
+                <span className="absolute top-1 right-1 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-brand-600 text-[10px] font-black text-white ring-2 ring-white dark:ring-slate-900 animate-pulse">
+                  {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
             </button>
 
-            {/* Notifications Dropdown */}
+            {/* Notifications Dropdown Panel */}
             {showNotifications && (
-              <div className="absolute right-0 mt-3 w-80 sm:w-96 rounded-3xl glass-panel bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-700/80 shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="absolute right-0 mt-3 w-80 sm:w-96 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl shadow-slate-950/20 backdrop-blur-2xl z-50 overflow-hidden animate-fade-in-up">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/70">
                   <div className="flex items-center space-x-2">
-                    <h4 className="text-sm font-black text-slate-900 dark:text-white">Campus Alerts</h4>
+                    <h4 className="text-sm font-black text-slate-900 dark:text-white">Notifications</h4>
                     {unreadCount > 0 && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-300 font-bold">
-                        {unreadCount} new
+                      <span className="px-2 py-0.5 text-[10px] font-black bg-brand-500 text-white rounded-full">
+                        {unreadCount} New
                       </span>
                     )}
                   </div>
                   {unreadCount > 0 && (
                     <button
                       onClick={() => markAsRead('all')}
-                      className="text-xs text-brand-600 dark:text-brand-400 hover:text-brand-500 font-bold transition cursor-pointer"
+                      className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer flex items-center gap-1"
                     >
-                      Mark all as read
+                      <CheckCheck className="w-3.5 h-3.5" />
+                      <span>Mark all read</span>
                     </button>
                   )}
                 </div>
 
-                <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/50 py-2 space-y-1">
+                <div className="max-h-[380px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60">
                   {notifications.length === 0 ? (
-                    <div className="text-center py-8 text-slate-400 dark:text-slate-500 text-xs">
-                      <Bell className="w-8 h-8 mx-auto mb-2 text-slate-300 dark:text-slate-600" />
-                      <p className="font-bold text-slate-700 dark:text-slate-300">All caught up!</p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">No new campus announcements or alerts.</p>
+                    <div className="p-8 text-center">
+                      <Bell className="w-8 h-8 text-slate-300 dark:text-slate-600 mx-auto mb-2 opacity-50" />
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                        No notifications yet. You are all caught up!
+                      </p>
                     </div>
                   ) : (
-                    notifications.map((n) => (
+                    notifications.map((notif) => (
                       <div
-                        key={n.id}
-                        onClick={() => markAsRead(n.id)}
-                        className={`p-3 rounded-2xl transition cursor-pointer flex items-start space-x-3 ${
-                          n.isRead 
-                            ? 'opacity-65 hover:opacity-100 hover:bg-slate-50 dark:hover:bg-slate-800/50' 
-                            : 'bg-brand-50/80 dark:bg-brand-500/15 hover:bg-brand-100/60 dark:hover:bg-brand-500/20 border border-brand-100 dark:border-brand-500/25'
+                        key={notif.id}
+                        onClick={() => {
+                          if (!notif.isRead) markAsRead(notif.id);
+                        }}
+                        className={`p-4 transition-all duration-200 hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer flex items-start space-x-3.5 ${
+                          !notif.isRead ? 'bg-indigo-50/40 dark:bg-brand-950/20' : ''
                         }`}
                       >
-                        <div className="p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex-shrink-0 shadow-2xs mt-0.5">
-                          {getNotificationIcon(n.type)}
+                        <div className="p-2 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 flex-shrink-0 shadow-2xs">
+                          {getNotificationIcon(notif.type)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{n.title}</p>
-                          <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">{n.message}</p>
-                          <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 block font-medium">
-                            {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          <p className={`text-xs ${!notif.isRead ? 'font-black text-slate-900 dark:text-white' : 'font-medium text-slate-700 dark:text-slate-300'}`}>
+                            {notif.title}
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2 leading-relaxed">
+                            {notif.message}
+                          </p>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold mt-1.5 block">
+                            {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(notif.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                           </span>
                         </div>
+                        {!notif.isRead && (
+                          <span className="w-2 h-2 rounded-full bg-brand-600 flex-shrink-0 mt-1.5 ring-2 ring-white dark:ring-slate-900" />
+                        )}
                       </div>
                     ))
                   )}
@@ -239,68 +241,55 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
-          {/* User Profile Dropdown */}
+          {/* User Profile Menu Container */}
           <div className="relative" ref={userRef}>
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center space-x-2 p-1.5 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition border border-slate-200/80 dark:border-slate-800 shadow-2xs cursor-pointer active:scale-95"
-              aria-label="User Menu"
+              className="flex items-center space-x-2.5 p-1.5 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+              aria-label="User profile options"
             >
-              {user?.avatarUrl ? (
-                <img
-                  src={user.avatarUrl}
-                  alt={user.fullName}
-                  className="w-8 h-8 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shadow-2xs"
-                />
-              ) : (
-                <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 text-white font-black text-xs shadow-2xs">
-                  {user?.fullName?.charAt(0) || 'U'}
-                </div>
-              )}
-              <div className="text-left hidden lg:block pr-1.5">
-                <p className="text-xs font-black text-slate-900 dark:text-white leading-tight flex items-center gap-1">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-md shadow-brand-500/20">
+                {user?.fullName?.charAt(0) || 'U'}
+              </div>
+              <div className="hidden xl:block text-left pr-1">
+                <p className="text-xs font-black text-slate-900 dark:text-white leading-none truncate max-w-[120px]">
                   {user?.fullName}
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
                 </p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold leading-tight">
-                  {user?.role === 'FACULTY' ? 'Faculty Member' : `${user?.semester}th Sem • ${user?.department || 'Student'}`}
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold mt-0.5 capitalize">
+                  {user?.role?.toLowerCase()}
                 </p>
               </div>
             </button>
 
-            {/* Profile Dropdown Menu */}
+            {/* User Options Dropdown */}
             {showUserMenu && (
-              <div className="absolute right-0 mt-3 w-72 rounded-3xl glass-panel bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-700/80 shadow-2xl p-3.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="p-3.5 rounded-2xl bg-indigo-50/60 dark:bg-slate-800/60 border border-indigo-100 dark:border-slate-700/60 mb-2">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Signed in as</p>
-                  <p className="text-xs font-black text-slate-900 dark:text-white truncate mt-0.5">{user?.email}</p>
-                  <div className="mt-2.5 flex items-center gap-1.5 flex-wrap">
-                    <Badge variant={user?.role === 'FACULTY' ? 'indigo' : user?.role === 'ADMIN' ? 'rose' : 'emerald'} size="sm" dot>
+              <div className="absolute right-0 mt-3 w-64 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl shadow-slate-950/20 backdrop-blur-2xl z-50 p-2 animate-fade-in-up">
+                <div className="p-3 border-b border-slate-100 dark:border-slate-800">
+                  <p className="text-xs font-black text-slate-900 dark:text-white truncate">
+                    {user?.fullName}
+                  </p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                    {user?.email}
+                  </p>
+                  <div className="mt-2 flex items-center gap-1.5">
+                    <Badge variant="indigo" size="xs">
                       {user?.role}
                     </Badge>
                     {user?.isVerified && (
-                      <Badge variant="blue" size="sm">Verified Campus</Badge>
+                      <Badge variant="emerald" size="xs" dot>
+                        Verified
+                      </Badge>
                     )}
                   </div>
                 </div>
 
-                <div className="px-3 py-2 text-xs text-slate-500 dark:text-slate-400 space-y-1.5">
-                  <div className="flex justify-between items-center text-[11px]">
-                    <span className="font-bold text-slate-700 dark:text-slate-300">Department:</span>
-                    <span className="truncate max-w-[140px] text-slate-600 dark:text-slate-400 text-right font-medium">{user?.department || 'General'}</span>
-                  </div>
-                  {user?.semester && (
-                    <div className="flex justify-between items-center text-[11px]">
-                      <span className="font-bold text-slate-700 dark:text-slate-300">Semester:</span>
-                      <span className="text-slate-600 dark:text-slate-400 font-medium">{user.semester}th</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="pt-2 mt-1 border-t border-slate-100 dark:border-slate-800">
+                <div className="pt-2">
                   <button
-                    onClick={logout}
-                    className="w-full flex items-center space-x-2 px-3.5 py-2.5 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-2xl transition cursor-pointer active:scale-95"
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      logout();
+                    }}
+                    className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-2xl transition cursor-pointer"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Sign Out</span>

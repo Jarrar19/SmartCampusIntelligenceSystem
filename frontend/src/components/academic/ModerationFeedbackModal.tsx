@@ -1,25 +1,35 @@
 import React, { useState } from 'react';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ShieldAlert } from 'lucide-react';
 import { Modal } from '../common/Modal';
+import { Button } from '../common/Button';
+import { Resource } from '../../types';
 
 interface ModerationFeedbackModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (reason: string) => Promise<void>;
-  title: string;
-  subtitle: string;
-  actionText: string;
+  onConfirm?: (reason: string) => Promise<void> | void;
+  onSubmit?: (reason: string) => Promise<void> | void;
+  title?: string;
+  subtitle?: string;
+  actionText?: string;
+  resource?: Resource;
+  status?: 'REJECTED' | 'CHANGES_REQUESTED';
   isProcessing?: boolean;
+  isSubmitting?: boolean;
 }
 
 export const ModerationFeedbackModal: React.FC<ModerationFeedbackModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
-  title,
-  subtitle,
-  actionText,
+  onSubmit,
+  title = 'Reject Resource Upload',
+  subtitle = 'Provide constructive moderator feedback to the student uploader.',
+  actionText = 'Confirm Rejection',
+  resource,
+  status,
   isProcessing = false,
+  isSubmitting = false,
 }) => {
   const [reason, setReason] = useState('');
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -31,22 +41,28 @@ export const ModerationFeedbackModal: React.FC<ModerationFeedbackModalProps> = (
       return;
     }
     setValidationError(null);
-    await onConfirm(reason.trim());
+    if (onSubmit) {
+      await onSubmit(reason.trim());
+    } else if (onConfirm) {
+      await onConfirm(reason.trim());
+    }
     setReason('');
   };
+
+  const loading = isProcessing || isSubmitting;
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={title}
+      title={resource ? `Moderation Decision: ${resource.title}` : title}
       subtitle={subtitle}
       maxWidth="md"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-            Constructive Moderator Feedback *
+        <div className="space-y-1.5 text-left">
+          <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+            Constructive Moderator Feedback <span className="text-rose-500">*</span>
           </label>
           <textarea
             rows={3}
@@ -57,32 +73,33 @@ export const ModerationFeedbackModal: React.FC<ModerationFeedbackModalProps> = (
               if (validationError) setValidationError(null);
             }}
             placeholder="Explain why this upload is rejected or what specific corrections are requested..."
-            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
+            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-medium focus:outline-none"
           />
           {validationError && (
-            <p className="text-xs text-rose-600 dark:text-rose-400 font-semibold mt-1 flex items-center gap-1">
+            <p className="text-xs text-rose-600 dark:text-rose-400 font-bold mt-1 flex items-center gap-1">
               <AlertCircle className="w-3.5 h-3.5" />
-              {validationError}
+              <span>{validationError}</span>
             </p>
           )}
         </div>
 
-        <div className="flex items-center justify-end space-x-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
-          <button
-            type="button"
+        <div className="flex items-center justify-end space-x-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
-            disabled={isProcessing}
-            className="px-4 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            disabled={loading}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            disabled={isProcessing}
-            className="px-5 py-2.5 text-xs font-black text-white bg-rose-600 hover:bg-rose-500 rounded-2xl transition shadow-md shadow-rose-500/25 disabled:opacity-50 cursor-pointer active:scale-95"
+            variant="destructive"
+            size="sm"
+            isLoading={loading}
           >
-            {isProcessing ? 'Submitting...' : actionText}
-          </button>
+            {actionText}
+          </Button>
         </div>
       </form>
     </Modal>

@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, CheckSquare, Inbox, Users, Plus, FileText, 
-  ShieldCheck, ChevronRight, Sparkles, ArrowRight
+  ShieldCheck, ChevronRight, Sparkles, ArrowRight, Download, Check, X, Award
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../services/api';
+import { useToast } from '../../context/ToastContext';
+import { api, extractErrorMessage } from '../../services/api';
 import { Course, Resource } from '../../types';
 import { CampusHeroCanvas } from '../../components/common/CampusHeroCanvas';
 import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { StatWidgetSkeleton, CardSkeleton, ListRowSkeleton } from '../../components/common/Skeleton';
+import { ModerationFeedbackModal } from '../../components/academic/ModerationFeedbackModal';
 
 interface FacultyDashboardProps {
   onNavigate: (tab: string, courseId?: number) => void;
@@ -23,31 +25,100 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
   onOpenUploadResource,
 }) => {
   const { user } = useAuth();
+  const { success, error } = useToast();
+
   const [stats, setStats] = useState<any>({});
   const [courses, setCourses] = useState<Course[]>([]);
   const [pendingResources, setPendingResources] = useState<Resource[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [processingId, setProcessingId] = useState<number | null>(null);
+  const [feedbackModalTarget, setFeedbackModalTarget] = useState<{
+    resource: Resource;
+    status: 'REJECTED' | 'CHANGES_REQUESTED';
+  } | null>(null);
+
+  const fetchFacultyData = async () => {
+    try {
+      const [statsRes, coursesRes, modRes] = await Promise.all([
+        api.get('/users/dashboard-stats'),
+        api.get('/courses?myOnly=true'),
+        api.get('/resources/moderation-queue?status=PENDING_REVIEW'),
+      ]);
+
+      if (statsRes.data.success) setStats(statsRes.data.data);
+      if (coursesRes.data.success) setCourses(coursesRes.data.data);
+      if (modRes.data.success) setPendingResources(modRes.data.data.slice(0, 5));
+    } catch (err) {
+      console.error('Failed to load faculty dashboard:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        const [statsRes, coursesRes, modRes] = await Promise.all([
-          api.get('/users/dashboard-stats'),
-          api.get('/courses?myOnly=true'),
-          api.get('/resources/moderation-queue?status=PENDING_REVIEW'),
-        ]);
-
-        if (statsRes.data.success) setStats(statsRes.data.data);
-        if (coursesRes.data.success) setCourses(coursesRes.data.data);
-        if (modRes.data.success) setPendingResources(modRes.data.data.slice(0, 4));
-      } catch (err) {
-        console.error('Failed to load faculty dashboard:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadData();
+    fetchFacultyData();
   }, []);
+
+  const handleQuickApprove = async (resourceId: number) => {
+    setProcessingId(resourceId);
+    try {
+      const res = await api.patch(`/resources/${resourceId}/moderate`, {
+        status: 'APPROVED',
+      });
+      if (res.data.success) {
+        success('Resource approved and published to student repository!');
+        setPendingResources((prev) => prev.filter((r) => r.id !== resourceId));
+        fetchFacultyData();
+      }
+    } catch (err: any) {
+      error(err.response?.data?.message || 'Moderation action failed');
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleFeedbackSubmit = async (reason: string) => {
+    if (!feedbackModalTarget) return;
+    const { resource, status } = feedbackModalTarget;
+
+    setProcessingId(resource.id);
+    try {
+      const res = await api.patch(`/resources/${resource.id}/moderate`, {
+        status,
+        rejectionReason: reason,
+      });
+
+      if (res.data.success) {
+        success(res.data.message);
+        setPendingResources((prev) => prev.filter((r) => r.id !== resource.id));
+        setFeedbackModalTarget(null);
+        fetchFacultyData();
+      }
+    } catch (err: any) {
+      error(err.response?.data?.message || 'Moderation action failed');
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleDownload = async (resource: Resource) => {
+    try {
+      const response = await api.get(`/resources/${resource.id}/download`, {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', resource.fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err: any) {
+      const msg = await extractErrorMessage(err, 'Download failed');
+      error(msg);
+    }
+  };
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -87,6 +158,8 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
     );
   }
 
+  const totalStudents = courses.reduce((acc, c) => acc + (c.enrolledCount || 0), 0);
+
   return (
     <div className="space-y-7 text-slate-900 dark:text-slate-100 max-w-[1400px] mx-auto pb-10 animate-fade-in-up">
       
@@ -100,7 +173,7 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
                 {formattedDate}
               </span>
               <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
-                Faculty Cockpit • {user?.department || 'Engineering'}
+                Faculty Cockpit • {user?.department || 'Engineering Department'}
               </span>
             </div>
 
@@ -110,8 +183,8 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
 
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
               {pendingResources.length > 0 
-                ? `You have ${pendingResources.length} student submission${pendingResources.length > 1 ? 's' : ''} awaiting moderation in your academic queue.`
-                : `All student uploads and class notices are currently up to date.`}
+                ? `You have ${pendingResources.length} student submission${pendingResources.length > 1 ? 's' : ''} awaiting review in your academic moderation queue.`
+                : 'All student uploads and class submissions are currently reviewed and up to date.'}
             </p>
           </div>
 
@@ -131,10 +204,10 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
               onClick={() => onNavigate('moderation')}
               leftIcon={<Inbox className="w-3.5 h-3.5" />}
             >
-              Review Queue ({pendingResources.length})
+              Moderation ({pendingResources.length})
             </Button>
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => onNavigate('grading')}
               leftIcon={<CheckSquare className="w-3.5 h-3.5" />}
@@ -145,268 +218,339 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
         </div>
       </div>
 
-      {/* 2. Faculty KPI Metric Cards */}
+      {/* 2. Key Metric Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Active Courses */}
         <div 
           onClick={() => onNavigate('courses')}
-          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer flex items-center justify-between shadow-2xs"
+          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer group"
         >
-          <div className="space-y-1">
-            <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">Instructed Courses</p>
-            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{stats.coursesTaughtCount ?? courses.length}</h3>
-            <p className="text-[11px] text-brand-600 dark:text-brand-400 font-bold flex items-center gap-1">
-              <span>Manage portals</span>
-              <ChevronRight className="w-3 h-3" />
-            </p>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Courses Instructed</span>
+            <div className="p-2.5 rounded-2xl bg-indigo-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 group-hover:scale-110 transition-transform">
+              <BookOpen className="w-4 h-4" />
+            </div>
           </div>
-          <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-brand-600 dark:text-brand-400 border border-indigo-100 dark:border-indigo-800">
-            <BookOpen className="w-5 h-5" />
+          <div className="mt-3 flex items-baseline space-x-2">
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+              {courses.length}
+            </span>
+            <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400">Active</span>
           </div>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1">
+            Current Semester
+          </p>
         </div>
 
+        {/* Pending Moderation Queue */}
         <div 
           onClick={() => onNavigate('moderation')}
-          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer flex items-center justify-between shadow-2xs"
+          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer group"
         >
-          <div className="space-y-1">
-            <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">Awaiting Review</p>
-            <h3 className="text-2xl font-black text-amber-600 dark:text-amber-400">{stats.pendingModerationCount ?? pendingResources.length}</h3>
-            <p className="text-[11px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1">
-              <span>Inspect queue</span>
-              <ChevronRight className="w-3 h-3" />
-            </p>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Pending Review</span>
+            <div className="p-2.5 rounded-2xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
+              <Inbox className="w-4 h-4" />
+            </div>
           </div>
-          <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-800">
-            <Inbox className="w-5 h-5" />
+          <div className="mt-3 flex items-baseline space-x-2">
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+              {pendingResources.length}
+            </span>
+            <Badge variant={pendingResources.length > 0 ? 'amber' : 'emerald'} size="xs" dot>
+              {pendingResources.length > 0 ? 'Queue' : 'Clear'}
+            </Badge>
           </div>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1">
+            Student notes & PYQs
+          </p>
         </div>
 
-        <div 
-          onClick={() => onNavigate('grading')}
-          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer flex items-center justify-between shadow-2xs"
-        >
-          <div className="space-y-1">
-            <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">Pending Grading</p>
-            <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400">{stats.pendingSubmissionsToGrade ?? 0}</h3>
-            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
-              <span>Evaluate submissions</span>
-              <ChevronRight className="w-3 h-3" />
-            </p>
-          </div>
-          <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800">
-            <CheckSquare className="w-5 h-5" />
-          </div>
-        </div>
-
+        {/* Total Enrolled Students */}
         <div 
           onClick={() => onNavigate('courses')}
-          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer flex items-center justify-between shadow-2xs"
+          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer group"
         >
-          <div className="space-y-1">
-            <p className="text-[11px] font-black uppercase tracking-wider text-slate-400">Enrolled Students</p>
-            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{stats.totalStudentsEnrolled ?? 0}</h3>
-            <p className="text-[11px] text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1">
-              <span>View rosters</span>
-              <ChevronRight className="w-3 h-3" />
-            </p>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Enrolled Students</span>
+            <div className="p-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+              <Users className="w-4 h-4" />
+            </div>
           </div>
-          <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-brand-600 dark:text-brand-400 border border-indigo-100 dark:border-indigo-800">
-            <Users className="w-5 h-5" />
+          <div className="mt-3 flex items-baseline space-x-2">
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+              {totalStudents || stats.totalStudentsCount || 0}
+            </span>
+            <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">Rosters</span>
           </div>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1">
+            Across your courses
+          </p>
+        </div>
+
+        {/* Evaluation Tasks */}
+        <div 
+          onClick={() => onNavigate('grading')}
+          className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Grading Center</span>
+            <div className="p-2.5 rounded-2xl bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 group-hover:scale-110 transition-transform">
+              <CheckSquare className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="mt-3 flex items-baseline space-x-2">
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+              {stats.pendingSubmissionsCount || 0}
+            </span>
+            <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400">Submissions</span>
+          </div>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1">
+            Awaiting assessment
+          </p>
         </div>
       </div>
 
-      {/* 3. Main Split View: Course Management & Moderation Snapshot */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-7">
+      {/* 3. Main Workspace Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* Left Column (7 Cols) */}
-        <div className="lg:col-span-7 space-y-7">
+        {/* Left Column: Pending Moderation & Teaching Courses (7 cols) */}
+        <div className="lg:col-span-7 space-y-6">
           
-          {/* Active Course Portals */}
-          <section className="space-y-3.5">
+          {/* Moderation Queue Preview Card */}
+          <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-                <span>My Instructed Courses</span>
-              </h2>
+              <div className="flex items-center space-x-2.5">
+                <div className="p-2 rounded-2xl bg-amber-50 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400">
+                  <Inbox className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                    Resource Moderation Queue
+                  </h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                    Review and approve student-submitted notes & PYQs
+                  </p>
+                </div>
+              </div>
               <button
-                onClick={() => onNavigate('courses')}
-                className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
+                onClick={() => onNavigate('moderation')}
+                className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1 cursor-pointer"
               >
-                Manage courses ({courses.length})
+                <span>Full Queue</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            {courses.length === 0 ? (
-              <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 text-center space-y-2">
-                <BookOpen className="w-8 h-8 text-slate-400 mx-auto" />
-                <p className="text-xs font-black text-slate-900 dark:text-white">No courses created yet</p>
-                <button
-                  onClick={onOpenCreateCourse}
-                  className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline"
-                >
-                  Create your first course portal
-                </button>
+            {pendingResources.length === 0 ? (
+              <div className="p-8 text-center bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
+                <Check className="w-8 h-8 text-emerald-500 mx-auto mb-2 opacity-80" />
+                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Moderation Queue is Clean!</p>
+                <p className="text-[11px] text-slate-500 mt-0.5">No student uploads awaiting review.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {courses.map((course) => (
+              <div className="space-y-3">
+                {pendingResources.map((res) => (
                   <div
-                    key={course.id}
-                    className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between space-y-4 shadow-2xs"
+                    key={res.id}
+                    className="p-4 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 hover:border-amber-300 dark:hover:border-amber-700 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs"
                   >
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-black text-brand-600 dark:text-brand-400">
-                          {course.courseCode}
-                        </span>
-                        <span className="text-[10px] font-bold text-slate-400">
-                          Sem {course.semester}
+                    <div className="space-y-1 min-w-0 flex-1">
+                      <div className="flex items-center space-x-2 flex-wrap">
+                        <Badge variant="amber" size="xs" dot>
+                          {res.category}
+                        </Badge>
+                        <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                          By {res.uploader?.fullName || 'Student'} (Sem {res.semester || 6})
                         </span>
                       </div>
-                      <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white line-clamp-1">
-                        {course.title}
-                      </h3>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium line-clamp-2">
-                        {course.description || 'No syllabus overview provided.'}
+
+                      <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
+                        {res.title}
+                      </h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                        File: {res.fileName} • {res.subjectCode || 'General'}
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 font-medium">
-                      <span>{course.enrolledCount ?? 0} students • {course.assignmentsCount ?? 0} tasks</span>
+                    <div className="flex items-center space-x-2 flex-shrink-0 self-end sm:self-center">
                       <button
-                        onClick={() => onNavigate('courses', course.id)}
-                        className="font-bold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer flex items-center gap-1"
+                        onClick={() => handleDownload(res)}
+                        className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer"
+                        title="Download File"
                       >
-                        <span>Open</span>
-                        <ChevronRight className="w-3 h-3" />
+                        <Download className="w-4 h-4" />
                       </button>
+                      <Button
+                        variant="secondary"
+                        size="xs"
+                        onClick={() => setFeedbackModalTarget({ resource: res, status: 'REJECTED' })}
+                      >
+                        Reject
+                      </Button>
+                      <Button
+                        variant="emerald"
+                        size="xs"
+                        isLoading={processingId === res.id}
+                        onClick={() => handleQuickApprove(res.id)}
+                        leftIcon={<Check className="w-3 h-3" />}
+                      >
+                        Approve
+                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
             )}
-          </section>
-        </div>
+          </div>
 
-        {/* Right Column (5 Cols) */}
-        <div className="lg:col-span-5 space-y-7">
-          
-          {/* Moderation Snapshot */}
-          <section className="space-y-3.5">
+          {/* Active Teaching Courses */}
+          <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Inbox className="w-4 h-4 text-amber-500" />
-                <span>Pending Moderation Queue</span>
-              </h2>
+              <div className="flex items-center space-x-2.5">
+                <div className="p-2 rounded-2xl bg-indigo-50 dark:bg-brand-500/15 text-brand-600 dark:text-brand-400">
+                  <BookOpen className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                    Active Courses Instructed
+                  </h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                    Publish assignments, post announcements, and manage resources
+                  </p>
+                </div>
+              </div>
               <button
-                onClick={() => onNavigate('moderation')}
-                className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline cursor-pointer"
+                onClick={() => onNavigate('courses')}
+                className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1 cursor-pointer"
               >
-                View full queue
+                <span>Manage</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <div className="p-5 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 space-y-3 shadow-2xs">
-              {pendingResources.length === 0 ? (
-                <div className="text-slate-500 text-xs py-4 text-center">
-                  <p className="font-bold text-slate-700 dark:text-slate-300">Moderation Queue Clear</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">All student uploads have been verified and approved.</p>
-                </div>
-              ) : (
-                pendingResources.map((r) => (
+            {courses.length === 0 ? (
+              <div className="p-8 text-center bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
+                <BookOpen className="w-8 h-8 text-slate-400 mx-auto mb-2 opacity-50" />
+                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">No courses created yet.</p>
+                <p className="text-[11px] text-slate-500 mt-1 mb-3">Create your first course to begin teaching.</p>
+                <Button variant="primary" size="xs" onClick={onOpenCreateCourse}>
+                  Create Course
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {courses.map((course) => (
                   <div
-                    key={r.id}
-                    className="p-3.5 rounded-2xl border border-slate-200/70 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-800/40 flex items-start justify-between gap-3"
+                    key={course.id}
+                    onClick={() => onNavigate('courses', course.id)}
+                    className="p-4 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 hover:border-brand-400 dark:hover:border-brand-500 transition cursor-pointer group shadow-2xs space-y-2.5"
                   >
-                    <div className="space-y-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="amber" size="sm" dot>
-                          {r.category}
-                        </Badge>
-                        <span className="text-[10px] text-slate-400 truncate">
-                          By {r.uploader?.fullName || 'Student'}
-                        </span>
-                      </div>
-                      <p className="text-xs font-black text-slate-900 dark:text-white truncate">
-                        {r.title}
-                      </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/80 px-2 py-0.5 rounded-lg border border-brand-200 dark:border-brand-800">
+                        {course.courseCode}
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-400">
+                        Sem {course.semester}
+                      </span>
                     </div>
 
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => onNavigate('moderation')}
-                      className="flex-shrink-0"
-                    >
-                      Review
-                    </Button>
+                    <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white line-clamp-1 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                      {course.title}
+                    </h4>
+
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                      {course.department} • Term: {course.academicYear || '2026-27'}
+                    </p>
+
+                    <div className="pt-2 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between text-[11px] text-slate-400 font-bold">
+                      <span>{course.enrolledCount || 0} Students • {course.assignmentsCount || 0} Tasks</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-brand-500 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
-                ))
-              )}
-            </div>
-          </section>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
 
-          {/* Quick Shortcuts */}
-          <section className="space-y-3.5">
-            <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+        {/* Right Column: Faculty Actions & Grading Shortcuts (5 cols) */}
+        <div className="lg:col-span-5 space-y-6">
+          
+          {/* Quick Action Center Card */}
+          <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3.5 bg-gradient-to-br from-indigo-500/5 via-transparent to-brand-500/5">
+            <div className="flex items-center space-x-2.5">
               <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-              <span>Faculty Utilities</span>
-            </h2>
-
-            <div className="space-y-2.5">
+              <h3 className="text-sm font-black text-slate-900 dark:text-white">
+                Faculty Workspace Shortcuts
+              </h3>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-2.5">
               <button
                 onClick={onOpenCreateCourse}
-                className="w-full p-4 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 text-left transition flex items-center justify-between cursor-pointer shadow-2xs"
+                className="p-3 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:border-brand-400 text-left transition cursor-pointer group shadow-2xs"
               >
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-brand-600 dark:text-brand-400">
-                    <BookOpen className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-black text-slate-900 dark:text-white">Create New Course Portal</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Publish syllabus and class schedule</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-400" />
+                <BookOpen className="w-4 h-4 text-brand-600 dark:text-brand-400 mb-1.5 group-hover:scale-110 transition-transform" />
+                <p className="text-xs font-black text-slate-900 dark:text-white">+ New Course</p>
+                <p className="text-[10px] text-slate-500">Create curriculum</p>
               </button>
 
               <button
-                onClick={() => onNavigate('grading')}
-                className="w-full p-4 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 text-left transition flex items-center justify-between cursor-pointer shadow-2xs"
+                onClick={onOpenUploadResource}
+                className="p-3 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400 text-left transition cursor-pointer group shadow-2xs"
               >
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
-                    <CheckSquare className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-black text-slate-900 dark:text-white">Evaluation & Grading Center</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Grade assignment submissions & provide feedback</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-400" />
-              </button>
-
-              <button
-                onClick={() => onNavigate('audit-logs')}
-                className="w-full p-4 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 text-left transition flex items-center justify-between cursor-pointer shadow-2xs"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                    <ShieldCheck className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-black text-slate-900 dark:text-white">Security & Audit Logs</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Review campus security logs and authentication events</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-400" />
+                <FileText className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mb-1.5 group-hover:scale-110 transition-transform" />
+                <p className="text-xs font-black text-slate-900 dark:text-white">+ Upload Doc</p>
+                <p className="text-[10px] text-slate-500">Official syllabus/PYQ</p>
               </button>
             </div>
-          </section>
+          </div>
 
+          {/* Grading Evaluation Prompt */}
+          <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+            <div className="flex items-center space-x-2.5">
+              <div className="p-2 rounded-2xl bg-sky-50 dark:bg-sky-500/15 text-sky-600 dark:text-sky-400">
+                <CheckSquare className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                  Grading & Evaluation Center
+                </h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                  Review student code, project reports, and homework
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Evaluate pending student submissions, grade deliverables with rubrics, and provide feedback directly in the grading center.
+            </p>
+
+            <Button
+              variant="primary"
+              size="sm"
+              className="w-full"
+              onClick={() => onNavigate('grading')}
+              rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+            >
+              Open Evaluation Workspace
+            </Button>
+          </div>
         </div>
       </div>
+
+      {/* Moderation Feedback Modal */}
+      {feedbackModalTarget && (
+        <ModerationFeedbackModal
+          isOpen={true}
+          onClose={() => setFeedbackModalTarget(null)}
+          resource={feedbackModalTarget.resource}
+          status={feedbackModalTarget.status}
+          onSubmit={handleFeedbackSubmit}
+          isSubmitting={processingId === feedbackModalTarget.resource.id}
+        />
+      )}
     </div>
   );
 };

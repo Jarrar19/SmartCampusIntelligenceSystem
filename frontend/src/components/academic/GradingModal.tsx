@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { Award, Download, MessageSquare, CheckCircle, Sparkles } from 'lucide-react';
 import { Modal } from '../common/Modal';
+import { Button } from '../common/Button';
+import { Input } from '../common/Input';
 import { api, extractErrorMessage } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
-import { Submission, SubmissionStatus } from '../../types';
+import { Submission, SubmissionStatus, Assignment } from '../../types';
 
 interface GradingModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
   submission: Submission;
-  maxMarks: number;
+  assignment?: Assignment;
+  maxMarks?: number;
 }
 
 export const GradingModal: React.FC<GradingModalProps> = ({
@@ -18,7 +21,8 @@ export const GradingModal: React.FC<GradingModalProps> = ({
   onClose,
   onSuccess,
   submission,
-  maxMarks,
+  assignment,
+  maxMarks = assignment?.maxMarks || 100,
 }) => {
   const { success, error } = useToast();
 
@@ -77,7 +81,7 @@ export const GradingModal: React.FC<GradingModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Grade Submission — ${submission.student?.fullName}`}
+      title={`Grade Submission — ${submission.student?.fullName || 'Student'}`}
       subtitle={`Submitted: ${new Date(submission.submittedAt).toLocaleDateString()} ${submission.isLate ? '(Late Submission)' : ''}`}
       maxWidth="lg"
     >
@@ -85,7 +89,9 @@ export const GradingModal: React.FC<GradingModalProps> = ({
         {/* Student Submission Text */}
         {submission.submissionText && (
           <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80">
-            <p className="text-[11px] font-black text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider">Student Notes / Submission Links:</p>
+            <p className="text-[11px] font-black text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider">
+              Student Notes / Submission Text:
+            </p>
             <p className="text-xs text-slate-800 dark:text-slate-200 whitespace-pre-wrap font-mono leading-relaxed font-medium">
               {submission.submissionText}
             </p>
@@ -101,42 +107,38 @@ export const GradingModal: React.FC<GradingModalProps> = ({
                 {((submission.fileSize || 0) / 1024).toFixed(1)} KB
               </p>
             </div>
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              size="xs"
               onClick={handleDownload}
-              className="px-4 py-2 rounded-xl text-xs font-bold text-brand-600 dark:text-brand-300 bg-indigo-50 dark:bg-brand-500/15 hover:bg-indigo-100 dark:hover:bg-brand-500/25 border border-indigo-200 dark:border-brand-500/30 flex items-center gap-1.5 transition cursor-pointer active:scale-95"
+              leftIcon={<Download className="w-3.5 h-3.5" />}
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download</span>
-            </button>
+              Download
+            </Button>
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-              Marks Awarded (Max: {maxMarks}) *
-            </label>
-            <input
-              type="number"
-              required
-              min={0}
-              max={maxMarks}
-              step={0.5}
-              value={marks}
-              onChange={(e) => setMarks(parseFloat(e.target.value))}
-              className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-black"
-            />
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            label={`Marks Awarded (Max: ${maxMarks})`}
+            type="number"
+            min={0}
+            max={maxMarks}
+            step={0.5}
+            value={marks}
+            onChange={(e) => setMarks(parseFloat(e.target.value))}
+            isRequired
+          />
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-              Submission Status
+          <div className="space-y-1.5 text-left">
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+              Evaluation Status <span className="text-rose-500">*</span>
             </label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as SubmissionStatus)}
-              className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-bold cursor-pointer"
+              className="w-full glass-input rounded-2xl px-3.5 py-2.5 text-xs font-bold focus:outline-none"
             >
               <option value="GRADED">GRADED</option>
               <option value="RETURNED">RETURNED FOR RESUBMISSION</option>
@@ -144,8 +146,8 @@ export const GradingModal: React.FC<GradingModalProps> = ({
           </div>
         </div>
 
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+        <div className="space-y-1.5 text-left">
+          <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
             Faculty Feedback & Mentorship Comments
           </label>
           <textarea
@@ -153,25 +155,27 @@ export const GradingModal: React.FC<GradingModalProps> = ({
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
             placeholder="Write constructive evaluation notes, strengths, and areas for improvement..."
-            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
+            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-medium focus:outline-none"
           />
         </div>
 
-        <div className="flex items-center justify-end space-x-2.5 pt-4 border-t border-slate-100 dark:border-slate-800">
-          <button
-            type="button"
+        <div className="flex items-center justify-end space-x-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
-            className="px-4 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            disabled={isSubmitting}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            disabled={isSubmitting}
-            className="px-6 py-2.5 text-xs font-black text-white bg-brand-600 hover:bg-brand-500 rounded-2xl transition shadow-md shadow-brand-500/25 disabled:opacity-50 cursor-pointer active:scale-95"
+            variant="primary"
+            size="sm"
+            isLoading={isSubmitting}
           >
-            {isSubmitting ? 'Saving...' : 'Save Evaluation'}
-          </button>
+            Save Evaluation
+          </Button>
         </div>
       </form>
     </Modal>

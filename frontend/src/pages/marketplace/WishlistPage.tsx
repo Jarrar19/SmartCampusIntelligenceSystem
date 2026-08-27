@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, ShoppingBag, Trash2, MapPin, Sparkles } from 'lucide-react';
+import { Heart, ShoppingBag, ArrowRight, Trash2 } from 'lucide-react';
 import { api, STORAGE_BASE_URL } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import { MarketplaceProduct } from '../../types';
+import { Badge } from '../../components/common/Badge';
+import { Button } from '../../components/common/Button';
 import { EmptyState } from '../../components/common/EmptyState';
+import { ProductCardSkeleton } from '../../components/common/Skeleton';
 import { ProductDetailModal } from '../../components/marketplace/ProductDetailModal';
 
 export const WishlistPage: React.FC = () => {
   const { success, error } = useToast();
-  const [favorites, setFavorites] = useState<MarketplaceProduct[]>([]);
+  const [products, setProducts] = useState<MarketplaceProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<MarketplaceProduct | null>(null);
 
@@ -17,10 +20,10 @@ export const WishlistPage: React.FC = () => {
     try {
       const res = await api.get('/marketplace/products');
       if (res.data.success) {
-        setFavorites(res.data.data.filter((p: MarketplaceProduct) => p.isFavorited));
+        setProducts(res.data.data.filter((p: MarketplaceProduct) => p.isFavorited));
       }
     } catch (err) {
-      error('Failed to load wishlist');
+      error('Failed to load wishlist items');
     } finally {
       setIsLoading(false);
     }
@@ -35,8 +38,8 @@ export const WishlistPage: React.FC = () => {
     try {
       const res = await api.post(`/marketplace/products/${productId}/favorite`);
       if (res.data.success) {
-        success('Removed from wishlist');
-        setFavorites(prev => prev.filter(p => p.id !== productId));
+        success('Item removed from wishlist');
+        setProducts((prev) => prev.filter((p) => p.id !== productId));
       }
     } catch (err) {
       error('Failed to update wishlist');
@@ -44,77 +47,108 @@ export const WishlistPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-fade-in-up">
+      {/* Header */}
       <div>
         <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
           <Heart className="w-6 h-6 text-rose-500 fill-rose-500" />
-          <span>Saved Wishlist & Bookmarked Items</span>
+          <span>Saved Marketplace Items & Wishlist</span>
         </h2>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Quickly access products you've saved for future coursework, lab work, or campus living needs.
+          Quickly monitor prices and availability of saved textbooks, calculators, and gadgets.
         </p>
       </div>
 
+      {/* Grid */}
       {isLoading ? (
-        <div className="text-center py-16 text-xs text-slate-400">Loading saved items...</div>
-      ) : favorites.length === 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
+        </div>
+      ) : products.length === 0 ? (
         <EmptyState
           icon={Heart}
           title="Your Wishlist is Empty"
-          description="Click the heart icon on any campus marketplace item to save it here for quick access."
+          description="Click the heart icon on any campus marketplace listing to bookmark it here."
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {favorites.map((product) => (
-            <div
-              key={product.id}
-              onClick={() => setSelectedProduct(product)}
-              className="glass-panel glass-panel-hover rounded-3xl overflow-hidden cursor-pointer flex flex-col justify-between group relative"
-            >
-              <div className="aspect-[4/3] bg-slate-100 dark:bg-slate-800/80 relative flex items-center justify-center overflow-hidden">
-                {product.images && product.images.length > 0 ? (
-                  <img
-                    src={`${STORAGE_BASE_URL}/${product.images[0].imagePath}`}
-                    alt={product.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      (e.target as any).src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400';
-                    }}
-                  />
-                ) : (
-                  <ShoppingBag className="w-12 h-12 text-slate-400 dark:text-slate-600" />
-                )}
+          {products.map((product) => {
+            const primaryImg = product.images?.[0]?.imagePath;
+            const imgUrl = primaryImg ? (primaryImg.startsWith('http') ? primaryImg : `${STORAGE_BASE_URL}/${primaryImg}`) : null;
 
-                <button
-                  onClick={(e) => handleRemoveFavorite(e, product.id)}
-                  className="absolute top-3 right-3 p-2 rounded-2xl bg-white/90 dark:bg-rose-500/20 text-rose-500 dark:text-rose-400 border border-rose-200 dark:border-rose-500/40 shadow-xs cursor-pointer active:scale-90 transition"
-                  title="Remove from saved wishlist"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
+            return (
+              <div
+                key={product.id}
+                onClick={() => setSelectedProduct(product)}
+                className="p-4 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between space-y-3 cursor-pointer group shadow-sm"
+              >
+                <div className="space-y-3">
+                  <div className="relative w-full h-44 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center">
+                    {imgUrl ? (
+                      <img
+                        src={imgUrl}
+                        alt={product.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <ShoppingBag className="w-12 h-12 text-slate-300 dark:text-slate-600" />
+                    )}
 
-              <div className="p-4 space-y-2">
-                <div className="flex items-baseline justify-between">
-                  <span className="text-base font-black text-emerald-600 dark:text-emerald-400">
-                    {product.price === 0 ? 'Free Giveaway' : `₹${product.price}`}
-                  </span>
-                  <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{product.condition}</span>
+                    <div className="absolute top-2 left-2">
+                      <span className="px-2.5 py-1 rounded-xl text-xs font-black text-white bg-slate-950/80 backdrop-blur-md">
+                        {product.price === 0 ? 'FREE' : `₹${product.price}`}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={(e) => handleRemoveFavorite(e, product.id)}
+                      className="absolute top-2 right-2 p-2 rounded-xl bg-rose-500 text-white shadow-xs hover:bg-rose-600 transition cursor-pointer"
+                      title="Remove from wishlist"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <Badge variant="slate" size="xs">
+                        {product.category}
+                      </Badge>
+                      <span className="text-[10px] font-bold text-slate-400">
+                        {product.condition}
+                      </span>
+                    </div>
+
+                    <h3 className="text-sm font-black text-slate-900 dark:text-white line-clamp-1">
+                      {product.title}
+                    </h3>
+                  </div>
                 </div>
-                <h3 className="text-xs font-black text-slate-900 dark:text-white line-clamp-1 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">{product.title}</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed font-medium">{product.description}</p>
+
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                  <span className="text-[10px] text-slate-500">
+                    {product.seller?.fullName || 'Seller'}
+                  </span>
+                  <span className="text-xs font-black text-brand-600 dark:text-brand-400 group-hover:translate-x-1 transition-transform">
+                    View Details
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
-      <ProductDetailModal
-        isOpen={!!selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-        product={selectedProduct}
-        onRefresh={fetchWishlist}
-      />
+      {selectedProduct && (
+        <ProductDetailModal
+          isOpen={true}
+          onClose={() => setSelectedProduct(null)}
+          product={selectedProduct}
+          onRefresh={fetchWishlist}
+        />
+      )}
     </div>
   );
 };

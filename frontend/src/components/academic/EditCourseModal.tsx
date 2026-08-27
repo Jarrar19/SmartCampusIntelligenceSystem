@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, X } from 'lucide-react';
 import { Modal } from '../common/Modal';
+import { Button } from '../common/Button';
+import { Input } from '../common/Input';
 import { api } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import { Course } from '../../types';
@@ -25,7 +27,7 @@ export const EditCourseModal: React.FC<EditCourseModalProps> = ({
   const [description, setDescription] = useState(course.description || '');
   const [department, setDepartment] = useState(course.department);
   const [semester, setSemester] = useState(course.semester);
-  const [academicYear, setAcademicYear] = useState(course.academicYear || '2025-2026');
+  const [academicYear, setAcademicYear] = useState(course.academicYear || '2026-2027');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export const EditCourseModal: React.FC<EditCourseModalProps> = ({
       setDescription(course.description || '');
       setDepartment(course.department);
       setSemester(course.semester);
-      setAcademicYear(course.academicYear || '2025-2026');
+      setAcademicYear(course.academicYear || '2026-2027');
     }
   }, [course]);
 
@@ -78,29 +80,22 @@ export const EditCourseModal: React.FC<EditCourseModalProps> = ({
       maxWidth="lg"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-              Course Code *
-            </label>
-            <input
-              type="text"
-              required
-              value={courseCode}
-              onChange={(e) => setCourseCode(e.target.value)}
-              placeholder="e.g. CS501"
-              className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
-            />
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            label="Course Code"
+            value={courseCode}
+            onChange={(e) => setCourseCode(e.target.value)}
+            isRequired
+          />
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-              Semester *
+          <div className="space-y-1.5 text-left">
+            <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+              Semester <span className="text-rose-500">*</span>
             </label>
             <select
               value={semester}
               onChange={(e) => setSemester(Number(e.target.value))}
-              className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-bold cursor-pointer"
+              className="w-full glass-input rounded-2xl px-3.5 py-2.5 text-xs font-bold focus:outline-none"
             >
               {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
                 <option key={s} value={s}>
@@ -111,35 +106,22 @@ export const EditCourseModal: React.FC<EditCourseModalProps> = ({
           </div>
         </div>
 
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-            Course Title *
-          </label>
-          <input
-            type="text"
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Software Engineering & Cloud Architectures"
-            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
-          />
-        </div>
+        <Input
+          label="Course Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          isRequired
+        />
 
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-            Department *
-          </label>
-          <input
-            type="text"
-            required
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
-          />
-        </div>
+        <Input
+          label="Academic Department"
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          isRequired
+        />
 
-        <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+        <div className="space-y-1.5 text-left">
+          <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
             Description & Syllabus Overview
           </label>
           <textarea
@@ -147,25 +129,27 @@ export const EditCourseModal: React.FC<EditCourseModalProps> = ({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Course syllabus, requirements, and reference textbooks..."
-            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs font-medium"
+            className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-medium focus:outline-none"
           />
         </div>
 
-        <div className="flex items-center justify-end space-x-2.5 pt-4 border-t border-slate-100 dark:border-slate-800">
-          <button
-            type="button"
+        <div className="flex items-center justify-end space-x-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
-            className="px-4 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            disabled={isSubmitting}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            disabled={isSubmitting}
-            className="px-6 py-2.5 text-xs font-black text-white bg-brand-600 hover:bg-brand-500 rounded-2xl transition shadow-md shadow-brand-500/25 disabled:opacity-50 cursor-pointer active:scale-95"
+            variant="primary"
+            size="sm"
+            isLoading={isSubmitting}
           >
-            {isSubmitting ? 'Saving Changes...' : 'Save Changes'}
-          </button>
+            Save Changes
+          </Button>
         </div>
       </form>
     </Modal>

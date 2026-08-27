@@ -8,10 +8,10 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { Assignment } from '../../types';
 import { Badge } from '../../components/common/Badge';
+import { Button } from '../../components/common/Button';
 import { EmptyState } from '../../components/common/EmptyState';
 import { ListRowSkeleton } from '../../components/common/Skeleton';
 import { SubmissionModal } from '../../components/academic/SubmissionModal';
-
 
 export const AssignmentsPage: React.FC = () => {
   const { user } = useAuth();
@@ -41,6 +41,7 @@ export const AssignmentsPage: React.FC = () => {
             }
           } catch (e) {}
         }
+        all.sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
         setAssignments(all);
       }
     } catch (err) {
@@ -54,6 +55,20 @@ export const AssignmentsPage: React.FC = () => {
     fetchAssignments();
   }, []);
 
+  const getDueDateStatus = (dueDateStr: string) => {
+    const due = new Date(dueDateStr).getTime();
+    const now = new Date().getTime();
+    const diffHours = (due - now) / (1000 * 60 * 60);
+
+    if (diffHours < 0) return { label: 'Past due', variant: 'rose' as const };
+    if (diffHours <= 24) return { label: 'Due today', variant: 'rose' as const };
+    if (diffHours <= 72) return { label: 'Due soon', variant: 'amber' as const };
+    return { 
+      label: `Due ${new Date(dueDateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`, 
+      variant: 'indigo' as const 
+    };
+  };
+
   const filteredAssignments = assignments.filter((a) => {
     const sub = a.submissions?.[0];
     if (filter === 'pending') return !sub;
@@ -63,7 +78,8 @@ export const AssignmentsPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-fade-in-up">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
@@ -86,7 +102,7 @@ export const AssignmentsPage: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setFilter(tab.id as any)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition cursor-pointer active:scale-95 ${
                 filter === tab.id
                   ? 'bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -98,94 +114,101 @@ export const AssignmentsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Assignment List */}
       {isLoading ? (
         <div className="space-y-4">
           <ListRowSkeleton />
           <ListRowSkeleton />
           <ListRowSkeleton />
-          <ListRowSkeleton />
         </div>
       ) : filteredAssignments.length === 0 ? (
-
         <EmptyState
           icon={CheckSquare}
-          title="No Assignments Found"
-          description="You're all caught up! No assignments found under this filter."
+          title={
+            filter === 'pending'
+              ? 'No Pending Deliverables!'
+              : filter === 'graded'
+              ? 'No Graded Tasks Yet'
+              : 'No Assignments Found'
+          }
+          description={
+            filter === 'pending'
+              ? 'You have completed and submitted all required course assignments.'
+              : 'Assignments for your enrolled courses will appear here.'
+          }
         />
       ) : (
-        <div className="grid grid-cols-1 gap-4">
-          {filteredAssignments.map((a) => {
-            const sub = a.submissions?.[0];
-            const isPastDue = new Date() > new Date(a.dueDate);
+        <div className="space-y-4">
+          {filteredAssignments.map((assignment) => {
+            const status = getDueDateStatus(assignment.dueDate);
+            const mySubmission = assignment.submissions?.[0];
+            const isSubmitted = !!mySubmission;
+            const isGraded = mySubmission?.status === 'GRADED';
 
             return (
               <div
-                key={a.id}
-                className="p-6 rounded-3xl glass-panel glass-panel-hover flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden"
+                key={assignment.id}
+                className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5"
               >
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-600 to-indigo-500" />
-                <div className="space-y-2 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-black text-brand-600 dark:text-brand-400 bg-indigo-50 dark:bg-brand-500/10 px-3 py-1 rounded-xl border border-indigo-100 dark:border-brand-500/20 shadow-2xs">
-                      {a.course?.courseCode || 'Course Task'}
+                <div className="space-y-2 min-w-0 flex-1">
+                  <div className="flex items-center space-x-2 flex-wrap">
+                    <span className="text-xs font-black text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/80 px-2.5 py-0.5 rounded-xl border border-brand-200 dark:border-brand-800">
+                      {assignment.course?.courseCode || 'COURSE'}
                     </span>
                     <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                      Max Marks: {a.maxMarks}
+                      {assignment.course?.title}
                     </span>
-                    {sub ? (
-                      sub.status === 'GRADED' ? (
-                        <Badge variant="emerald">
-                          Graded: {sub.marksAwarded}/{a.maxMarks}
-                        </Badge>
-                      ) : (
-                        <Badge variant="blue">Submitted (Awaiting Grade)</Badge>
-                      )
-                    ) : isPastDue ? (
-                      <Badge variant="rose">Past Deadline</Badge>
-                    ) : (
-                      <Badge variant="amber">Due Soon</Badge>
-                    )}
+                    <Badge variant={isGraded ? 'emerald' : isSubmitted ? 'indigo' : status.variant} size="xs" dot>
+                      {isGraded ? 'Graded & Evaluated' : isSubmitted ? 'Submitted' : status.label}
+                    </Badge>
                   </div>
 
-                  <h3 className="text-base font-black text-slate-900 dark:text-white">{a.title}</h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl whitespace-pre-wrap font-medium">
-                    {a.description}
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                    {assignment.title}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                    {assignment.description}
                   </p>
 
-                  <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 pt-1 font-semibold">
-                    <span className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400">
-                      <Clock className="w-3.5 h-3.5" />
-                      Due: {new Date(a.dueDate).toLocaleDateString()} at {new Date(a.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                    {sub && (
-                      <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                        Submitted: {new Date(sub.submittedAt).toLocaleDateString()} {sub.isLate ? '(Late)' : ''}
-                      </span>
-                    )}
-                  </div>
-
-                  {sub?.facultyFeedback && (
-                    <div className="p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/30 text-indigo-900 dark:text-indigo-300 text-xs mt-2 shadow-2xs">
-                      <p className="font-extrabold flex items-center gap-1.5 mb-1 text-brand-700 dark:text-brand-300">
-                        <Award className="w-4 h-4 text-brand-600 dark:text-indigo-400" />
-                        <span>Faculty Evaluation Feedback:</span>
-                      </p>
-                      <p className="italic text-slate-700 dark:text-slate-200 font-medium">"{sub.facultyFeedback}"</p>
+                  {/* Feedback block if graded */}
+                  {isGraded && mySubmission && (
+                    <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-900/50 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-black text-emerald-900 dark:text-emerald-200 flex items-center gap-1.5">
+                          <Award className="w-4 h-4 text-emerald-600" />
+                          <span>Marks Awarded: {mySubmission.marksAwarded} / {assignment.maxMarks}</span>
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                          Evaluated by Faculty
+                        </span>
+                      </div>
+                      {mySubmission.facultyFeedback && (
+                        <p className="text-xs text-emerald-800 dark:text-emerald-200 font-medium pt-1">
+                          "{mySubmission.facultyFeedback}"
+                        </p>
+                      )}
                     </div>
                   )}
+
+                  <div className="pt-2 flex items-center space-x-4 text-xs font-bold text-slate-400 flex-wrap">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>Deadline: {new Date(assignment.dueDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(assignment.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    </span>
+                    <span>•</span>
+                    <span>Max Marks: {assignment.maxMarks}</span>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <button
-                    onClick={() => setSelectedAssignment(a)}
-                    className={`px-5 py-2.5 rounded-2xl text-xs font-black transition cursor-pointer shadow-sm active:scale-95 ${
-                      sub
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                        : 'bg-brand-600 text-white hover:bg-brand-500 shadow-md shadow-brand-500/25'
-                    }`}
+                <div className="flex items-center space-x-2 flex-shrink-0 self-end md:self-center">
+                  <Button
+                    variant={isSubmitted ? 'outline' : 'primary'}
+                    size="sm"
+                    onClick={() => setSelectedAssignment(assignment)}
                   >
-                    {sub ? 'View / Update' : 'Turn In Work'}
-                  </button>
+                    {isSubmitted ? 'View / Resubmit' : 'Submit Deliverable'}
+                  </Button>
                 </div>
               </div>
             );
@@ -193,13 +216,16 @@ export const AssignmentsPage: React.FC = () => {
         </div>
       )}
 
+      {/* Submission Modal */}
       {selectedAssignment && (
         <SubmissionModal
-          isOpen={!!selectedAssignment}
+          isOpen={true}
           onClose={() => setSelectedAssignment(null)}
-          onSuccess={fetchAssignments}
           assignment={selectedAssignment}
-          existingSubmission={selectedAssignment.submissions?.[0]}
+          onSuccess={() => {
+            setSelectedAssignment(null);
+            fetchAssignments();
+          }}
         />
       )}
     </div>

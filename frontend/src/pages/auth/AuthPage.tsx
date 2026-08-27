@@ -8,6 +8,9 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { useTheme } from '../../context/ThemeContext';
 import { UserRole } from '../../types';
+import { Button } from '../../components/common/Button';
+import { Input } from '../../components/common/Input';
+import { Badge } from '../../components/common/Badge';
 
 export const AuthPage: React.FC = () => {
   const { login, register, config } = useAuth();
@@ -67,8 +70,9 @@ export const AuthPage: React.FC = () => {
       <div className="absolute top-4 right-4 z-20">
         <button
           onClick={toggleTheme}
-          className="p-2.5 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 shadow-xs transition backdrop-blur-md cursor-pointer"
+          className="p-2.5 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 shadow-xs transition backdrop-blur-md cursor-pointer active:scale-90"
           title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          aria-label="Toggle theme"
         >
           {isDark ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-indigo-600" />}
         </button>
@@ -98,68 +102,25 @@ export const AuthPage: React.FC = () => {
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/20">
             <ShoppingBag className="w-3 h-3" /> ₹0 Marketplace
           </span>
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/20">
-            <ShieldCheck className="w-3 h-3" /> @{collegeDomain} Verified
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-brand-500/10 text-brand-600 dark:text-brand-300 border border-brand-500/20">
+            <ShieldCheck className="w-3 h-3" /> RBAC Secure
           </span>
         </div>
       </div>
 
-      {/* Auth Card */}
-      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md px-4 relative z-10">
-        <div className="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/90">
-          {/* Quick Demo Fillers */}
-          <div className="mb-6 p-3.5 rounded-2xl bg-gradient-to-br from-indigo-50/70 to-slate-50 dark:from-slate-800/70 dark:to-slate-900/80 border border-indigo-100 dark:border-slate-700/60 shadow-2xs">
-            <p className="text-[11px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2.5 flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>1-Click Persona Access</span>
-              </span>
-              <span className="text-[10px] text-slate-400 font-medium">Demo Mode</span>
-            </p>
-            <div className="grid grid-cols-2 gap-2.5">
-              <button
-                type="button"
-                onClick={() => handleQuickDemoLogin(`faculty1@${collegeDomain}`)}
-                className="p-2.5 rounded-2xl text-left bg-white dark:bg-indigo-500/15 hover:bg-indigo-50 dark:hover:bg-indigo-500/25 border border-indigo-200 dark:border-indigo-500/30 transition text-xs shadow-2xs cursor-pointer flex flex-col group active:scale-95"
-              >
-                <div className="flex items-center space-x-2">
-                  <div className="w-6 h-6 rounded-lg bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center">
-                    P
-                  </div>
-                  <span className="font-bold text-indigo-700 dark:text-indigo-300 group-hover:text-brand-600 truncate">
-                    Prof. Jenkins
-                  </span>
-                </div>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 pl-8">Faculty (CSE)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickDemoLogin(`student1@${collegeDomain}`)}
-                className="p-2.5 rounded-2xl text-left bg-white dark:bg-emerald-500/15 hover:bg-emerald-50 dark:hover:bg-emerald-500/25 border border-emerald-200 dark:border-emerald-500/30 transition text-xs shadow-2xs cursor-pointer flex flex-col group active:scale-95"
-              >
-                <div className="flex items-center space-x-2">
-                  <div className="w-6 h-6 rounded-lg bg-emerald-600 text-white font-bold text-[10px] flex items-center justify-center">
-                    A
-                  </div>
-                  <span className="font-bold text-emerald-700 dark:text-emerald-300 group-hover:text-emerald-600 truncate">
-                    Alex Rivera
-                  </span>
-                </div>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 pl-8">Student (6th Sem)</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Toggle Login/Register */}
-          <div className="flex bg-slate-100 dark:bg-slate-950 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 mb-6">
+      {/* Main Card */}
+      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
+        <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xl backdrop-blur-2xl">
+          
+          {/* Sign In vs Register Switcher */}
+          <div className="flex rounded-2xl bg-slate-100 dark:bg-slate-800/80 p-1 mb-6 border border-slate-200/70 dark:border-slate-700/60">
             <button
               type="button"
               onClick={() => setIsLogin(true)}
-              className={`flex-1 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                isLogin 
-                  ? 'bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-xs' 
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              className={`flex-1 py-2 rounded-xl text-xs font-black transition cursor-pointer active:scale-95 ${
+                isLogin
+                  ? 'bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-xs'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Sign In
@@ -167,143 +128,180 @@ export const AuthPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsLogin(false)}
-              className={`flex-1 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                !isLogin 
-                  ? 'bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-xs' 
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              className={`flex-1 py-2 rounded-xl text-xs font-black transition cursor-pointer active:scale-95 ${
+                !isLogin
+                  ? 'bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-xs'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              Create Account
+              Register
             </button>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    Full Name *
+                <Input
+                  label="Full Name"
+                  placeholder="e.g. Aman Sharma"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  leftIcon={<User className="w-4 h-4" />}
+                  isRequired
+                />
+
+                <div className="space-y-1.5 text-left">
+                  <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+                    Campus Role <span className="text-rose-500">*</span>
                   </label>
-                  <div className="relative">
-                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                    <input
-                      type="text"
-                      required
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      placeholder="e.g. John Doe"
-                      className="w-full glass-input rounded-2xl pl-10 pr-3.5 py-2.5 text-xs font-medium"
-                    />
+                  <div className="grid grid-cols-2 gap-2">
+                    {(['STUDENT', 'FACULTY'] as const).map((r) => (
+                      <button
+                        key={r}
+                        type="button"
+                        onClick={() => setRole(r)}
+                        className={`py-2 rounded-2xl text-xs font-extrabold transition cursor-pointer active:scale-95 ${
+                          role === r
+                            ? 'bg-brand-600 text-white shadow-xs border border-transparent'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                        }`}
+                      >
+                        {r === 'STUDENT' ? 'Student' : 'Faculty Member'}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Role *</label>
+                <div className="space-y-1.5 text-left">
+                  <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+                    Academic Department <span className="text-rose-500">*</span>
+                  </label>
+                  <select
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                    className="w-full glass-input rounded-2xl text-xs font-bold px-3.5 py-2.5 focus:outline-none"
+                  >
+                    <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Electronics & Telecom">Electronics & Telecom</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Electrical Engineering">Electrical Engineering</option>
+                  </select>
+                </div>
+
+                {role === 'STUDENT' && (
+                  <div className="space-y-1.5 text-left">
+                    <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
+                      Semester <span className="text-rose-500">*</span>
+                    </label>
                     <select
-                      value={role}
-                      onChange={(e) => setRole(e.target.value as UserRole)}
-                      className="w-full glass-input rounded-2xl px-3 py-2.5 text-xs font-bold cursor-pointer"
+                      value={semester}
+                      onChange={(e) => setSemester(Number(e.target.value))}
+                      className="w-full glass-input rounded-2xl text-xs font-bold px-3.5 py-2.5 focus:outline-none"
                     >
-                      <option value="STUDENT">Student</option>
-                      <option value="FACULTY">Faculty Member</option>
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                        <option key={s} value={s}>
+                          Semester {s}
+                        </option>
+                      ))}
                     </select>
                   </div>
-
-                  {role === 'STUDENT' ? (
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Semester</label>
-                      <select
-                        value={semester}
-                        onChange={(e) => setSemester(Number(e.target.value))}
-                        className="w-full glass-input rounded-2xl px-3 py-2.5 text-xs font-bold cursor-pointer"
-                      >
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-                          <option key={s} value={s}>Semester {s}</option>
-                        ))}
-                      </select>
-                    </div>
-                  ) : (
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Department</label>
-                      <select
-                        value={department}
-                        onChange={(e) => setDepartment(e.target.value)}
-                        className="w-full glass-input rounded-2xl px-3 py-2.5 text-xs font-bold cursor-pointer"
-                      >
-                        <option value="Computer Science & Engineering">CSE</option>
-                        <option value="Electronics & Communication Engineering">ECE</option>
-                        <option value="Electrical Engineering">EE</option>
-                        <option value="Mechanical Engineering">ME</option>
-                      </select>
-                    </div>
-                  )}
-                </div>
+                )}
               </>
             )}
 
             <div>
-              <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                  College Email Address *
-                </label>
-                {email && (
-                  <span className={`text-[10px] font-bold flex items-center gap-1 ${isDomainValid ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'}`}>
-                    {isDomainValid ? <Check className="w-3 h-3" /> : 'Invalid Domain'}
-                  </span>
-                )}
-              </div>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={`username@${collegeDomain}`}
-                  className="w-full glass-input rounded-2xl pl-10 pr-3.5 py-2.5 text-xs font-medium"
-                />
-              </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
-                Restricted to institutional domain <code className="text-brand-600 dark:text-brand-400 font-mono font-bold">@{collegeDomain}</code>
-              </p>
+              <Input
+                label="Institutional Email"
+                type="email"
+                placeholder={`yourname@${collegeDomain}`}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                leftIcon={<Mail className="w-4 h-4" />}
+                isRequired
+              />
+              {!isLogin && email && (
+                <div className="mt-1 flex items-center gap-1.5">
+                  {isDomainValid ? (
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                      <Check className="w-3 h-3" /> Valid @{collegeDomain} domain
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1">
+                      <ShieldAlert className="w-3 h-3" /> Must end with @{collegeDomain}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                Password *
-              </label>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  minLength={6}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full glass-input rounded-2xl pl-10 pr-10 py-2.5 text-xs font-medium"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
+            <div className="relative">
+              <Input
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                leftIcon={<Lock className="w-4 h-4" />}
+                rightIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                }
+                isRequired
+              />
             </div>
 
-            <button
+            <Button
               type="submit"
-              disabled={isLoading}
-              className="w-full mt-3 py-3 px-4 rounded-2xl text-xs font-extrabold text-white bg-gradient-to-r from-brand-600 via-indigo-600 to-indigo-700 hover:from-brand-500 hover:to-indigo-600 transition shadow-xl shadow-brand-500/25 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer active:scale-98"
+              variant="primary"
+              size="md"
+              className="w-full mt-2"
+              isLoading={isLoading}
+              rightIcon={<ArrowRight className="w-4 h-4" />}
             >
-              <span>{isLoading ? 'Authenticating...' : isLogin ? 'Sign In to Campus Hub' : 'Register Verified Account'}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+              {isLogin ? 'Sign In to Campus' : 'Create Verified Account'}
+            </Button>
           </form>
+
+          {/* Quick Demo Logins Container */}
+          <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-slate-800">
+            <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 text-center mb-2.5">
+              1-Click Demo Profiles
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => handleQuickDemoLogin('student@sbjit.edu.in')}
+                className="p-2 rounded-2xl bg-indigo-50 dark:bg-brand-950/60 border border-indigo-100 dark:border-brand-800/60 text-brand-600 dark:text-brand-300 hover:bg-brand-600 hover:text-white transition text-center cursor-pointer active:scale-95 group"
+              >
+                <User className="w-3.5 h-3.5 mx-auto mb-1 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-black block">Student</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickDemoLogin('faculty@sbjit.edu.in')}
+                className="p-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-300 hover:bg-emerald-600 hover:text-white transition text-center cursor-pointer active:scale-95 group"
+              >
+                <BookOpen className="w-3.5 h-3.5 mx-auto mb-1 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-black block">Faculty</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickDemoLogin('admin@sbjit.edu.in')}
+                className="p-2 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-100 dark:border-rose-800/60 text-rose-600 dark:text-rose-300 hover:bg-rose-600 hover:text-white transition text-center cursor-pointer active:scale-95 group"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 mx-auto mb-1 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-black block">Admin</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
