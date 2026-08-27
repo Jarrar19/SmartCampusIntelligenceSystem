@@ -7,16 +7,39 @@ const UpdateProfileSchema = z.object({
   department: z.string().optional(),
   semester: z.number().int().optional(),
   avatarUrl: z.string().optional(),
+  prn: z.string().optional(),
 });
 
 export async function updateProfile(req: Request, res: Response) {
   if (!req.user) return res.status(401).json({ success: false, message: 'Unauthorized' });
 
   const parsed = UpdateProfileSchema.parse(req.body);
+  const updateData: any = { ...parsed };
+
+  if (parsed.prn !== undefined) {
+    const formattedPrn = parsed.prn.trim().toUpperCase();
+    if (formattedPrn && formattedPrn !== req.user.prn) {
+      const existing = await prisma.user.findFirst({
+        where: {
+          prn: formattedPrn,
+          id: { not: req.user.id },
+        },
+      });
+      if (existing) {
+        return res.status(409).json({
+          success: false,
+          message: `Roll No. / USN (${formattedPrn}) is already registered to another student.`,
+        });
+      }
+      updateData.prn = formattedPrn;
+    } else if (!formattedPrn) {
+      updateData.prn = null;
+    }
+  }
 
   const updated = await prisma.user.update({
     where: { id: req.user.id },
-    data: parsed,
+    data: updateData,
     select: {
       id: true,
       email: true,
@@ -24,6 +47,7 @@ export async function updateProfile(req: Request, res: Response) {
       role: true,
       department: true,
       semester: true,
+      prn: true,
       avatarUrl: true,
       isVerified: true,
       isActive: true,
@@ -33,7 +57,7 @@ export async function updateProfile(req: Request, res: Response) {
 
   return res.json({
     success: true,
-    message: 'Profile updated successfully',
+    message: 'Profile details updated successfully',
     data: updated,
   });
 }

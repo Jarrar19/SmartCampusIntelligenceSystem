@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import { Upload, FileText, CheckCircle2, AlertCircle, ShieldAlert, Sparkles, Check } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Upload, FileText, CheckCircle2, AlertCircle, ShieldAlert, Sparkles, Check, BookOpen } from 'lucide-react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
 import { api, extractErrorMessage } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
-import { ResourceCategory } from '../../types';
+import { ResourceCategory, Course } from '../../types';
 
 interface ResourceUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
   courseId?: number;
+  preselectedCourse?: Course | null;
 }
 
 export const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({
@@ -20,21 +21,64 @@ export const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({
   onClose,
   onSuccess,
   courseId,
+  preselectedCourse,
 }) => {
-  const { user, config } = useAuth();
+  const { user } = useAuth();
   const { success, error } = useToast();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<ResourceCategory>('NOTES');
-  const [subjectCode, setSubjectCode] = useState('');
-  const [department, setDepartment] = useState(user?.department || 'Computer Science & Engineering');
-  const [semester, setSemester] = useState<number>(user?.semester || 6);
+  const [selectedCourseId, setSelectedCourseId] = useState<number | undefined>(courseId || preselectedCourse?.id);
+  const [coursesList, setCoursesList] = useState<Course[]>([]);
+  const [subjectCode, setSubjectCode] = useState(preselectedCourse?.courseCode || '');
+  const [department, setDepartment] = useState(preselectedCourse?.department || user?.department || 'Computer Science & Engineering');
+  const [semester, setSemester] = useState<number>(preselectedCourse?.semester || user?.semester || 6);
   const [tags, setTags] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isStudent = user?.role === 'STUDENT';
+  const isFaculty = user?.role === 'FACULTY' || user?.role === 'ADMIN';
+
+  // Fetch available courses when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      api.get('/courses')
+        .then((res) => {
+          if (res.data.success) {
+            setCoursesList(res.data.data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
+
+  // Sync props if courseId or preselectedCourse changes
+  useEffect(() => {
+    const targetCourseId = courseId || preselectedCourse?.id;
+    if (targetCourseId) {
+      setSelectedCourseId(targetCourseId);
+    }
+    if (preselectedCourse) {
+      setSubjectCode(preselectedCourse.courseCode);
+      setDepartment(preselectedCourse.department);
+      setSemester(preselectedCourse.semester);
+    }
+  }, [courseId, preselectedCourse]);
+
+  const handleCourseChange = (cId: number) => {
+    setSelectedCourseId(cId);
+    const found = coursesList.find((c) => c.id === cId);
+    if (found) {
+      setSubjectCode(found.courseCode);
+      setDepartment(found.department);
+      setSemester(found.semester);
+      if (!title) {
+        setTitle(`Lecture Notes - ${found.courseCode} (${found.title})`);
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +93,9 @@ export const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({
       formData.append('title', title.trim());
       formData.append('description', description.trim());
       formData.append('category', category);
-      if (courseId) formData.append('courseId', String(courseId));
+      
+      const targetCourseId = selectedCourseId || courseId;
+      if (targetCourseId) formData.append('courseId', String(targetCourseId));
       if (subjectCode) formData.append('subjectCode', subjectCode.trim());
       if (department) formData.append('department', department);
       if (semester) formData.append('semester', String(semester));
@@ -59,7 +105,7 @@ export const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({
       const res = await api.post('/resources', formData);
 
       if (res.data.success) {
-        success(res.data.message);
+        success(res.data.message || 'Resource uploaded successfully!');
         onSuccess();
         onClose();
         setTitle('');
@@ -75,15 +121,26 @@ export const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({
     }
   };
 
+  const activeCourseObj = coursesList.find((c) => c.id === (selectedCourseId || courseId)) || preselectedCourse;
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Upload Academic Resource"
-      subtitle={isStudent ? "Student contributions enter faculty review before public publishing." : "Faculty uploads are immediately published to the resource library."}
+      title={isFaculty ? "Add Notes & Study Material" : "Upload Academic Resource"}
+      subtitle={isStudent ? "Student contributions enter faculty review before public publishing." : "Faculty notes are immediately published to enrolled students."}
       maxWidth="xl"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
+        {isFaculty && (
+          <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-start space-x-2.5">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5 text-emerald-400" />
+            <p className="leading-relaxed font-semibold">
+              <strong>Faculty Instant Publishing:</strong> Notes and study materials uploaded by faculty members are automatically published and accessible by all students in <strong>{activeCourseObj ? activeCourseObj.title : 'the selected subject'}</strong>.
+            </p>
+          </div>
+        )}
+
         {isStudent && (
           <div className="p-3.5 rounded-2xl bg-amber-50/90 dark:bg-amber-500/10 border border-amber-200/90 dark:border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs flex items-start space-x-2.5">
             <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
@@ -93,9 +150,33 @@ export const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({
           </div>
         )}
 
+        {/* Target Subject / Course Selection */}
+        <div className="space-y-1.5 text-left">
+          <label className="block text-xs font-black text-slate-700 dark:text-slate-200 flex items-center justify-between">
+            <span>Target Subject / Course</span>
+            {activeCourseObj && (
+              <span className="text-[10px] text-emerald-400 font-bold">
+                Selected: {activeCourseObj.courseCode}
+              </span>
+            )}
+          </label>
+          <select
+            value={selectedCourseId || ''}
+            onChange={(e) => handleCourseChange(Number(e.target.value))}
+            className="w-full glass-input rounded-2xl px-3.5 py-2.5 text-xs font-bold focus:outline-none"
+          >
+            <option value="">-- General Repository (No Specific Course) --</option>
+            {coursesList.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.courseCode} • {c.title} (Sem {c.semester})
+              </option>
+            ))}
+          </select>
+        </div>
+
         <Input
           label="Resource Title"
-          placeholder="e.g. CS301 End Semester 2025 Solved Question Paper"
+          placeholder="e.g. CS301 Unit 3 Graph Theory & Trees Lecture Notes"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           isRequired
@@ -139,6 +220,7 @@ export const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({
               className="w-full glass-input rounded-2xl px-3.5 py-2.5 text-xs font-bold focus:outline-none"
             >
               <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+              <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning</option>
               <option value="Information Technology">Information Technology</option>
               <option value="Electronics & Telecom">Electronics & Telecom</option>
               <option value="Mechanical Engineering">Mechanical Engineering</option>
@@ -170,14 +252,14 @@ export const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({
             rows={2}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Brief notes on what chapters or concepts this document covers..."
+            placeholder="Brief description of chapters, formulas, or module topics included..."
             className="w-full glass-input rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-medium focus:outline-none"
           />
         </div>
 
         <Input
           label="Tags (comma separated)"
-          placeholder="e.g. pyq, endsem, trees, graphs, 2025"
+          placeholder="e.g. notes, unit3, trees, graphs, 2026"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
@@ -185,45 +267,35 @@ export const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({
         {/* File Picker */}
         <div className="space-y-1.5 text-left">
           <label className="block text-xs font-black text-slate-700 dark:text-slate-200">
-            Select Document <span className="text-rose-500">*</span>
+            Attach Document File <span className="text-rose-500">*</span>
           </label>
-          <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-500 rounded-3xl p-6 text-center cursor-pointer transition bg-slate-50/60 dark:bg-slate-800/40">
+          <div className="relative border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-500 rounded-2xl p-4 text-center transition cursor-pointer bg-slate-50/50 dark:bg-slate-900/50">
             <input
               type="file"
-              required
-              id="file-upload"
-              className="hidden"
               onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-              accept=".pdf,.docx,.pptx,.xlsx,.txt,.zip"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              accept=".pdf,.doc,.docx,.ppt,.pptx,.zip,.png,.jpg"
+              required
             />
-            <label htmlFor="file-upload" className="cursor-pointer block">
-              <Upload className="w-9 h-9 text-brand-600 dark:text-brand-400 mx-auto mb-2" />
-              {selectedFile ? (
-                <p className="text-xs font-black text-emerald-600 dark:text-emerald-400">
-                  Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+            {selectedFile ? (
+              <div className="flex items-center justify-center space-x-2 text-emerald-600 dark:text-emerald-400 font-bold text-xs">
+                <CheckCircle2 className="w-4 h-4" />
+                <span className="truncate">{selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                <Upload className="w-6 h-6 mx-auto text-slate-400" />
+                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  Click or drag PDF, Office docs, or slides here
                 </p>
-              ) : (
-                <>
-                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Click or drag file to upload (PDF, DOCX, PPTX, ZIP)
-                  </p>
-                  <p className="text-[10px] text-slate-400 mt-1 font-semibold">
-                    Max allowed size: {config?.maxUploadSizeMb || 25} MB
-                  </p>
-                </>
-              )}
-            </label>
+                <p className="text-[10px] text-slate-400">Maximum file size: 50MB</p>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center justify-end space-x-2 pt-4 border-t border-slate-100 dark:border-slate-800">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            disabled={isSubmitting}
-          >
+        <div className="flex justify-end space-x-3 pt-3 border-t border-slate-200/80 dark:border-slate-800">
+          <Button type="button" variant="ghost" size="sm" onClick={onClose}>
             Cancel
           </Button>
           <Button
@@ -231,8 +303,9 @@ export const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({
             variant="primary"
             size="sm"
             isLoading={isSubmitting}
+            leftIcon={<Upload className="w-3.5 h-3.5" />}
           >
-            Submit Resource
+            {isFaculty ? "Publish Notes" : "Upload Resource"}
           </Button>
         </div>
       </form>

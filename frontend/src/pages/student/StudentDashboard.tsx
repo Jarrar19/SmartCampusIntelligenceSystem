@@ -15,6 +15,7 @@ import { SubmissionModal } from '../../components/academic/SubmissionModal';
 import { ProductDetailModal } from '../../components/marketplace/ProductDetailModal';
 import { CgpaProgressionChart } from '../../components/academic/CgpaProgressionChart';
 import { FacultyMentorCard } from '../../components/academic/FacultyMentorCard';
+import { StudentMarksheetModal } from '../../components/academic/StudentMarksheetModal';
 
 interface StudentDashboardProps {
   onNavigate: (tab: string, courseId?: number) => void;
@@ -34,6 +35,8 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [marketplaceProducts, setMarketplaceProducts] = useState<MarketplaceProduct[]>([]);
+  const [resultPublication, setResultPublication] = useState<any>(null);
+  const [showMarksheetModal, setShowMarksheetModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   // Selected modals
@@ -42,14 +45,16 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
   const fetchDashboardData = async () => {
     try {
-      const [statsRes, coursesRes, productsRes] = await Promise.all([
+      const [statsRes, coursesRes, productsRes, resultRes] = await Promise.all([
         api.get('/users/dashboard-stats').catch(() => ({ data: { success: false, data: {} } })),
         api.get('/courses?myOnly=true').catch(() => ({ data: { success: false, data: [] } })),
         api.get('/marketplace/products?limit=4').catch(() => ({ data: { success: false, data: [] } })),
+        api.get('/results/publication/latest').catch(() => ({ data: { success: false, data: null } })),
       ]);
 
       if (statsRes.data.success) setStats(statsRes.data.data);
       if (productsRes.data.success) setMarketplaceProducts(productsRes.data.data.slice(0, 4));
+      if (resultRes.data.success && resultRes.data.data) setResultPublication(resultRes.data.data);
 
       if (coursesRes.data.success) {
         const coursesList = coursesRes.data.data;
@@ -206,6 +211,42 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
           </div>
         </div>
       </div>
+
+      {/* 1.5. "Results Are Out" Notification Card (High-Priority Official Announcement) */}
+      {resultPublication && (
+        <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/15 via-brand-500/10 to-emerald-500/15 border-2 border-amber-400/80 dark:border-amber-500/80 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-5 animate-fade-in-up">
+          <div className="space-y-1.5 max-w-3xl text-left">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[11px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/90 px-3 py-1 rounded-full border border-amber-300 dark:border-amber-700 flex items-center gap-1.5 shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" /> RESULTS ARE OUT
+              </span>
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                {resultPublication.department || 'Department of Emerging Technologies'}
+              </span>
+            </div>
+
+            <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
+              {resultPublication.title}
+            </h3>
+
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+              {resultPublication.message || 'The Continuous Assessment Examination (CAE-I) results have been officially published by the Head of Department. Click below to view your score breakdown.'}
+            </p>
+          </div>
+
+          <div className="flex-shrink-0 self-end md:self-center">
+            <Button
+              variant="saffron"
+              size="md"
+              onClick={() => setShowMarksheetModal(true)}
+              leftIcon={<Award className="w-4 h-4 text-amber-100" />}
+              className="shadow-md shadow-amber-500/20 text-xs sm:text-sm font-black"
+            >
+              View Results
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* 2. Key Metric Stat Cards with Tricolor Theme Harmony */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -578,6 +619,13 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
           onClose={() => setViewingProduct(null)}
           product={viewingProduct}
           onRefresh={() => fetchDashboardData()}
+        />
+      )}
+
+      {showMarksheetModal && (
+        <StudentMarksheetModal
+          isOpen={showMarksheetModal}
+          onClose={() => setShowMarksheetModal(false)}
         />
       )}
     </div>

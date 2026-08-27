@@ -7,6 +7,7 @@ import * as resourceController from '../controllers/resourceController';
 import * as assignmentController from '../controllers/assignmentController';
 import * as marketplaceController from '../controllers/marketplaceController';
 import * as chatController from '../controllers/chatController';
+import * as resultController from '../controllers/resultController';
 import { authenticate, requireRole } from '../middleware/auth';
 import { authLimiter } from '../middleware/rateLimit';
 import { memoryUpload } from '../services/fileStorage';
@@ -45,6 +46,12 @@ router.post('/courses/:id/enroll', authenticate, asyncHandler(courseController.e
 router.delete('/courses/:id/unenroll', authenticate, asyncHandler(courseController.unenrollFromCourse));
 router.post('/courses/:id/announcements', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(courseController.createAnnouncement));
 router.get('/courses/:id/roster', authenticate, asyncHandler(courseController.getCourseRoster));
+router.patch('/courses/:id/students/:studentId/grade', authenticate, requireRole(['FACULTY', 'ADMIN']), asyncHandler(courseController.updateStudentGrade));
+
+// Exam Result & Marksheet Routes
+router.post('/results/publish', authenticate, requireRole(['HOD', 'ADMIN']), asyncHandler(resultController.publishResultNotification));
+router.get('/results/publication/latest', authenticate, asyncHandler(resultController.getLatestResultPublication));
+router.get('/results/my-result', authenticate, asyncHandler(resultController.getMyExamResult));
 
 // Resource & Moderation Routes
 router.get('/resources', authenticate, asyncHandler(resourceController.getResources));

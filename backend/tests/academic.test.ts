@@ -66,7 +66,7 @@ describe('Module 4: Academic Hub & Learning Management Tests', () => {
   });
 
   it('Faculty upload should be auto-approved (APPROVED status)', async () => {
-    const fileBuffer = Buffer.from('Faculty uploaded lecture material');
+    const fileBuffer = Buffer.from('%PDF-1.4 Faculty uploaded lecture material');
     const res = await request(app)
       .post('/api/v1/resources')
       .set('Authorization', `Bearer ${facultyToken}`)
@@ -80,7 +80,7 @@ describe('Module 4: Academic Hub & Learning Management Tests', () => {
   });
 
   it('Student upload must enter PENDING_REVIEW status for moderation', async () => {
-    const fileBuffer = Buffer.from('Student uploaded PYQ paper');
+    const fileBuffer = Buffer.from('%PDF-1.4 Student uploaded PYQ paper');
     const res = await request(app)
       .post('/api/v1/resources')
       .set('Authorization', `Bearer ${studentToken}`)
@@ -231,7 +231,7 @@ describe('Module 4: Academic Hub & Learning Management Tests', () => {
   });
 
   it('Faculty rejection must require constructive reason and update status to REJECTED', async () => {
-    const fileBuffer = Buffer.from('Low quality submission');
+    const fileBuffer = Buffer.from('%PDF-1.4 Low quality submission');
     const uploadRes = await request(app)
       .post('/api/v1/resources')
       .set('Authorization', `Bearer ${studentToken}`)

@@ -17,8 +17,8 @@ export const config = {
   JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   
   // Campus Branding & Domain Configuration
-  COLLEGE_NAME: process.env.COLLEGE_NAME || 'St. Bernard Institute of Technology',
-  COLLEGE_SHORT_NAME: process.env.COLLEGE_SHORT_NAME || 'SBIT',
+  COLLEGE_NAME: process.env.COLLEGE_NAME || 'S. B. Jain Institute of Technology, Management & Research',
+  COLLEGE_SHORT_NAME: process.env.COLLEGE_SHORT_NAME || 'SBJIT',
   COLLEGE_EMAIL_DOMAIN: (process.env.COLLEGE_EMAIL_DOMAIN || 'sbjit.edu.in').toLowerCase().trim(),
   COLLEGE_DEPARTMENTS: (process.env.COLLEGE_DEPARTMENTS || 'Computer Science & Engineering,Electronics & Communication Engineering,Electrical Engineering,Mechanical Engineering,Civil Engineering,Information Technology,Applied Sciences & Humanities').split(','),
   COLLEGE_SEMESTERS: (process.env.COLLEGE_SEMESTERS || '1,2,3,4,5,6,7,8').split(',').map(s => parseInt(s.trim(), 10)),

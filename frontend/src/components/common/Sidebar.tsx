@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   LayoutDashboard, BookOpen, FileText, CheckSquare, ShoppingBag, 
   ShieldCheck, Heart, Tag, Inbox, PanelLeftClose, PanelLeft,
-  Sparkles, CheckCircle2, Award
+  Sparkles, CheckCircle2, Award, Edit3
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { ProfileSettingsModal } from './ProfileSettingsModal';
 
 interface SidebarProps {
   currentTab: string;
@@ -33,6 +34,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onToggleCollapse,
 }) => {
   const { user } = useAuth();
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const isFaculty = user?.role === 'FACULTY' || user?.role === 'ADMIN';
 
   const studentSections: NavSection[] = [
@@ -142,19 +144,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {user?.isVerified && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />}
               </p>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">
-                {user?.department || 'Engineering'} • {isFaculty ? user?.role : `Sem ${user?.semester || 6}`}
+                {user?.prn ? `${user.prn} • ` : ''}{user?.department || 'Engineering'} • {isFaculty ? user?.role : `Sem ${user?.semester || 6}`}
               </p>
             </div>
-            {onToggleCollapse && (
+            <div className="flex items-center space-x-1 flex-shrink-0">
               <button
-                onClick={onToggleCollapse}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition cursor-pointer active:scale-90"
-                title="Collapse Sidebar"
-                aria-label="Collapse Sidebar"
+                onClick={() => setShowProfileModal(true)}
+                className="p-1.5 rounded-lg text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/60 transition cursor-pointer active:scale-90"
+                title="Edit Profile & Roll No. / USN"
+                aria-label="Edit Profile & Roll No. / USN"
               >
-                <PanelLeftClose className="w-4 h-4" />
+                <Edit3 className="w-3.5 h-3.5" />
               </button>
-            )}
+              {onToggleCollapse && (
+                <button
+                  onClick={onToggleCollapse}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition cursor-pointer active:scale-90"
+                  title="Collapse Sidebar"
+                  aria-label="Collapse Sidebar"
+                >
+                  <PanelLeftClose className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -239,6 +251,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             v2.1
           </span>
         </div>
+      )}
+
+      {showProfileModal && (
+        <ProfileSettingsModal
+          isOpen={showProfileModal}
+          onClose={() => setShowProfileModal(false)}
+        />
       )}
     </aside>
   );

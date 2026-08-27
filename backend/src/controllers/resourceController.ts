@@ -40,8 +40,14 @@ export async function uploadResource(req: Request, res: Response) {
     const isFacultyOrAdmin = req.user.role === 'FACULTY' || req.user.role === 'ADMIN';
     const approvalStatus = isFacultyOrAdmin ? 'APPROVED' : 'PENDING_REVIEW';
 
-    const parsedCourseId = courseId && courseId !== 'null' ? parseInt(courseId, 10) : null;
-    const parsedSemester = semester && semester !== 'null' ? parseInt(semester, 10) : null;
+    const parsedCourseId = courseId && courseId !== 'null' && courseId !== 'undefined' && !isNaN(Number(courseId)) ? parseInt(String(courseId), 10) : null;
+    const parsedSemester = semester && semester !== 'null' && semester !== 'undefined' && !isNaN(Number(semester)) ? parseInt(String(semester), 10) : null;
+
+    let validCourseId: number | null = null;
+    if (parsedCourseId) {
+      const existingCourse = await prisma.course.findUnique({ where: { id: parsedCourseId } });
+      if (existingCourse) validCourseId = existingCourse.id;
+    }
 
     const resource = await prisma.resource.create({
       data: {
@@ -58,7 +64,7 @@ export async function uploadResource(req: Request, res: Response) {
         approvalStatus,
         reviewerId: isFacultyOrAdmin ? req.user.id : null,
         reviewedAt: isFacultyOrAdmin ? new Date() : null,
-        courseId: parsedCourseId,
+        courseId: validCourseId,
         subjectCode: subjectCode || null,
         department: department || null,
         semester: parsedSemester,

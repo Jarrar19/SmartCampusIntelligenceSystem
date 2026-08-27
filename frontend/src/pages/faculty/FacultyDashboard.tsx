@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, CheckSquare, Inbox, Users, Plus, FileText, 
-  ShieldCheck, ChevronRight, Sparkles, ArrowRight, Download, Check, X, Award
+  ShieldCheck, ChevronRight, Sparkles, ArrowRight, Download, Check, X, Award,
+  Upload, FolderPlus, Megaphone
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -12,6 +13,8 @@ import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { StatWidgetSkeleton, CardSkeleton, ListRowSkeleton } from '../../components/common/Skeleton';
 import { ModerationFeedbackModal } from '../../components/academic/ModerationFeedbackModal';
+import { ResourceUploadModal } from '../../components/academic/ResourceUploadModal';
+import { PublishResultsModal } from '../../components/academic/PublishResultsModal';
 
 interface FacultyDashboardProps {
   onNavigate: (tab: string, courseId?: number) => void;
@@ -32,12 +35,19 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
   const [pendingResources, setPendingResources] = useState<Resource[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<number | null>(null);
+
+  // Subject Note Upload State
+  const [selectedCourseForNotes, setSelectedCourseForNotes] = useState<Course | null>(null);
+  const [showNotesModal, setShowNotesModal] = useState(false);
+  const [showPublishResultsModal, setShowPublishResultsModal] = useState(false);
+
   const [feedbackModalTarget, setFeedbackModalTarget] = useState<{
     resource: Resource;
     status: 'REJECTED' | 'CHANGES_REQUESTED';
   } | null>(null);
 
   const fetchFacultyData = async () => {
+    setIsLoading(true);
     try {
       const [statsRes, coursesRes, modRes] = await Promise.all([
         api.get('/users/dashboard-stats'),
@@ -46,7 +56,19 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
       ]);
 
       if (statsRes.data.success) setStats(statsRes.data.data);
-      if (coursesRes.data.success) setCourses(coursesRes.data.data);
+      
+      let fetchedCourses: Course[] = [];
+      if (coursesRes.data.success && coursesRes.data.data.length > 0) {
+        fetchedCourses = coursesRes.data.data;
+      } else {
+        // Fallback: load department courses if myOnly returned zero
+        const deptCoursesRes = await api.get(`/courses?department=${encodeURIComponent(user?.department || '')}`);
+        if (deptCoursesRes.data.success) {
+          fetchedCourses = deptCoursesRes.data.data;
+        }
+      }
+      setCourses(fetchedCourses);
+
       if (modRes.data.success) setPendingResources(modRes.data.data.slice(0, 5));
     } catch (err) {
       console.error('Failed to load faculty dashboard:', err);
@@ -120,6 +142,12 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
     }
   };
 
+  const handleOpenAddNotesForCourse = (e: React.MouseEvent, course: Course) => {
+    e.stopPropagation();
+    setSelectedCourseForNotes(course);
+    setShowNotesModal(true);
+  };
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -182,14 +210,22 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-              {pendingResources.length > 0 
-                ? `You have ${pendingResources.length} student submission${pendingResources.length > 1 ? 's' : ''} awaiting review in your academic moderation queue.`
-                : 'All student uploads and class submissions are currently reviewed and up to date.'}
+              You are currently instructing <strong>{courses.length} active subjects</strong> in {user?.department || 'your department'}. Manage courses, upload lecture notes, and assess student submissions.
             </p>
           </div>
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
+            {(user?.role === 'HOD' || user?.role === 'ADMIN') && (
+              <Button
+                variant="saffron"
+                size="sm"
+                onClick={() => setShowPublishResultsModal(true)}
+                leftIcon={<Megaphone className="w-3.5 h-3.5" />}
+              >
+                Publish Results
+              </Button>
+            )}
             <Button
               variant="primary"
               size="sm"
@@ -199,6 +235,14 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
               Create Course
             </Button>
             <Button
+              variant="emerald"
+              size="sm"
+              onClick={onOpenUploadResource}
+              leftIcon={<Upload className="w-3.5 h-3.5" />}
+            >
+              Add Notes & Materials
+            </Button>
+            <Button
               variant="secondary"
               size="sm"
               onClick={() => onNavigate('moderation')}
@@ -206,27 +250,19 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
             >
               Moderation ({pendingResources.length})
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onNavigate('grading')}
-              leftIcon={<CheckSquare className="w-3.5 h-3.5" />}
-            >
-              Grading Center
-            </Button>
           </div>
         </div>
       </div>
 
       {/* 2. Key Metric Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Active Courses */}
+        {/* Active Teaching Subjects */}
         <div 
           onClick={() => onNavigate('courses')}
           className="p-5 rounded-3xl glass-panel glass-panel-hover border border-slate-200/80 dark:border-slate-800 cursor-pointer group"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Courses Instructed</span>
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Teaching Subjects</span>
             <div className="p-2.5 rounded-2xl bg-indigo-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 group-hover:scale-110 transition-transform">
               <BookOpen className="w-4 h-4" />
             </div>
@@ -238,7 +274,7 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
             <span className="text-[11px] font-bold text-brand-600 dark:text-brand-400">Active</span>
           </div>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1">
-            Current Semester
+            Assigned for current semester
           </p>
         </div>
 
@@ -314,9 +350,95 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
       {/* 3. Main Workspace Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* Left Column: Pending Moderation & Teaching Courses (7 cols) */}
+        {/* Left Column: Teaching Subjects Grid & Notes Upload Shortcut (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
           
+          {/* Active Teaching Courses & Subjects */}
+          <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center space-x-2.5">
+                <div className="p-2 rounded-2xl bg-indigo-50 dark:bg-brand-500/15 text-brand-600 dark:text-brand-400">
+                  <BookOpen className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                    Subjects Currently Teaching ({courses.length})
+                  </h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                    Upload notes directly to your subjects or open full course workspace
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="primary"
+                  size="xs"
+                  onClick={onOpenCreateCourse}
+                  leftIcon={<Plus className="w-3 h-3" />}
+                >
+                  Create Subject
+                </Button>
+              </div>
+            </div>
+
+            {courses.length === 0 ? (
+              <div className="p-8 text-center bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
+                <BookOpen className="w-8 h-8 text-slate-400 mx-auto mb-2 opacity-50" />
+                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">No active subjects assigned yet.</p>
+                <p className="text-[11px] text-slate-500 mt-1 mb-3">Create or claim a course to begin publishing notes and tasks.</p>
+                <Button variant="primary" size="xs" onClick={onOpenCreateCourse}>
+                  Create Subject
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {courses.map((course) => (
+                  <div
+                    key={course.id}
+                    onClick={() => onNavigate('courses', course.id)}
+                    className="p-4 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 hover:border-brand-400 dark:hover:border-brand-500 transition cursor-pointer group shadow-2xs space-y-3 flex flex-col justify-between"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-black text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/80 px-2 py-0.5 rounded-lg border border-brand-200 dark:border-brand-800">
+                          {course.courseCode}
+                        </span>
+                        <span className="text-[10px] font-bold text-slate-400">
+                          Semester {course.semester}
+                        </span>
+                      </div>
+
+                      <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white line-clamp-1 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                        {course.title}
+                      </h4>
+
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                        {course.department} • Term: {course.academicYear || '2026-27'}
+                      </p>
+                    </div>
+
+                    <div className="pt-2.5 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between gap-2">
+                      <div className="text-[10px] text-slate-400 font-bold">
+                        <span>{course.enrolledCount || 0} Students • {course.resourcesCount || 0} Notes</span>
+                      </div>
+
+                      <div className="flex items-center space-x-1.5">
+                        <button
+                          onClick={(e) => handleOpenAddNotesForCourse(e, course)}
+                          className="px-2.5 py-1 rounded-xl text-[10px] font-black text-white bg-emerald-600 hover:bg-emerald-500 shadow-xs transition flex items-center gap-1 cursor-pointer"
+                          title="Upload notes for this subject"
+                        >
+                          <Plus className="w-3 h-3" />
+                          <span>Add Notes</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Moderation Queue Preview Card */}
           <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
@@ -403,78 +525,9 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
               </div>
             )}
           </div>
-
-          {/* Active Teaching Courses */}
-          <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2.5">
-                <div className="p-2 rounded-2xl bg-indigo-50 dark:bg-brand-500/15 text-brand-600 dark:text-brand-400">
-                  <BookOpen className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
-                    Active Courses Instructed
-                  </h3>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                    Publish assignments, post announcements, and manage resources
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => onNavigate('courses')}
-                className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1 cursor-pointer"
-              >
-                <span>Manage</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {courses.length === 0 ? (
-              <div className="p-8 text-center bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
-                <BookOpen className="w-8 h-8 text-slate-400 mx-auto mb-2 opacity-50" />
-                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">No courses created yet.</p>
-                <p className="text-[11px] text-slate-500 mt-1 mb-3">Create your first course to begin teaching.</p>
-                <Button variant="primary" size="xs" onClick={onOpenCreateCourse}>
-                  Create Course
-                </Button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {courses.map((course) => (
-                  <div
-                    key={course.id}
-                    onClick={() => onNavigate('courses', course.id)}
-                    className="p-4 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 hover:border-brand-400 dark:hover:border-brand-500 transition cursor-pointer group shadow-2xs space-y-2.5"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/80 px-2 py-0.5 rounded-lg border border-brand-200 dark:border-brand-800">
-                        {course.courseCode}
-                      </span>
-                      <span className="text-[10px] font-bold text-slate-400">
-                        Sem {course.semester}
-                      </span>
-                    </div>
-
-                    <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white line-clamp-1 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
-                      {course.title}
-                    </h4>
-
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
-                      {course.department} • Term: {course.academicYear || '2026-27'}
-                    </p>
-
-                    <div className="pt-2 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between text-[11px] text-slate-400 font-bold">
-                      <span>{course.enrolledCount || 0} Students • {course.assignmentsCount || 0} Tasks</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-brand-500 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
 
-        {/* Right Column: Faculty Actions & Grading Shortcuts (5 cols) */}
+        {/* Right Column: Faculty Actions & Shortcuts (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
           
           {/* Quick Action Center Card */}
@@ -489,66 +542,93 @@ export const FacultyDashboard: React.FC<FacultyDashboardProps> = ({
             <div className="grid grid-cols-2 gap-2.5">
               <button
                 onClick={onOpenCreateCourse}
-                className="p-3 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:border-brand-400 text-left transition cursor-pointer group shadow-2xs"
+                className="p-3.5 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:border-brand-400 text-left transition cursor-pointer group shadow-2xs"
               >
                 <BookOpen className="w-4 h-4 text-brand-600 dark:text-brand-400 mb-1.5 group-hover:scale-110 transition-transform" />
-                <p className="text-xs font-black text-slate-900 dark:text-white">+ New Course</p>
+                <p className="text-xs font-black text-slate-900 dark:text-white">+ New Subject</p>
                 <p className="text-[10px] text-slate-500">Create curriculum</p>
               </button>
 
               <button
                 onClick={onOpenUploadResource}
-                className="p-3 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400 text-left transition cursor-pointer group shadow-2xs"
+                className="p-3.5 rounded-2xl bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400 text-left transition cursor-pointer group shadow-2xs"
               >
-                <FileText className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mb-1.5 group-hover:scale-110 transition-transform" />
-                <p className="text-xs font-black text-slate-900 dark:text-white">+ Upload Doc</p>
-                <p className="text-[10px] text-slate-500">Official syllabus/PYQ</p>
+                <Upload className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mb-1.5 group-hover:scale-110 transition-transform" />
+                <p className="text-xs font-black text-slate-900 dark:text-white">+ Publish Notes</p>
+                <p className="text-[10px] text-slate-500">Upload lecture PDFs</p>
               </button>
             </div>
           </div>
 
-          {/* Grading Evaluation Prompt */}
+          {/* Quick Grading & Moderation Shortcuts */}
           <div className="p-6 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
-            <div className="flex items-center space-x-2.5">
-              <div className="p-2 rounded-2xl bg-sky-50 dark:bg-sky-500/15 text-sky-600 dark:text-sky-400">
-                <CheckSquare className="w-4 h-4" />
+            <h3 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <Award className="w-4 h-4 text-sky-500" />
+              <span>Assessment & Evaluation Shortcuts</span>
+            </h3>
+
+            <div className="space-y-2.5">
+              <div 
+                onClick={() => onNavigate('grading')}
+                className="p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 hover:border-sky-400 transition cursor-pointer flex items-center justify-between"
+              >
+                <div className="space-y-0.5">
+                  <p className="text-xs font-black text-slate-900 dark:text-white">Assignment Evaluation Center</p>
+                  <p className="text-[10px] text-slate-400">Evaluate student homework submissions</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-sky-500" />
               </div>
-              <div>
-                <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
-                  Grading & Evaluation Center
-                </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                  Review student code, project reports, and homework
-                </p>
+
+              <div 
+                onClick={() => onNavigate('resources')}
+                className="p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 hover:border-indigo-400 transition cursor-pointer flex items-center justify-between"
+              >
+                <div className="space-y-0.5">
+                  <p className="text-xs font-black text-slate-900 dark:text-white">Institutional Resource Library</p>
+                  <p className="text-[10px] text-slate-400">View published notes, manuals & PYQs</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-indigo-500" />
               </div>
             </div>
-
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Evaluate pending student submissions, grade deliverables with rubrics, and provide feedback directly in the grading center.
-            </p>
-
-            <Button
-              variant="primary"
-              size="sm"
-              className="w-full"
-              onClick={() => onNavigate('grading')}
-              rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-            >
-              Open Evaluation Workspace
-            </Button>
           </div>
         </div>
       </div>
 
-      {/* Moderation Feedback Modal */}
+      {/* Moderation Feedback Reason Modal */}
       {feedbackModalTarget && (
         <ModerationFeedbackModal
-          isOpen={true}
+          isOpen={!!feedbackModalTarget}
           onClose={() => setFeedbackModalTarget(null)}
-          resource={feedbackModalTarget.resource}
-          status={feedbackModalTarget.status}
           onSubmit={handleFeedbackSubmit}
+          status={feedbackModalTarget.status}
+          resourceTitle={feedbackModalTarget.resource.title}
           isSubmitting={processingId === feedbackModalTarget.resource.id}
+        />
+      )}
+
+      {/* Course-Specific Note Upload Modal */}
+      {showNotesModal && (
+        <ResourceUploadModal
+          isOpen={showNotesModal}
+          onClose={() => {
+            setShowNotesModal(false);
+            setSelectedCourseForNotes(null);
+          }}
+          onSuccess={() => {
+            fetchFacultyData();
+          }}
+          preselectedCourse={selectedCourseForNotes}
+          courseId={selectedCourseForNotes?.id}
+        />
+      )}
+
+      {showPublishResultsModal && (
+        <PublishResultsModal
+          isOpen={showPublishResultsModal}
+          onClose={() => setShowPublishResultsModal(false)}
+          onSuccess={() => {
+            fetchFacultyData();
+          }}
         />
       )}
     </div>

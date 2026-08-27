@@ -20,6 +20,7 @@ import { ResourceUploadModal } from '../../components/academic/ResourceUploadMod
 import { EditCourseModal } from '../../components/academic/EditCourseModal';
 import { EditAssignmentModal } from '../../components/academic/EditAssignmentModal';
 import { DeleteConfirmModal } from '../../components/common/DeleteConfirmModal';
+import { EditStudentGradeModal } from '../../components/academic/EditStudentGradeModal';
 import { CardSkeleton, CourseHeaderSkeleton } from '../../components/common/Skeleton';
 
 interface CoursesPageProps {
@@ -34,6 +35,8 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
 
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [rosterData, setRosterData] = useState<any[]>([]);
+  const [editingStudentGrade, setEditingStudentGrade] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState<'announcements' | 'resources' | 'assignments' | 'students'>('announcements');
   const [searchQuery, setSearchQuery] = useState('');
   const [semesterFilter, setSemesterFilter] = useState<string>('');
@@ -91,9 +94,15 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
   const fetchCourseDetail = async (id: number) => {
     setIsLoading(true);
     try {
-      const res = await api.get(`/courses/${id}`);
+      const [res, rosterRes] = await Promise.all([
+        api.get(`/courses/${id}`),
+        api.get(`/courses/${id}/roster`),
+      ]);
       if (res.data.success) {
         setSelectedCourse(res.data.data);
+      }
+      if (rosterRes.data.success && rosterRes.data.data.students) {
+        setRosterData(rosterRes.data.data.students);
       }
     } catch (err: any) {
       error('Failed to load course workspace details');
@@ -326,6 +335,14 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
 
             {isOwnerOrAdmin && (
               <>
+                <Button
+                  variant="emerald"
+                  size="sm"
+                  onClick={() => setShowUploadResourceModal(true)}
+                  leftIcon={<Plus className="w-3.5 h-3.5" />}
+                >
+                  + Upload Notes
+                </Button>
                 <Button
                   variant="secondary"
                   size="sm"
@@ -696,16 +713,16 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
           </div>
         )}
 
-        {/* TAB 4: STUDENTS / PEOPLE */}
+        {/* TAB 4: STUDENTS / PEOPLE & GRADING ROSTER */}
         {activeTab === 'students' && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-base font-black text-slate-900 dark:text-white">
-                  Enrolled Students & Class Roster
+                  Enrolled Students, Attendance & Grade Roster
                 </h3>
                 <p className="text-xs text-slate-500">
-                  {selectedCourse.enrollments?.length || selectedCourse.enrolledCount || 0} active students enrolled in this curriculum section
+                  {rosterData.length || selectedCourse.enrollments?.length || 0} active students enrolled. View attendance %, change exam marks, and assign letter grades.
                 </p>
               </div>
 
@@ -721,40 +738,83 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
               )}
             </div>
 
-            {!selectedCourse.enrollments || selectedCourse.enrollments.length === 0 ? (
+            {(rosterData.length === 0 && (!selectedCourse.enrollments || selectedCourse.enrollments.length === 0)) ? (
               <EmptyState
                 icon={Users}
                 title="No Enrolled Students"
                 description="Students who enroll in this course will appear in this roster."
               />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
-                {selectedCourse.enrollments.map((enr, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-2xl glass-panel border border-slate-200/80 dark:border-slate-800 flex items-center space-x-3 shadow-2xs hover:border-brand-300 dark:hover:border-brand-700 transition"
-                  >
-                    <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-brand-500/15 text-brand-600 dark:text-brand-400 font-black text-xs flex items-center justify-center flex-shrink-0">
-                      {enr.student.fullName.charAt(0)}
-                    </div>
-                    <div className="min-w-0 flex-1 space-y-0.5">
-                      <p className="text-xs font-black text-slate-900 dark:text-white truncate">
-                        {enr.student.fullName}
-                      </p>
-                      <p className="text-[10px] text-slate-500 truncate">
-                        {enr.student.email}
-                      </p>
-                      <div className="flex items-center gap-1.5 pt-0.5">
-                        <span className="text-[9px] font-bold text-slate-400">
-                          {enr.student.department || 'Student'}
-                        </span>
-                        <span className="text-[9px] font-black text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-1.5 py-0.2 rounded">
-                          Sem {enr.student.semester || 6}
-                        </span>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {(rosterData.length > 0 ? rosterData : selectedCourse.enrollments.map((e: any) => ({ ...e.student, attendance: e.attendance || 85, marks: e.marks || 82, grade: e.grade || 'A' }))).map((student: any) => {
+                  const attendanceNum = student.attendance ?? 85;
+                  const isLowAttendance = attendanceNum < 75;
+
+                  return (
+                    <div
+                      key={student.id || student.enrollmentId}
+                      className="p-5 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4 hover:border-brand-400 transition"
+                    >
+                      <div className="space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-brand-500/15 text-brand-600 dark:text-brand-400 font-black text-xs flex items-center justify-center flex-shrink-0">
+                              {student.fullName?.charAt(0) || 'S'}
+                            </div>
+                            <div className="min-w-0">
+                              <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
+                                {student.fullName}
+                              </h4>
+                              <p className="text-[10px] text-slate-500 truncate font-medium">
+                                PRN: {student.prn || 'N/A'}
+                              </p>
+                            </div>
+                          </div>
+
+                          <Badge variant={student.grade === 'A+' || student.grade === 'A' ? 'emerald' : student.grade === 'F' ? 'rose' : 'indigo'} size="sm">
+                            Grade: {student.grade || 'A'}
+                          </Badge>
+                        </div>
+
+                        {/* Performance Metrics: Attendance & Marks */}
+                        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                          <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 space-y-0.5">
+                            <span className="text-[10px] font-bold text-slate-400">Attendance</span>
+                            <div className="flex items-center space-x-1">
+                              <span className={`text-xs sm:text-sm font-black ${isLowAttendance ? 'text-amber-500' : 'text-emerald-500'}`}>
+                                {attendanceNum}%
+                              </span>
+                              <span className="text-[9px] text-slate-400">
+                                {isLowAttendance ? '(Shortage)' : '(Good)'}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 space-y-0.5">
+                            <span className="text-[10px] font-bold text-slate-400">Marks Secured</span>
+                            <p className="text-xs sm:text-sm font-black text-brand-600 dark:text-brand-400">
+                              {student.marks ?? 82} <span className="text-[10px] text-slate-400">/ 100</span>
+                            </p>
+                          </div>
+                        </div>
                       </div>
+
+                      {/* Faculty Grade & Marks Editor Trigger */}
+                      {isFaculty && (
+                        <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+                          <Button
+                            variant="secondary"
+                            size="xs"
+                            onClick={() => setEditingStudentGrade(student)}
+                            leftIcon={<Edit3 className="w-3 h-3" />}
+                          >
+                            Edit Grade & Marks
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -1020,9 +1080,25 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
                     <span>{course.resourcesCount || 0} Docs</span>
                   </div>
 
-                  <span className="inline-flex items-center text-xs font-black text-brand-600 dark:text-brand-400 group-hover:translate-x-1 transition-transform">
-                    Enter Class <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    {isFaculty && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedCourse(course);
+                          setShowUploadResourceModal(true);
+                        }}
+                        className="px-2 py-0.5 rounded-lg text-[10px] font-black text-white bg-emerald-600 hover:bg-emerald-500 transition cursor-pointer"
+                        title="Upload notes for this subject"
+                      >
+                        + Add Notes
+                      </button>
+                    )}
+
+                    <span className="inline-flex items-center text-xs font-black text-brand-600 dark:text-brand-400 group-hover:translate-x-1 transition-transform">
+                      Enter Class <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1114,6 +1190,35 @@ export const CoursesPage: React.FC<CoursesPageProps> = ({ initialCourseId, onSel
             </div>
           </form>
         </Modal>
+      )}
+
+      {showUploadResourceModal && (
+        <ResourceUploadModal
+          isOpen={true}
+          onClose={() => {
+            setShowUploadResourceModal(false);
+          }}
+          courseId={selectedCourse?.id}
+          preselectedCourse={selectedCourse}
+          onSuccess={() => {
+            setShowUploadResourceModal(false);
+            if (selectedCourse) fetchCourseDetail(selectedCourse.id);
+            fetchCourses();
+          }}
+        />
+      )}
+
+      {editingStudentGrade && selectedCourse && (
+        <EditStudentGradeModal
+          isOpen={!!editingStudentGrade}
+          onClose={() => setEditingStudentGrade(null)}
+          onSuccess={() => {
+            if (selectedCourse) fetchCourseDetail(selectedCourse.id);
+          }}
+          courseId={selectedCourse.id}
+          courseCode={selectedCourse.courseCode}
+          student={editingStudentGrade}
+        />
       )}
     </div>
   );

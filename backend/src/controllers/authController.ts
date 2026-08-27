@@ -18,13 +18,14 @@ const RegisterSchema = z.object({
   email: z.string().email('Invalid email address format'),
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
-  role: z.enum(['STUDENT', 'FACULTY']).optional(),
+  role: z.enum(['STUDENT', 'FACULTY', 'HOD']).optional(),
   department: z.string().optional(),
   semester: z.number().int().optional(),
+  prn: z.string().optional(),
 });
 
 const LoginSchema = z.object({
-  email: z.string().email(),
+  email: z.string().min(1, 'Email or USN is required'),
   password: z.string().min(1),
 });
 
@@ -52,14 +53,19 @@ export async function register(req: Request, res: Response, next: any) {
     }
 
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          ...(parsed.prn ? [{ prn: parsed.prn.trim().toUpperCase() }] : []),
+        ],
+      },
     });
 
     if (existingUser) {
       return res.status(409).json({
         success: false,
-        message: 'An account with this college email address already exists.',
+        message: 'An account with this college email or Roll No./USN already exists.',
       });
     }
 
@@ -71,21 +77,26 @@ export async function register(req: Request, res: Response, next: any) {
     const isVerified = config.AUTO_VERIFY_EMAILS_IN_DEV;
 
     // Allow STUDENT or FACULTY registration from frontend (defaults to STUDENT).
-    // Privileged role ADMIN cannot be self-assigned via public registration APIs.
-    const assignedRole = parsed.role === 'FACULTY' ? 'FACULTY' : 'STUDENT';
+    const assignedRole = parsed.role === 'FACULTY' ? 'FACULTY' : parsed.role === 'HOD' ? 'HOD' : 'STUDENT';
 
     let rosterData: any = null;
     let autoEnrolledCount = 0;
 
     if (assignedRole === 'STUDENT') {
-      rosterData = await prisma.studentRoster.findUnique({
-        where: { email },
+      rosterData = await prisma.studentRoster.findFirst({
+        where: {
+          OR: [
+            { email },
+            ...(parsed.prn ? [{ prn: parsed.prn.trim().toUpperCase() }] : []),
+          ],
+        },
       });
     }
 
     const finalFullName = rosterData?.fullName || parsed.fullName;
     const finalDepartment = rosterData?.department || parsed.department || 'Computer Science & Engineering';
     const finalSemester = assignedRole === 'STUDENT' ? (rosterData?.semester || parsed.semester || 6) : null;
+    const finalPrn = (assignedRole === 'STUDENT' && parsed.prn) ? parsed.prn.trim().toUpperCase() : (rosterData?.prn || null);
 
     const newUser = await prisma.user.create({
       data: {
@@ -95,7 +106,7 @@ export async function register(req: Request, res: Response, next: any) {
         role: assignedRole,
         department: finalDepartment,
         semester: finalSemester,
-        prn: rosterData?.prn || null,
+        prn: finalPrn,
         tenthPercentage: rosterData?.tenthPercentage ?? null,
         twelfthPercentage: rosterData?.twelfthPercentage ?? null,
         sem1Cgpa: rosterData?.sem1Cgpa ?? null,
@@ -220,10 +231,15 @@ export async function register(req: Request, res: Response, next: any) {
 export async function login(req: Request, res: Response, next: any) {
   try {
     const parsed = LoginSchema.parse(req.body);
-    const email = parsed.email.toLowerCase().trim();
+    const input = parsed.email.trim();
 
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: input.toLowerCase() },
+          { prn: input.toUpperCase() },
+        ],
+      },
     });
 
     if (!user) {
@@ -231,11 +247,11 @@ export async function login(req: Request, res: Response, next: any) {
         action: 'AUTH_LOGIN_FAILED',
         resourceType: 'USER',
         ipAddress: req.ip,
-        details: { email, reason: 'USER_NOT_FOUND' },
+        details: { email: input, reason: 'USER_NOT_FOUND' },
       });
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password',
+        message: 'Invalid email/USN or password',
       });
     }
 
@@ -247,7 +263,7 @@ export async function login(req: Request, res: Response, next: any) {
         resourceType: 'USER',
         resourceId: user.id,
         ipAddress: req.ip,
-        details: { email, reason: 'INVALID_PASSWORD' },
+        details: { email: input, reason: 'INVALID_PASSWORD' },
       });
       return res.status(401).json({
         success: false,

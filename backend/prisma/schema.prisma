@@ -58,6 +58,7 @@ model User {
   notifications         Notification[]
   blocksInitiated       BlockedUser[]         @relation("BlockInitiator")
   blocksReceived        BlockedUser[]         @relation("BlockTarget")
+  resultPublications    ExamResultPublication[]
   examRecords           ExamRecord[]
 
   @@index([email])
@@ -95,6 +96,9 @@ model Enrollment {
   courseId    Int
   studentId   Int
   enrolledAt  DateTime @default(now())
+  attendance  Float    @default(85.0)
+  marks       Float    @default(82.0)
+  grade       String   @default("A")
 
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   student     User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
@@ -417,6 +421,21 @@ model ExamRecord {
   course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@index([studentId, courseId])
+}
+
+model ExamResultPublication {
+  id              Int      @id @default(autoincrement())
+  title           String
+  academicSession String   @default("Session 2026-27 (ODD)")
+  department      String   @default("Department of Emerging Technologies CSE (AI&ML)")
+  examType        String   @default("CAE-I Examination")
+  message         String?
+  publishedById   Int
+  isPublished     Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  publishedBy     User     @relation(fields: [publishedById], references: [id], onDelete: Cascade)
 }
 
 

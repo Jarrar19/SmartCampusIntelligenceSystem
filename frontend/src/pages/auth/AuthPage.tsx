@@ -25,6 +25,7 @@ export const AuthPage: React.FC = () => {
   const [role, setRole] = useState<UserRole>('STUDENT');
   const [department, setDepartment] = useState('Computer Science & Engineering');
   const [semester, setSemester] = useState<number>(6);
+  const [prn, setPrn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const collegeDomain = config?.collegeEmailDomain || 'sbjit.edu.in';
@@ -43,6 +44,12 @@ export const AuthPage: React.FC = () => {
         return;
       }
 
+      if (role === 'STUDENT' && !prn.trim()) {
+        error('Please enter your official Roll No. / USN (e.g. CM23001).');
+        setIsLoading(false);
+        return;
+      }
+
       await register({
         email: email.trim(),
         fullName: fullName.trim(),
@@ -50,6 +57,7 @@ export const AuthPage: React.FC = () => {
         role,
         department,
         semester: role === 'STUDENT' ? semester : undefined,
+        prn: role === 'STUDENT' ? prn.trim().toUpperCase() : undefined,
       });
     }
 
@@ -150,19 +158,19 @@ export const AuthPage: React.FC = () => {
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
                     Campus Role <span className="text-rose-500">*</span>
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {(['STUDENT', 'FACULTY'] as const).map((r) => (
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {(['STUDENT', 'FACULTY', 'HOD'] as const).map((r) => (
                       <button
                         key={r}
                         type="button"
                         onClick={() => setRole(r)}
-                        className={`py-2 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
+                        className={`py-2 rounded-xl text-[11px] font-bold transition cursor-pointer active:scale-95 ${
                           role === r
                             ? 'bg-brand-600 text-white shadow-xs border border-brand-500'
                             : 'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
                         }`}
                       >
-                        {r === 'STUDENT' ? 'Student' : 'Faculty Member'}
+                        {r === 'STUDENT' ? 'Student' : r === 'HOD' ? 'HoD' : 'Faculty'}
                       </button>
                     ))}
                   </div>
@@ -186,21 +194,31 @@ export const AuthPage: React.FC = () => {
                 </div>
 
                 {role === 'STUDENT' && (
-                  <div className="space-y-1.5 text-left">
-                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                      Semester <span className="text-rose-500">*</span>
-                    </label>
-                    <select
-                      value={semester}
-                      onChange={(e) => setSemester(Number(e.target.value))}
-                      className="w-full glass-input rounded-xl text-xs font-semibold px-3.5 py-2.5 focus:outline-none"
-                    >
-                      {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-                        <option key={s} value={s}>
-                          Semester {s}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1.5 text-left">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                        Semester <span className="text-rose-500">*</span>
+                      </label>
+                      <select
+                        value={semester}
+                        onChange={(e) => setSemester(Number(e.target.value))}
+                        className="w-full glass-input rounded-xl text-xs font-semibold px-3.5 py-2.5 focus:outline-none"
+                      >
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                          <option key={s} value={s}>
+                            Semester {s}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <Input
+                      label="Roll No. / USN"
+                      placeholder="e.g. CM23001"
+                      value={prn}
+                      onChange={(e) => setPrn(e.target.value.toUpperCase())}
+                      isRequired
+                    />
                   </div>
                 )}
               </>
@@ -208,9 +226,9 @@ export const AuthPage: React.FC = () => {
 
             <div>
               <Input
-                label="Institutional Email"
-                type="email"
-                placeholder={`yourname@${collegeDomain}`}
+                label={isLogin ? "Institutional Email or Roll No. / USN" : "Institutional Email"}
+                type="text"
+                placeholder={isLogin ? `yourname@${collegeDomain} or CM23001` : `yourname@${collegeDomain}`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 leftIcon={<Mail className="w-4 h-4" />}

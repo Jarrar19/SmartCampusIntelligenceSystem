@@ -2,13 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   GraduationCap, Bell, MessageSquare, LogOut, 
   Menu, BookOpen, ShoppingBag, Sun, Moon, 
-  ShieldCheck, Inbox, PanelLeft, Search, CheckCheck, X
+  ShieldCheck, Inbox, PanelLeft, Search, CheckCheck, X, User as UserIcon
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../../context/NotificationContext';
 import { useChat } from '../../context/ChatContext';
 import { useTheme } from '../../context/ThemeContext';
 import { Badge } from './Badge';
+import { ProfileSettingsModal } from './ProfileSettingsModal';
 
 interface NavbarProps {
   onOpenMobileMenu?: () => void;
@@ -32,6 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
 
@@ -286,7 +288,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-2">
+                <div className="py-1 border-t border-b border-slate-100 dark:border-slate-800">
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      setShowProfileModal(true);
+                    }}
+                    className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition cursor-pointer"
+                  >
+                    <UserIcon className="w-4 h-4 text-brand-500" />
+                    <span>My Profile & Credentials</span>
+                  </button>
+                </div>
+
+                <div className="pt-1">
                   <button
                     onClick={() => {
                       setShowUserMenu(false);
@@ -303,6 +318,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
       </div>
+
+      {showProfileModal && (
+        <ProfileSettingsModal
+          isOpen={showProfileModal}
+          onClose={() => setShowProfileModal(false)}
+        />
+      )}
     </header>
   );
 };

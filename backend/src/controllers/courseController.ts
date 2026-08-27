@@ -450,6 +450,9 @@ export async function getCourseRoster(req: Request, res: Response, next: any) {
     const roster = course.enrollments.map(e => ({
       enrollmentId: e.id,
       enrolledAt: e.enrolledAt,
+      attendance: e.attendance,
+      marks: e.marks,
+      grade: e.grade,
       ...e.student,
     }));
 
@@ -463,6 +466,75 @@ export async function getCourseRoster(req: Request, res: Response, next: any) {
         credits: course.credits,
         totalStudents: roster.length,
         students: roster,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateStudentGrade(req: Request, res: Response, next: any) {
+  try {
+    if (!req.user || (req.user.role !== 'FACULTY' && req.user.role !== 'ADMIN')) {
+      return res.status(403).json({ success: false, message: 'Only course faculty can update student grades' });
+    }
+
+    const courseId = parseInt(req.params.id, 10);
+    const studentId = parseInt(req.params.studentId, 10);
+
+    const { marks, grade, attendance } = req.body;
+
+    const enrollment = await prisma.enrollment.findUnique({
+      where: { courseId_studentId: { courseId, studentId } },
+      include: { course: true },
+    });
+
+    if (!enrollment) {
+      return res.status(404).json({ success: false, message: 'Student enrollment record not found for this course' });
+    }
+
+    const updateData: any = {};
+    if (marks !== undefined && marks !== null && marks !== '') updateData.marks = parseFloat(marks);
+    if (grade !== undefined && grade !== null && grade !== '') updateData.grade = String(grade).toUpperCase();
+    if (attendance !== undefined && attendance !== null && attendance !== '') updateData.attendance = parseFloat(attendance);
+
+    const updated = await prisma.enrollment.update({
+      where: { id: enrollment.id },
+      data: updateData,
+      include: {
+        student: {
+          select: { id: true, fullName: true, email: true, prn: true },
+        },
+      },
+    });
+
+    // Send notification to student
+    await prisma.notification.create({
+      data: {
+        userId: studentId,
+        title: `Grade & Marks Updated in ${enrollment.course.courseCode}`,
+        message: `Your grade for ${enrollment.course.title} has been updated: Grade ${updated.grade}, Marks: ${updated.marks}/100, Attendance: ${updated.attendance}%.`,
+        type: 'ACADEMIC',
+        link: `/courses/${courseId}`,
+      },
+    });
+
+    emitToUser(studentId, 'notification', {
+      title: `Grade Updated in ${enrollment.course.courseCode}`,
+      message: `Updated Grade: ${updated.grade} (${updated.marks}/100)`,
+    });
+
+    return res.json({
+      success: true,
+      message: `Grade & performance updated for ${updated.student.fullName}`,
+      data: {
+        enrollmentId: updated.id,
+        courseId: updated.courseId,
+        studentId: updated.studentId,
+        marks: updated.marks,
+        grade: updated.grade,
+        attendance: updated.attendance,
+        student: updated.student,
       },
     });
   } catch (error) {
