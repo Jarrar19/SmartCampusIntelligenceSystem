@@ -13,6 +13,8 @@ import { useToast } from '../../context/ToastContext';
 import { useChat } from '../../context/ChatContext';
 import { MarketplaceProduct } from '../../types';
 
+import { getProductGalleryImages } from '../../utils/productImages';
+
 interface ProductDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -38,10 +40,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   if (!product) return null;
 
   const isMine = product.sellerId === user?.id;
-  const currentImage = product.images?.[selectedImageIndex] || product.images?.[0];
-  const primaryImgUrl = currentImage?.imagePath 
-    ? (currentImage.imagePath.startsWith('http') ? currentImage.imagePath : `${STORAGE_BASE_URL}/${currentImage.imagePath}`)
-    : null;
+  const galleryImages = getProductGalleryImages(product);
+  const primaryImgUrl = galleryImages[selectedImageIndex] || galleryImages[0];
 
   const handleFavorite = async () => {
     try {
@@ -146,11 +146,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
 
               {/* Multiple images thumbnail selector */}
-              {product.images && product.images.length > 1 && (
+              {galleryImages.length > 1 && (
                 <div className="absolute bottom-3 inset-x-0 flex justify-center space-x-1.5">
-                  {product.images.map((img, idx) => (
+                  {galleryImages.map((_, idx) => (
                     <button
-                      key={img.id}
+                      key={idx}
                       onClick={() => setSelectedImageIndex(idx)}
                       className={`w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${
                         selectedImageIndex === idx ? 'bg-brand-500 w-6' : 'bg-white/60 hover:bg-white'
@@ -161,22 +161,19 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               )}
             </div>
 
-            {product.images && product.images.length > 1 && (
+            {galleryImages.length > 1 && (
               <div className="flex items-center space-x-2 overflow-x-auto pb-1">
-                {product.images.map((img, idx) => {
-                  const url = img.imagePath.startsWith('http') ? img.imagePath : `${STORAGE_BASE_URL}/${img.imagePath}`;
-                  return (
-                    <button
-                      key={img.id}
-                      onClick={() => setSelectedImageIndex(idx)}
-                      className={`w-14 h-14 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition cursor-pointer ${
-                        selectedImageIndex === idx ? 'border-brand-500' : 'border-transparent opacity-60 hover:opacity-100'
-                      }`}
-                    >
-                      <img src={url} alt="" className="w-full h-full object-cover" />
-                    </button>
-                  );
-                })}
+                {galleryImages.map((url, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImageIndex(idx)}
+                    className={`w-14 h-14 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition cursor-pointer ${
+                      selectedImageIndex === idx ? 'border-brand-500' : 'border-transparent opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={url} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
               </div>
             )}
           </div>

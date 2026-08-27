@@ -15,6 +15,7 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { ProductCardSkeleton } from '../../components/common/Skeleton';
 import { CreateProductModal } from '../../components/marketplace/CreateProductModal';
 import { ProductDetailModal } from '../../components/marketplace/ProductDetailModal';
+import { getProductImageUrl } from '../../utils/productImages';
 
 export const MarketplacePage: React.FC = () => {
   const { user } = useAuth();
@@ -201,8 +202,7 @@ export const MarketplacePage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {products.map((product) => {
-            const primaryImg = product.images?.[0]?.imagePath;
-            const imgUrl = primaryImg ? (primaryImg.startsWith('http') ? primaryImg : `${STORAGE_BASE_URL}/${primaryImg}`) : null;
+            const imgUrl = getProductImageUrl(product);
 
             return (
               <div
@@ -213,16 +213,12 @@ export const MarketplacePage: React.FC = () => {
                 <div className="space-y-3">
                   {/* Image container with favorite button */}
                   <div className="relative w-full h-44 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center">
-                    {imgUrl ? (
-                      <img
-                        src={imgUrl}
-                        alt={product.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <ShoppingBag className="w-12 h-12 text-slate-300 dark:text-slate-600" />
-                    )}
+                    <img
+                      src={imgUrl}
+                      alt={product.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
 
                     <div className="absolute top-2 left-2 flex items-center gap-1">
                       <span className="px-2.5 py-1 rounded-xl text-xs font-black text-white bg-slate-950/80 backdrop-blur-md shadow-xs">

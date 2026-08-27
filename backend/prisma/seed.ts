@@ -625,6 +625,12 @@ async function main() {
       status: 'AVAILABLE',
       moderationStatus: 'APPROVED',
       viewsCount: 64,
+      images: {
+        create: [
+          { imagePath: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', isPrimary: true },
+          { imagePath: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=800&q=80', isPrimary: false }
+        ]
+      }
     },
   });
 
@@ -640,6 +646,12 @@ async function main() {
       status: 'AVAILABLE',
       moderationStatus: 'APPROVED',
       viewsCount: 92,
+      images: {
+        create: [
+          { imagePath: 'https://images.unsplash.com/photo-1611125832047-1d7ad1e8e48b?auto=format&fit=crop&w=800&q=80', isPrimary: true },
+          { imagePath: 'https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?auto=format&fit=crop&w=800&q=80', isPrimary: false }
+        ]
+      }
     },
   });
 
@@ -655,6 +667,11 @@ async function main() {
       status: 'AVAILABLE',
       moderationStatus: 'APPROVED',
       viewsCount: 45,
+      images: {
+        create: [
+          { imagePath: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=800&q=80', isPrimary: true }
+        ]
+      }
     },
   });
 
@@ -670,6 +687,96 @@ async function main() {
       status: 'AVAILABLE',
       moderationStatus: 'APPROVED',
       viewsCount: 118,
+      images: {
+        create: [
+          { imagePath: 'https://images.unsplash.com/photo-1553406830-ef2513450d76?auto=format&fit=crop&w=800&q=80', isPrimary: true },
+          { imagePath: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80', isPrimary: false }
+        ]
+      }
+    },
+  });
+
+  const prod5 = await prisma.marketplaceProduct.create({
+    data: {
+      sellerId: student2.id,
+      title: 'Apple MacBook Air M1 (8GB / 256GB SSD) - Space Grey',
+      description: 'Barely used MacBook Air M1 in battery health 96%. Includes original MagSafe charger and leather sleeve.',
+      category: 'ELECTRONICS',
+      price: 42000,
+      condition: 'LIKE_NEW',
+      campusInfo: 'Hostel Block C',
+      status: 'AVAILABLE',
+      moderationStatus: 'APPROVED',
+      viewsCount: 184,
+      images: {
+        create: [
+          { imagePath: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80', isPrimary: true },
+          { imagePath: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80', isPrimary: false }
+        ]
+      }
+    },
+  });
+
+  const prod6 = await prisma.marketplaceProduct.create({
+    data: {
+      sellerId: student1.id,
+      title: 'Hero Octane 21-Speed Gear Bicycle (Campus Commute)',
+      description: 'Sturdy mountain bicycle with front suspension, disk brakes, and helmet included. Great for riding between hostels and academic blocks.',
+      category: 'OTHER',
+      price: 3500,
+      condition: 'GOOD',
+      campusInfo: 'Hostel Cycle Stand Block A',
+      status: 'AVAILABLE',
+      moderationStatus: 'APPROVED',
+      viewsCount: 142,
+      images: {
+        create: [
+          { imagePath: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=800&q=80', isPrimary: true },
+          { imagePath: 'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?auto=format&fit=crop&w=800&q=80', isPrimary: false }
+        ]
+      }
+    },
+  });
+
+  const prod7 = await prisma.marketplaceProduct.create({
+    data: {
+      sellerId: student2.id,
+      title: 'Sony WH-1000XM4 Wireless Noise Canceling Headphones',
+      description: 'Active Noise Canceling over-ear headphones with 30hr battery life. Crystal clear sound for library studying.',
+      category: 'ELECTRONICS',
+      price: 8500,
+      condition: 'LIKE_NEW',
+      campusInfo: 'Central Library / Reading Room',
+      status: 'AVAILABLE',
+      moderationStatus: 'APPROVED',
+      viewsCount: 210,
+      images: {
+        create: [
+          { imagePath: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80', isPrimary: true },
+          { imagePath: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=800&q=80', isPrimary: false }
+        ]
+      }
+    },
+  });
+
+  const prod8 = await prisma.marketplaceProduct.create({
+    data: {
+      sellerId: student1.id,
+      title: 'Engineering Mini Drafter + Wooden A2 Drawing Board',
+      description: 'Complete engineering graphics kit with mini drafter clamp, A2 drawing board, clips, and set squares.',
+      category: 'OTHER',
+      price: 450,
+      condition: 'GOOD',
+      campusInfo: 'Mechanical Lab Block',
+      status: 'AVAILABLE',
+      moderationStatus: 'APPROVED',
+      viewsCount: 76,
+      images: {
+        create: [
+          { imagePath: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80', isPrimary: true },
+          { imagePath: 'https://images.unsplash.com/photo-1580481072645-022f9a6d8310?auto=format&fit=crop&w=800&q=80', isPrimary: false }
+        ]
+      }
     },
   });
 

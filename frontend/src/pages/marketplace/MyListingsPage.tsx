@@ -12,6 +12,7 @@ import { Button } from '../../components/common/Button';
 import { EmptyState } from '../../components/common/EmptyState';
 import { DeleteConfirmModal } from '../../components/common/DeleteConfirmModal';
 import { ListRowSkeleton } from '../../components/common/Skeleton';
+import { getProductImageUrl } from '../../utils/productImages';
 
 export const MyListingsPage: React.FC = () => {
   const { user } = useAuth();
@@ -233,29 +234,38 @@ export const MyListingsPage: React.FC = () => {
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-            {myListings.map((prod) => (
-              <div
-                key={prod.id}
-                className="p-5 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between space-y-4 shadow-sm"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">
-                      {prod.price === 0 ? 'FREE' : `₹${prod.price}`}
-                    </span>
-                    <Badge variant="slate" size="xs">
-                      {prod.status}
-                    </Badge>
+            {myListings.map((prod) => {
+              const imgUrl = getProductImageUrl(prod);
+              return (
+                <div
+                  key={prod.id}
+                  className="p-4 rounded-3xl glass-panel border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between space-y-3 shadow-sm"
+                >
+                  <div className="space-y-3">
+                    <div className="relative w-full h-36 rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                      <img src={imgUrl} alt={prod.title} className="w-full h-full object-cover" />
+                      <div className="absolute top-2 left-2">
+                        <span className="px-2 py-0.5 rounded-lg text-xs font-black text-white bg-slate-950/80 backdrop-blur-md">
+                          {prod.price === 0 ? 'FREE' : `₹${prod.price}`}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-black text-slate-900 dark:text-white line-clamp-1">
+                          {prod.title}
+                        </h3>
+                        <Badge variant="slate" size="xs">
+                          {prod.status}
+                        </Badge>
+                      </div>
+
+                      <p className="text-xs text-slate-500 line-clamp-2">
+                        {prod.description}
+                      </p>
+                    </div>
                   </div>
-
-                  <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white line-clamp-1">
-                    {prod.title}
-                  </h3>
-
-                  <p className="text-xs text-slate-500 line-clamp-2">
-                    {prod.description}
-                  </p>
-                </div>
 
                 <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                   <span className="text-[10px] text-slate-400">
@@ -272,9 +282,10 @@ export const MyListingsPage: React.FC = () => {
                   </Button>
                 </div>
               </div>
-            ))}
-          </div>
-        )
+            );
+          })}
+        </div>
+      )
       ) : (
         sentRequests.length === 0 ? (
           <EmptyState
