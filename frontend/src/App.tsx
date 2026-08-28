@@ -23,6 +23,7 @@ import { MyListingsPage } from './pages/marketplace/MyListingsPage';
 import { WishlistPage } from './pages/marketplace/WishlistPage';
 import { AuditLogsPage } from './pages/audit/AuditLogsPage';
 import { SmartAiPage } from './pages/academic/SmartAiPage';
+import { NoticeBoardPage } from './pages/academic/NoticeBoardPage';
 import { ResourceUploadModal } from './components/academic/ResourceUploadModal';
 import { CreateProductModal } from './components/marketplace/CreateProductModal';
 import { GlobalSearchModal } from './components/common/GlobalSearchModal';
@@ -136,6 +137,10 @@ const AppContent: React.FC = () => {
                   onOpenChat={() => openChat()}
                 />
               )
+            )}
+
+            {currentTab === 'notice-board' && (
+              <NoticeBoardPage />
             )}
 
             {currentTab === 'courses' && (

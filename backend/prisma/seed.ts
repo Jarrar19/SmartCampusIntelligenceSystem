@@ -70,30 +70,6 @@ async function main() {
   });
 
   const student1 = await prisma.user.upsert({
-    where: { email: 'student1@sbjit.edu.in' },
-    update: {
-      passwordHash,
-      role: 'STUDENT',
-      prn: 'CM23003',
-      fullName: 'DHANSHREE MADEHO BHORKAR',
-      isActive: true,
-      isVerified: true,
-    },
-    create: {
-      email: 'student1@sbjit.edu.in',
-      fullName: 'DHANSHREE MADEHO BHORKAR',
-      prn: 'CM23003',
-      passwordHash,
-      role: 'STUDENT',
-      department: 'Department of Emerging Technologies CSE (AI&ML)',
-      semester: 6,
-      isActive: true,
-      isVerified: true,
-      avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
-    },
-  });
-
-  await prisma.user.upsert({
     where: { email: 'student@sbjit.edu.in' },
     update: {
       passwordHash,
@@ -138,6 +114,30 @@ async function main() {
       isActive: true,
       isVerified: true,
       avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+    },
+  });
+
+  const student3 = await prisma.user.upsert({
+    where: { email: 'student1@sbjit.edu.in' },
+    update: {
+      passwordHash,
+      role: 'STUDENT',
+      prn: 'CM23003',
+      fullName: 'DHANSHREE MADEHO BHORKAR',
+      isActive: true,
+      isVerified: true,
+    },
+    create: {
+      email: 'student1@sbjit.edu.in',
+      fullName: 'DHANSHREE MADEHO BHORKAR',
+      prn: 'CM23003',
+      passwordHash,
+      role: 'STUDENT',
+      department: 'Department of Emerging Technologies CSE (AI&ML)',
+      semester: 6,
+      isActive: true,
+      isVerified: true,
+      avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
     },
   });
 
@@ -386,76 +386,7 @@ async function main() {
         });
       }
 
-      // 3.5. Pre-create all 62 students as active User accounts with default password 'Password@123'
-      for (const student of rosterData.students) {
-        const u = await prisma.user.upsert({
-          where: { email: student.email },
-          update: {
-            fullName: student.fullName,
-            passwordHash,
-            role: 'STUDENT',
-            department: 'Artificial Intelligence & Machine Learning',
-            semester: 6,
-            prn: student.prn,
-            tenthPercentage: student.tenthPercentage,
-            twelfthPercentage: student.twelfthPercentage,
-            sem1Cgpa: student.sem1Cgpa,
-            sem2Cgpa: student.sem2Cgpa,
-            sem3Cgpa: student.sem3Cgpa,
-            sem4Cgpa: student.sem4Cgpa,
-            sem5Cgpa: student.sem5Cgpa,
-            sem6Cgpa: student.sem6Cgpa,
-            backlogs: student.backlogs,
-            internships: student.internships,
-            tgMentorName: student.tgMentorName || 'Prof. Bhushan Manjrekar',
-            isActive: true,
-            isVerified: true,
-          },
-          create: {
-            email: student.email,
-            fullName: student.fullName,
-            passwordHash,
-            role: 'STUDENT',
-            department: 'Artificial Intelligence & Machine Learning',
-            semester: 6,
-            prn: student.prn,
-            tenthPercentage: student.tenthPercentage,
-            twelfthPercentage: student.twelfthPercentage,
-            sem1Cgpa: student.sem1Cgpa,
-            sem2Cgpa: student.sem2Cgpa,
-            sem3Cgpa: student.sem3Cgpa,
-            sem4Cgpa: student.sem4Cgpa,
-            sem5Cgpa: student.sem5Cgpa,
-            sem6Cgpa: student.sem6Cgpa,
-            backlogs: student.backlogs,
-            internships: student.internships,
-            tgMentorName: student.tgMentorName || 'Prof. Bhushan Manjrekar',
-            isActive: true,
-            isVerified: true,
-          },
-        });
-
-        // Auto-enroll in all courses registered in Excel for this PRN
-        const myRegs = rosterData.studentCourses.filter((sc: any) => sc.prn === student.prn);
-        for (const reg of myRegs) {
-          const course = await prisma.course.findFirst({ where: { courseCode: reg.courseCode } });
-          if (course) {
-            await prisma.enrollment.upsert({
-              where: {
-                courseId_studentId: {
-                  courseId: course.id,
-                  studentId: u.id,
-                },
-              },
-              update: {},
-              create: {
-                courseId: course.id,
-                studentId: u.id,
-              },
-            });
-          }
-        }
-      }
+      // 3.5. Student User pre-creation skipped to allow fresh student registrations for all USNs (CM23001 - CM23062)
 
       console.log(`✅ Loaded & pre-activated ${Object.keys(facultyMap).length} real Faculty accounts, ${rosterData.students.length} students & ${rosterData.courses.length} courses`);
     } catch (err) {
@@ -847,6 +778,43 @@ async function main() {
     ],
   });
 
+  // 6. Seed Campus Notices
+  const now = new Date();
+  await prisma.campusNotice.createMany({
+    data: [
+      {
+        title: 'Mid-Semester Exam Timetable & Seating Plan Released',
+        content: 'All 6th Semester Artificial Intelligence & Machine Learning students are hereby informed that the CAE-I Mid-Semester Examination timetable is available. Please report to Auditorium A-102 by 9:30 AM with your Institutional ID card.',
+        category: 'EXAM',
+        priority: 'HIGH',
+        location: 'Auditorium A-102 & ET Block',
+        eventDate: new Date(now.getTime() + 48 * 60 * 60 * 1000),
+        expiresAt: new Date(now.getTime() + 72 * 60 * 60 * 1000), // Expires in 3 days
+        authorId: faculty.id,
+      },
+      {
+        title: 'Annual Campus AI & Robotics Hackathon 2026',
+        content: 'Registration is open for the SBJIT Annual Hackathon! Teams of up to 4 students can register. Prizes worth ₹50,000 for top 3 solutions in Computer Vision and Natural Language Processing.',
+        category: 'EVENT',
+        priority: 'NORMAL',
+        location: 'ET Innovation Lab B-204',
+        eventDate: new Date(now.getTime() + 96 * 60 * 60 * 1000),
+        expiresAt: new Date(now.getTime() + 120 * 60 * 60 * 1000), // Expires in 5 days
+        authorId: admin.id,
+      },
+      {
+        title: 'URGENT: Library Book Return Deadline',
+        content: 'All students holding semester reference books are requested to return or renew them at the central library desk to avoid overdue penalties.',
+        category: 'ACADEMIC',
+        priority: 'URGENT',
+        location: 'Central Library First Floor',
+        expiresAt: new Date(now.getTime() + 24 * 60 * 60 * 1000), // Expires in 24 hours
+        authorId: faculty.id,
+      },
+    ],
+  });
+
+  console.log('✅ Campus Notices seeded');
   console.log('✅ Marketplace, Chat, and Notifications seeded');
   console.log('🎉 Seeding completed successfully!');
 }

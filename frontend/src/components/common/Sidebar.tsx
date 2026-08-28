@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   LayoutDashboard, BookOpen, FileText, CheckSquare, ShoppingBag, 
   ShieldCheck, Heart, Tag, Inbox, PanelLeftClose, PanelLeft,
-  Sparkles, CheckCircle2, Award, Edit3
+  Sparkles, CheckCircle2, Award, Edit3, Megaphone
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { ProfileSettingsModal } from './ProfileSettingsModal';
@@ -42,6 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       title: 'Academic & Learning',
       items: [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'notice-board', label: 'Campus Notice Board', icon: Megaphone },
         { id: 'courses', label: 'My Courses', icon: BookOpen },
         { id: 'resources', label: 'Notes & PYQs', icon: FileText },
         { id: 'assignments', label: 'Tasks & Homework', icon: CheckSquare },
@@ -69,6 +70,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       title: 'Instruction & Moderation',
       items: [
         { id: 'dashboard', label: 'Faculty Cockpit', icon: LayoutDashboard },
+        { id: 'notice-board', label: 'Campus Notice Board', icon: Megaphone },
         { id: 'courses', label: 'Course Management', icon: BookOpen },
         { 
           id: 'moderation', 

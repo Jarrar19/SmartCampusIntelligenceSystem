@@ -60,6 +60,7 @@ model User {
   blocksReceived        BlockedUser[]         @relation("BlockTarget")
   resultPublications    ExamResultPublication[]
   examRecords           ExamRecord[]
+  noticesPosted         CampusNotice[]
 
   @@index([email])
   @@index([role])
@@ -436,6 +437,26 @@ model ExamResultPublication {
   updatedAt       DateTime @updatedAt
 
   publishedBy     User     @relation(fields: [publishedById], references: [id], onDelete: Cascade)
+}
+
+model CampusNotice {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  category    String   @default("GENERAL") // GENERAL, ACADEMIC, EVENT, EXAM, EMERGENCY, CULTURAL, SPORTS
+  priority    String   @default("NORMAL")  // NORMAL, HIGH, URGENT
+  location    String?  // e.g. "Auditorium A-102" or "Online"
+  eventDate   DateTime?
+  expiresAt   DateTime // Timestamp after which the notice self-deletes
+  authorId    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+  @@index([category])
+  @@index([priority])
 }
 
 
