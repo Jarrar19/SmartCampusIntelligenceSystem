@@ -223,6 +223,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
                 {resultPublication.department || 'Department of Emerging Technologies'}
               </span>
+              {user?.prn && (
+                <span className="text-[11px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-700 flex items-center gap-1">
+                  <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  Roll No: {user.prn} • Auto-Linked
+                </span>
+              )}
             </div>
 
             <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -242,7 +248,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               leftIcon={<Award className="w-4 h-4 text-amber-100" />}
               className="shadow-md shadow-amber-500/20 text-xs sm:text-sm font-black"
             >
-              View Results
+              View My Marksheet
             </Button>
           </div>
         </div>

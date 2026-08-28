@@ -20,6 +20,8 @@ export const StudentMarksheetModal: React.FC<StudentMarksheetModalProps> = ({
   const [selectedUsn, setSelectedUsn] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
 
+  const [showManualLookup, setShowManualLookup] = useState(false);
+
   const fetchResult = async (usn?: string) => {
     setIsLoading(true);
     try {
@@ -58,7 +60,7 @@ export const StudentMarksheetModal: React.FC<StudentMarksheetModalProps> = ({
         <div className="p-12 text-center space-y-3">
           <Sparkles className="w-8 h-8 text-brand-500 animate-spin mx-auto" />
           <p className="text-xs font-black text-slate-700 dark:text-slate-300">
-            Fetching official examination scorecard...
+            Auto-detecting your verified credentials & loading scorecard...
           </p>
         </div>
       ) : !resultData ? (
@@ -71,57 +73,82 @@ export const StudentMarksheetModal: React.FC<StudentMarksheetModalProps> = ({
       ) : (
         <div className="space-y-5 text-left">
           
-          {/* USN / Roll No. Verification Bar */}
-          <div className="p-3 rounded-2xl bg-indigo-50/80 dark:bg-slate-800/80 border border-indigo-200/80 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-            <div className="flex items-center space-x-2">
-              <span className="font-bold text-slate-700 dark:text-slate-200">Roll No. / USN:</span>
-              {resultData.allUsns && resultData.allUsns.length > 0 ? (
-                <select
-                  value={selectedUsn || resultData.usnNo || ''}
-                  onChange={(e) => {
-                    setSelectedUsn(e.target.value);
-                    fetchResult(e.target.value);
-                  }}
-                  className="glass-input rounded-xl px-3 py-1 font-black text-xs text-brand-600 dark:text-brand-400 focus:outline-none cursor-pointer"
-                >
-                  {resultData.allUsns.map((u: any) => (
-                    <option key={u.usn} value={u.usn}>
-                      {u.usn} — {u.studentName}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <div className="flex items-center space-x-1.5">
-                  <input
-                    type="text"
-                    placeholder="e.g. CM23001"
-                    value={selectedUsn || resultData.usnNo || ''}
-                    onChange={(e) => setSelectedUsn(e.target.value.toUpperCase())}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && selectedUsn.trim()) {
-                        fetchResult(selectedUsn.trim());
-                      }
-                    }}
-                    className="w-28 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-black text-brand-600 dark:text-brand-400 focus:outline-none"
-                  />
-                  <Button
-                    variant="primary"
-                    size="xs"
-                    onClick={() => {
-                      if (selectedUsn.trim()) fetchResult(selectedUsn.trim());
-                    }}
-                    leftIcon={<Search className="w-3 h-3" />}
-                  >
-                    Load
-                  </Button>
-                </div>
-              )}
+          {/* Automated Student Authentication Status Bar */}
+          <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 dark:bg-emerald-950/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-7 h-7 rounded-xl bg-emerald-500 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="font-black text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5">
+                  <span>Auto-Authenticated:</span>
+                  <span className="text-slate-900 dark:text-white">{resultData.studentName}</span>
+                </p>
+                <p className="text-[11px] text-emerald-700 dark:text-emerald-400 font-bold">
+                  Roll No. / USN: <span className="font-black text-amber-600 dark:text-amber-400">{resultData.usnNo}</span> • Verified Record
+                </p>
+              </div>
             </div>
 
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" /> Matched to: {resultData.studentName} ({resultData.usnNo})
-            </span>
+            <button
+              type="button"
+              onClick={() => setShowManualLookup(!showManualLookup)}
+              className="text-[11px] font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1 self-start sm:self-center"
+            >
+              <Search className="w-3 h-3" />
+              {showManualLookup ? 'Hide Roll No. Switcher' : 'Switch / Search Roll No.'}
+            </button>
           </div>
+
+          {/* Optional Manual Roll No. Lookup Bar (Collapsible for Staff or Custom USN Search) */}
+          {showManualLookup && (
+            <div className="p-3 rounded-2xl bg-indigo-50/80 dark:bg-slate-800/80 border border-indigo-200/80 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs animate-fade-in-up">
+              <div className="flex items-center space-x-2 flex-1">
+                <span className="font-bold text-slate-700 dark:text-slate-200 flex-shrink-0">Select Student USN:</span>
+                {resultData.allUsns && resultData.allUsns.length > 0 ? (
+                  <select
+                    value={selectedUsn || resultData.usnNo || ''}
+                    onChange={(e) => {
+                      setSelectedUsn(e.target.value);
+                      fetchResult(e.target.value);
+                    }}
+                    className="glass-input rounded-xl px-3 py-1 font-black text-xs text-brand-600 dark:text-brand-400 focus:outline-none cursor-pointer flex-1"
+                  >
+                    {resultData.allUsns.map((u: any) => (
+                      <option key={u.usn} value={u.usn}>
+                        {u.usn} — {u.studentName}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="flex items-center space-x-1.5">
+                    <input
+                      type="text"
+                      placeholder="e.g. CM23001"
+                      value={selectedUsn || resultData.usnNo || ''}
+                      onChange={(e) => setSelectedUsn(e.target.value.toUpperCase())}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && selectedUsn.trim()) {
+                          fetchResult(selectedUsn.trim());
+                        }
+                      }}
+                      className="w-28 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-black text-brand-600 dark:text-brand-400 focus:outline-none"
+                    />
+                    <Button
+                      variant="primary"
+                      size="xs"
+                      onClick={() => {
+                        if (selectedUsn.trim()) fetchResult(selectedUsn.trim());
+                      }}
+                      leftIcon={<Search className="w-3 h-3" />}
+                    >
+                      Load
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
           
           {/* Institutional Marksheet Header */}
           <div className="p-5 rounded-3xl bg-gradient-to-r from-brand-900 via-indigo-900 to-slate-900 text-white shadow-md border border-brand-700/50 space-y-3 relative overflow-hidden">
