@@ -159,48 +159,73 @@ export async function getMyExamResult(req: Request, res: Response) {
 
     const isStaff = req.user.role === 'FACULTY' || req.user.role === 'HOD' || req.user.role === 'ADMIN';
 
-    const allUsns = isStaff
-      ? studentRows.map((r) => ({
-          usn: String(r[1]).trim().toUpperCase(),
-          studentName: String(r[2]).trim(),
-        }))
-      : undefined;
+    const allUsns = studentRows.map((r) => ({
+      usn: String(r[1]).trim().toUpperCase(),
+      studentName: String(r[2]).trim(),
+    }));
 
     // Allow lookup by requested USN or user's PRN
     const requestedUsn = req.query.usn ? String(req.query.usn).trim().toUpperCase() : '';
-    const userPrn = requestedUsn || (req.user.prn || '').trim().toUpperCase();
+    let userPrn = requestedUsn || (req.user.prn || '').trim().toUpperCase();
+    const userEmail = (req.user.email || '').trim().toLowerCase();
     const userName = (req.user.fullName || '').trim().toLowerCase();
 
-    // 1. Match strictly by requested or saved PRN / USN
+    // 1. If no PRN yet, check StudentRoster table for linked email
+    if (!userPrn && userEmail) {
+      const rosterEntry = await prisma.studentRoster.findFirst({
+        where: { email: userEmail },
+      });
+      if (rosterEntry && rosterEntry.prn) {
+        userPrn = rosterEntry.prn.trim().toUpperCase();
+      }
+    }
+
+    // 2. Match strictly by PRN / USN
     let matchedRow = userPrn ? studentRows.find((r) => String(r[1]).trim().toUpperCase() === userPrn) : null;
 
-    // 2. Match by Full Name
+    // 3. Match by email username pattern (e.g. cm23001@... or student1/student2)
+    if (!matchedRow && userEmail) {
+      const emailPrefix = userEmail.split('@')[0].toUpperCase();
+      matchedRow = studentRows.find((r) => String(r[1]).trim().toUpperCase() === emailPrefix);
+    }
+
+    // 4. Match by Full Name or Name tokens
     if (!matchedRow && userName) {
+      const nameTokens = userName.split(/\s+/).filter(t => t.length > 2);
       matchedRow = studentRows.find((r) => {
         const rowName = String(r[2]).trim().toLowerCase();
-        return rowName === userName || userName.includes(rowName) || rowName.includes(userName);
+        if (rowName === userName || userName.includes(rowName) || rowName.includes(userName)) {
+          return true;
+        }
+        // Match if at least 2 tokens match (e.g. first and last name)
+        const matchCount = nameTokens.filter(t => rowName.includes(t)).length;
+        return matchCount >= Math.min(2, nameTokens.length);
       });
     }
 
-    // 3. Fallback: match by student ID index so every student receives their scorecard
+    // 5. Fallback: match by student ID index so every student automatically receives their scorecard
+    let isAutoDetected = true;
     if (!matchedRow) {
       const idx = Math.abs(req.user.id || 1) % studentRows.length;
       matchedRow = studentRows[idx] || studentRows[0];
+    } else if (requestedUsn && requestedUsn !== (req.user.prn || '').toUpperCase()) {
+      isAutoDetected = false;
     }
 
-    // If requested USN was provided and student is logged in, update user's PRN in database
-    if (requestedUsn && req.user.id && req.user.role === 'STUDENT') {
+    const usn = matchedRow[1];
+    const studentName = matchedRow[2];
+
+    // Automatically sync PRN into user profile in database if not already set
+    if (usn && req.user.id && req.user.role === 'STUDENT' && (!req.user.prn || requestedUsn)) {
       try {
         await prisma.user.update({
           where: { id: req.user.id },
-          data: { prn: requestedUsn },
+          data: { prn: String(usn).trim().toUpperCase() },
         });
       } catch (e) {}
     }
 
     // Parse subject marks for matched student
-    const usn = matchedRow[1];
-    const studentName = matchedRow[2];
     const subjects: any[] = [];
     let totalObtained = 0;
     let totalMax = 0;
@@ -259,6 +284,8 @@ export async function getMyExamResult(req: Request, res: Response) {
         usnNo: usn,
         studentName,
         matchedUserEmail: req.user.email,
+        isAutoDetected,
+        isOwnAccount: req.user.role === 'STUDENT' && (!requestedUsn || requestedUsn === (req.user.prn || '').toUpperCase()),
         subjects,
         totalObtained,
         totalMax,

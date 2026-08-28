@@ -19,7 +19,10 @@ describe('Smart AI Academic Performance Advisor & Tutor Tests', () => {
     // 1. Create test student
     const student = await prisma.user.upsert({
       where: { email: 'ai_student_test@sbjit.edu.in' },
-      update: {},
+      update: {
+        isActive: true,
+        isVerified: true,
+      },
       create: {
         email: 'ai_student_test@sbjit.edu.in',
         fullName: 'AI Test Student',
@@ -29,6 +32,8 @@ describe('Smart AI Academic Performance Advisor & Tutor Tests', () => {
         semester: 6,
         sem1Cgpa: 8.2,
         sem2Cgpa: 8.5,
+        isActive: true,
+        isVerified: true,
       },
     });
     testStudentId = student.id;
@@ -58,11 +63,11 @@ describe('Smart AI Academic Performance Advisor & Tutor Tests', () => {
       },
     });
 
-    const loginRes = await request(app)
-      .post('/api/v1/auth/login')
-      .send({ email: 'student1@sbjit.edu.in', password: 'Password@123' });
-
-    studentToken = loginRes.body.data.accessToken;
+    studentToken = jwt.sign(
+      { userId: student.id, email: student.email, role: student.role, tokenVersion: 1 },
+      config.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
   });
 
   afterAll(async () => {
