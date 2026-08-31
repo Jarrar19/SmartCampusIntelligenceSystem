@@ -98,6 +98,12 @@ def parse_excel():
         prn = str(prn).strip()
         email = str(email).strip().lower()
         
+        # Fix known roster sheet email typos
+        if email == "samirkhorgae.aiml23@sbjit.edu.in":
+            email = "samirkhorgade.aiml23@sbjit.edu.in"
+        if ".aim23@" in email:
+            email = email.replace(".aim23@", ".aiml23@")
+        
         full_name = sheet.cell(row=r, column=10).value or sheet.cell(row=r, column=4).value
         full_name = str(full_name).strip() if full_name else "Unknown Student"
         

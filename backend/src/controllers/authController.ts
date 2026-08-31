@@ -14,6 +14,27 @@ function validateCollegeEmail(email: string): boolean {
   return parts[1] === config.COLLEGE_EMAIL_DOMAIN;
 }
 
+function normalizeInputEmail(email: string): string[] {
+  const clean = email.trim().toLowerCase();
+  const candidates = new Set<string>([clean]);
+
+  // Handle common branch/suffix variations and roster typo aliases
+  if (clean.includes('.aim23@')) {
+    candidates.add(clean.replace('.aim23@', '.aiml23@'));
+  }
+  if (clean.includes('.aiml23@')) {
+    candidates.add(clean.replace('.aiml23@', '.aim23@'));
+  }
+  if (clean.includes('samirkhorgae')) {
+    candidates.add(clean.replace('samirkhorgae', 'samirkhorgade'));
+  }
+  if (clean.includes('samirkhorgade')) {
+    candidates.add(clean.replace('samirkhorgade', 'samirkhorgae'));
+  }
+
+  return Array.from(candidates);
+}
+
 const RegisterSchema = z.object({
   email: z.string().email('Invalid email address format'),
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
@@ -42,7 +63,13 @@ const ChangePasswordSchema = z.object({
 export async function register(req: Request, res: Response, next: any) {
   try {
     const parsed = RegisterSchema.parse(req.body);
-    const email = parsed.email.toLowerCase().trim();
+    let email = parsed.email.toLowerCase().trim();
+    if (email.includes('.aim23@')) {
+      email = email.replace('.aim23@', '.aiml23@');
+    }
+    if (email.includes('samirkhorgae')) {
+      email = email.replace('samirkhorgae', 'samirkhorgade');
+    }
 
     // Validate college domain strictly
     if (!validateCollegeEmail(email)) {
@@ -53,10 +80,11 @@ export async function register(req: Request, res: Response, next: any) {
     }
 
     // Check if user already exists
+    const emailCandidates = normalizeInputEmail(email);
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [
-          { email },
+          ...emailCandidates.map((e) => ({ email: e })),
           ...(parsed.prn ? [{ prn: parsed.prn.trim().toUpperCase() }] : []),
         ],
       },
@@ -90,7 +118,7 @@ export async function register(req: Request, res: Response, next: any) {
       rosterData = await prisma.studentRoster.findFirst({
         where: {
           OR: [
-            { email },
+            ...emailCandidates.map((e) => ({ email: e })),
             ...(parsed.prn ? [{ prn: parsed.prn.trim().toUpperCase() }] : []),
           ],
         },
@@ -236,11 +264,12 @@ export async function login(req: Request, res: Response, next: any) {
   try {
     const parsed = LoginSchema.parse(req.body);
     const input = parsed.email.trim();
+    const emailCandidates = normalizeInputEmail(input);
 
     const user = await prisma.user.findFirst({
       where: {
         OR: [
-          { email: input.toLowerCase() },
+          ...emailCandidates.map((e) => ({ email: e })),
           { prn: input.toUpperCase() },
         ],
       },
