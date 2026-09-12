@@ -310,42 +310,42 @@ export const AuthPage: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('rajurkude.aiml23@sbjit.edu.in')}
+                onClick={() => handleQuickDemoLogin('student@sbjit.edu.in')}
                 className="p-2 rounded-xl bg-orange-50/50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/60 text-slate-800 dark:text-slate-200 hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/40 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
               >
                 <User className="w-3.5 h-3.5 mx-auto mb-0.5 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform" />
                 <span className="text-[10px] font-extrabold block">Raj (Student)</span>
-                <span className="text-[9px] text-orange-700/80 dark:text-orange-400/80 block">PRN: CM23001</span>
+                <span className="text-[9px] text-orange-700/80 dark:text-orange-400/80 block">USN: CM23001</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('bhushanmanjrekar@sbjit.edu.in')}
+                onClick={() => handleQuickDemoLogin('student2@sbjit.edu.in')}
                 className="p-2 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/60 text-slate-800 dark:text-slate-200 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
               >
-                <BookOpen className="w-3.5 h-3.5 mx-auto mb-0.5 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-extrabold block">Prof. Bhushan</span>
-                <span className="text-[9px] text-blue-700/80 dark:text-blue-400/80 block">Deep Learning</span>
+                <User className="w-3.5 h-3.5 mx-auto mb-0.5 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-extrabold block">Chaitanya (Student)</span>
+                <span className="text-[9px] text-blue-700/80 dark:text-blue-400/80 block">USN: CM23002</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('sujatasardare@sbjit.edu.in')}
+                onClick={() => handleQuickDemoLogin('faculty@sbjit.edu.in')}
                 className="p-2 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/60 text-slate-800 dark:text-slate-200 hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
               >
                 <BookOpen className="w-3.5 h-3.5 mx-auto mb-0.5 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-extrabold block">Prof. Sujata</span>
-                <span className="text-[9px] text-emerald-700/80 dark:text-emerald-400/80 block">Vision & Lab</span>
+                <span className="text-[10px] font-extrabold block">Faculty Portal</span>
+                <span className="text-[9px] text-emerald-700/80 dark:text-emerald-400/80 block">Prof. Jenkins</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('admin@sbjit.edu.in')}
+                onClick={() => handleQuickDemoLogin('hod@sbjit.edu.in')}
                 className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
               >
                 <ShieldCheck className="w-3.5 h-3.5 mx-auto mb-0.5 text-blue-700 dark:text-blue-400 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-extrabold block">Admin Portal</span>
-                <span className="text-[9px] text-slate-500 dark:text-slate-400 block">Dean Academics</span>
+                <span className="text-[10px] font-extrabold block">HoD Portal</span>
+                <span className="text-[9px] text-slate-500 dark:text-slate-400 block">Publish Results</span>
               </button>
             </div>
           </div>

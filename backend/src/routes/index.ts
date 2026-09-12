@@ -8,6 +8,7 @@ import * as assignmentController from '../controllers/assignmentController';
 import * as marketplaceController from '../controllers/marketplaceController';
 import * as chatController from '../controllers/chatController';
 import * as resultController from '../controllers/resultController';
+import * as noticeController from '../controllers/noticeController';
 import { authenticate, requireRole } from '../middleware/auth';
 import { authLimiter } from '../middleware/rateLimit';
 import { memoryUpload } from '../services/fileStorage';
@@ -93,6 +94,11 @@ router.post('/chat/conversations', authenticate, asyncHandler(chatController.sta
 router.get('/chat/conversations/:id', authenticate, asyncHandler(chatController.getConversationMessages));
 router.post('/chat/conversations/:id/messages', authenticate, asyncHandler(chatController.sendMessage));
 router.post('/chat/block-user', authenticate, asyncHandler(chatController.blockUser));
+
+// Campus Notice Board Routes
+router.get('/notices', authenticate, asyncHandler(noticeController.getNotices));
+router.post('/notices', authenticate, requireRole(['FACULTY', 'HOD', 'ADMIN']), asyncHandler(noticeController.createNotice));
+router.delete('/notices/:id', authenticate, asyncHandler(noticeController.deleteNotice));
 
 // AI Academic Advisor Routes
 import aiRoutes from './ai';

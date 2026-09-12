@@ -91,9 +91,13 @@ export async function register(req: Request, res: Response, next: any) {
     });
 
     if (existingUser) {
+      const conflictMsg = existingUser.email === email
+        ? `An account with email (${email}) already exists. Please log in with your existing password.`
+        : `Roll No. / USN (${parsed.prn}) is already registered to account (${existingUser.email}). Log in with that email or USN.`;
+
       return res.status(409).json({
         success: false,
-        message: 'An account with this college email or Roll No./USN already exists.',
+        message: conflictMsg,
       });
     }
 

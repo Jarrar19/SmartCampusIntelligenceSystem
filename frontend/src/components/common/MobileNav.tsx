@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   LayoutDashboard, BookOpen, FileText, CheckSquare, 
   ShoppingBag, Tag, Heart, ShieldCheck, Inbox, 
-  X, MessageSquare, Sun, Moon, LogOut, LucideIcon
+  X, MessageSquare, Sun, Moon, LogOut, LucideIcon, Megaphone
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
@@ -37,6 +37,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
 
   const studentNavItems: MobileNavItem[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'notice-board', label: 'Notice Board', icon: Megaphone },
     { id: 'courses', label: 'My Courses', icon: BookOpen },
     { id: 'resources', label: 'Notes & PYQs', icon: FileText },
     { id: 'assignments', label: 'Assignments', icon: CheckSquare },
@@ -48,6 +49,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
 
   const facultyNavItems: MobileNavItem[] = [
     { id: 'dashboard', label: 'Faculty Cockpit', icon: LayoutDashboard },
+    { id: 'notice-board', label: 'Notice Board', icon: Megaphone },
     { id: 'courses', label: 'Course Management', icon: BookOpen },
     { 
       id: 'moderation', 
@@ -63,6 +65,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
 
   const adminNavItems: MobileNavItem[] = [
     { id: 'dashboard', label: 'Admin Cockpit', icon: LayoutDashboard },
+    { id: 'notice-board', label: 'Notice Board', icon: Megaphone },
     { id: 'courses', label: 'All Courses', icon: BookOpen },
     { 
       id: 'moderation', 
