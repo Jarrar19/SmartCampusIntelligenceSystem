@@ -287,7 +287,27 @@ export const AuthPage: React.FC = () => {
             <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-center mb-2">
               1-Click Institutional Demo Profiles
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+              <button
+                type="button"
+                onClick={() => handleQuickDemoLogin('burhanuddinhusain.aiml23@sbjit.edu.in')}
+                className="p-2 rounded-xl bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900/60 text-slate-800 dark:text-slate-200 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950/40 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
+              >
+                <User className="w-3.5 h-3.5 mx-auto mb-0.5 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-extrabold block">Burhanuddin</span>
+                <span className="text-[9px] text-purple-700/80 dark:text-purple-400/80 block">PRN: CM23061</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickDemoLogin('shivamaj.aiml23@sbjit.edu.in')}
+                className="p-2 rounded-xl bg-cyan-50/50 dark:bg-cyan-950/20 border border-cyan-200 dark:border-cyan-900/60 text-slate-800 dark:text-slate-200 hover:border-cyan-500 hover:bg-cyan-50 dark:hover:bg-cyan-950/40 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
+              >
+                <User className="w-3.5 h-3.5 mx-auto mb-0.5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-extrabold block">Shivam Jadhav</span>
+                <span className="text-[9px] text-cyan-700/80 dark:text-cyan-400/80 block">PRN: CM23030</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('rajurkude.aiml23@sbjit.edu.in')}

@@ -14,9 +14,30 @@ let io: SocketIOServer | null = null;
 const userSockets = new Map<number, Set<string>>();
 
 export function initSocketServer(server: HttpServer): SocketIOServer {
+  const getSocketAllowedOrigins = (): string[] => {
+    const rawList = [config.CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000'];
+    const origins = new Set<string>();
+    for (const item of rawList) {
+      if (!item) continue;
+      item.split(',').forEach(u => {
+        const trimmed = u.trim().replace(/\/+$/, '');
+        if (trimmed) origins.add(trimmed);
+      });
+    }
+    return Array.from(origins);
+  };
+
   io = new SocketIOServer(server, {
     cors: {
-      origin: [config.CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000'],
+      origin: (origin, callback) => {
+        const allowedOrigins = getSocketAllowedOrigins();
+        const normalizedOrigin = origin ? origin.replace(/\/+$/, '') : null;
+        if (!origin || (normalizedOrigin && allowedOrigins.includes(normalizedOrigin)) || config.DEV_MODE) {
+          callback(null, true);
+        } else {
+          callback(new Error('CORS policy: Access denied for socket connection'));
+        }
+      },
       methods: ['GET', 'POST'],
       credentials: true,
     },

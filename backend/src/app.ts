@@ -14,15 +14,29 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allows images/avatars to load in frontend
 }));
 
+// Helper to extract clean origins without trailing slashes
+const getAllowedOrigins = (): string[] => {
+  const rawList = [config.CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000'];
+  const origins = new Set<string>();
+  for (const item of rawList) {
+    if (!item) continue;
+    item.split(',').forEach(u => {
+      const trimmed = u.trim().replace(/\/+$/, '');
+      if (trimmed) origins.add(trimmed);
+    });
+  }
+  return Array.from(origins);
+};
+
 // Middlewares
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, postman) or matching allowed origins
-    const allowedOrigins = [config.CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000'];
-    if (!origin || allowedOrigins.includes(origin) || config.DEV_MODE) {
+    const allowedOrigins = getAllowedOrigins();
+    const normalizedOrigin = origin ? origin.replace(/\/+$/, '') : null;
+    if (!origin || (normalizedOrigin && allowedOrigins.includes(normalizedOrigin)) || config.DEV_MODE) {
       callback(null, true);
     } else {
-      callback(new Error('CORS policy: Access denied for this origin'));
+      callback(new Error(`CORS policy: Access denied for origin ${origin}`));
     }
   },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

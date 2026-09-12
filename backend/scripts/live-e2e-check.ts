@@ -1,6 +1,6 @@
 const BASE_URL = 'http://localhost:5000/api/v1';
 
-async function req(path: string, options: any = {}) {
+async function req(path: string, options: any = {}): Promise<{ status: number; ok: boolean; data: any }> {
   const url = `${BASE_URL}${path}`;
   const res = await fetch(url, {
     ...options,
@@ -9,7 +9,7 @@ async function req(path: string, options: any = {}) {
       ...(options.headers || {}),
     },
   });
-  const data = await res.json().catch(() => null);
+  const data: any = await res.json().catch(() => null);
   return { status: res.status, ok: res.ok, data };
 }
 

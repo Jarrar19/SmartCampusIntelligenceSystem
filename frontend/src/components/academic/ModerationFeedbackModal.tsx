@@ -13,6 +13,7 @@ interface ModerationFeedbackModalProps {
   subtitle?: string;
   actionText?: string;
   resource?: Resource;
+  resourceTitle?: string;
   status?: 'REJECTED' | 'CHANGES_REQUESTED';
   isProcessing?: boolean;
   isSubmitting?: boolean;
@@ -23,10 +24,11 @@ export const ModerationFeedbackModal: React.FC<ModerationFeedbackModalProps> = (
   onClose,
   onConfirm,
   onSubmit,
-  title = 'Reject Resource Upload',
+  title,
   subtitle = 'Provide constructive moderator feedback to the student uploader.',
-  actionText = 'Confirm Rejection',
+  actionText,
   resource,
+  resourceTitle,
   status,
   isProcessing = false,
   isSubmitting = false,
@@ -50,12 +52,20 @@ export const ModerationFeedbackModal: React.FC<ModerationFeedbackModalProps> = (
   };
 
   const loading = isProcessing || isSubmitting;
+  const resolvedTitle = title || (
+    resourceTitle
+      ? `${status === 'CHANGES_REQUESTED' ? 'Request Changes' : 'Reject Resource'}: ${resourceTitle}`
+      : (resource ? `Moderation Decision: ${resource.title}` : 'Reject Resource Upload')
+  );
+  const resolvedActionText = actionText || (
+    status === 'CHANGES_REQUESTED' ? 'Send Request' : 'Confirm Rejection'
+  );
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={resource ? `Moderation Decision: ${resource.title}` : title}
+      title={resolvedTitle}
       subtitle={subtitle}
       maxWidth="md"
     >
@@ -98,7 +108,7 @@ export const ModerationFeedbackModal: React.FC<ModerationFeedbackModalProps> = (
             size="sm"
             isLoading={loading}
           >
-            {actionText}
+            {resolvedActionText}
           </Button>
         </div>
       </form>

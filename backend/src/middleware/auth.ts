@@ -10,6 +10,7 @@ export interface AuthUser {
   fullName: string;
   department?: string | null;
   semester?: number | null;
+  prn?: string | null;
   isActive: boolean;
   isVerified: boolean;
   tokenVersion?: number;
@@ -50,6 +51,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
         role: true,
         department: true,
         semester: true,
+        prn: true,
         isActive: true,
         isVerified: true,
         tokenVersion: true,

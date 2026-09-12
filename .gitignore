@@ -29,3 +29,4 @@ backend/storage/general/*
 .DS_Store
 Thumbs.db
 *.log
+.vscode/
