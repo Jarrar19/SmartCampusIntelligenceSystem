@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api/v1';
-export const API_ORIGIN = API_URL.replace(/\/api\/v1\/?$/, '');
+export const API_URL = (import.meta as any).env?.VITE_API_URL || '/api/v1';
+export const API_ORIGIN = API_URL.startsWith('http') ? API_URL.replace(/\/api\/v1\/?$/, '') : window.location.origin;
 export const STORAGE_BASE_URL = `${API_ORIGIN}/storage`;
 export const SOCKET_URL = API_ORIGIN;
 

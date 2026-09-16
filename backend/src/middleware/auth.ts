@@ -8,6 +8,7 @@ export interface AuthUser {
   email: string;
   role: string;
   fullName: string;
+  prn?: string | null;
   department?: string | null;
   semester?: number | null;
   isActive: boolean;

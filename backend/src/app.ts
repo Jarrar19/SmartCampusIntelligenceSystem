@@ -41,11 +41,10 @@ app.use('/storage/avatars', express.static(path.join(config.STORAGE_DIR, 'avatar
 app.use('/storage/general', express.static(path.join(config.STORAGE_DIR, 'general')));
 
 
-// General API rate limiter
-app.use('/api', apiLimiter);
-
-// API v1 routes
+// API v1 routes (Mounted on /api/v1, /v1, and /api for Vercel Serverless compatibility)
 app.use('/api/v1', routes);
+app.use('/v1', routes);
+app.use('/api', routes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
