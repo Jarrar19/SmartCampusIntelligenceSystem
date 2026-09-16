@@ -41,10 +41,11 @@ app.use('/storage/avatars', express.static(path.join(config.STORAGE_DIR, 'avatar
 app.use('/storage/general', express.static(path.join(config.STORAGE_DIR, 'general')));
 
 
-// API v1 routes (Mounted on /api/v1, /v1, and /api for Vercel Serverless compatibility)
+// API v1 routes (Universal route mounting for local dev, Express standalone, and Vercel serverless functions)
 app.use('/api/v1', routes);
 app.use('/v1', routes);
 app.use('/api', routes);
+app.use('/', routes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
