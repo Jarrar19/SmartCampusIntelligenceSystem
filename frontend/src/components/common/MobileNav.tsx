@@ -2,7 +2,8 @@ import React from 'react';
 import { 
   LayoutDashboard, BookOpen, FileText, CheckSquare, 
   ShoppingBag, Tag, Heart, ShieldCheck, Inbox, 
-  X, MessageSquare, Sun, Moon, LogOut, LucideIcon, Megaphone
+  X, MessageSquare, Sun, Moon, LogOut, LucideIcon, Megaphone,
+  FolderLock, FileCheck2
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
@@ -37,6 +38,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
 
   const studentNavItems: MobileNavItem[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'student-docx', label: 'Student DOCX', icon: FolderLock },
     { id: 'notice-board', label: 'Notice Board', icon: Megaphone },
     { id: 'courses', label: 'My Courses', icon: BookOpen },
     { id: 'resources', label: 'Notes & PYQs', icon: FileText },
@@ -65,6 +67,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
 
   const adminNavItems: MobileNavItem[] = [
     { id: 'dashboard', label: 'Admin Cockpit', icon: LayoutDashboard },
+    { id: 'student-section-admin', label: 'Student Section DOCX', icon: FileCheck2 },
     { id: 'notice-board', label: 'Notice Board', icon: Megaphone },
     { id: 'courses', label: 'All Courses', icon: BookOpen },
     { 
@@ -78,7 +81,19 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     { id: 'audit-logs', label: 'Security & Audit Logs', icon: ShieldCheck },
   ];
 
-  const navItems: MobileNavItem[] = user?.role === 'ADMIN' ? adminNavItems : isFaculty ? facultyNavItems : studentNavItems;
+  const studentSectionNavItems: MobileNavItem[] = [
+    { id: 'student-section-admin', label: 'DOCX Management', icon: FileCheck2 },
+    { id: 'notice-board', label: 'Notice Board', icon: Megaphone },
+    { id: 'audit-logs', label: 'Security & Audit Logs', icon: ShieldCheck },
+  ];
+
+  const navItems = user?.role === 'ADMIN'
+    ? adminNavItems
+    : user?.role === 'STUDENT_SECTION'
+    ? studentSectionNavItems
+    : isFaculty
+    ? facultyNavItems
+    : studentNavItems;
 
   const bottomItems: MobileNavItem[] = [
     { id: 'dashboard', label: 'Home', icon: LayoutDashboard },

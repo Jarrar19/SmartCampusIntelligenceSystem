@@ -39,7 +39,7 @@ const RegisterSchema = z.object({
   email: z.string().email('Invalid email address format'),
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
-  role: z.enum(['STUDENT', 'FACULTY', 'HOD']).optional(),
+  role: z.enum(['STUDENT', 'FACULTY', 'HOD', 'STUDENT_SECTION']).optional(),
   department: z.string().optional(),
   semester: z.number().int().optional(),
   prn: z.string().optional(),
@@ -635,7 +635,7 @@ export async function promoteUserRole(req: Request, res: Response, next: any) {
     const { targetUserId, newRole } = req.body;
     const numericId = parseInt(String(targetUserId), 10);
 
-    if (isNaN(numericId) || !['STUDENT', 'FACULTY', 'ADMIN'].includes(newRole)) {
+    if (isNaN(numericId) || !['STUDENT', 'FACULTY', 'ADMIN', 'STUDENT_SECTION', 'HOD'].includes(newRole)) {
       return res.status(400).json({ success: false, message: 'Invalid targetUserId or newRole specified' });
     }
 

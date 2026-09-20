@@ -160,6 +160,26 @@ async function main() {
     },
   });
 
+  const studentSectionStaff = await prisma.user.upsert({
+    where: { email: 'studentsection@sbjit.edu.in' },
+    update: {
+      passwordHash,
+      role: 'STUDENT_SECTION',
+      isActive: true,
+      isVerified: true,
+    },
+    create: {
+      email: 'studentsection@sbjit.edu.in',
+      fullName: 'Prof. Nilesh Patil (Student Section Head)',
+      passwordHash,
+      role: 'STUDENT_SECTION',
+      department: 'Central Student Section & Registry',
+      isActive: true,
+      isVerified: true,
+      avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+    },
+  });
+
   console.log('✅ Users seeded');
 
   // 2. Create Courses
@@ -815,6 +835,156 @@ async function main() {
   });
 
   console.log('✅ Campus Notices seeded');
+
+  // 7. Seed Student DOCX Requirements and Sample Documents
+  const samplePdfContent = Buffer.from(
+    '%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R/Resources<<>>>>endobj\nxref\n0 4\n0000000000 65535 f \n0000000010 00000 n \n0000000060 00000 n \n0000000118 00000 n \ntrailer<</Size 4/Root 1 0 R>>\nstartxref\n200\n%%EOF'
+  );
+
+  const docsDir = path.join(__dirname, '../../storage/student_docs');
+  if (!fs.existsSync(docsDir)) {
+    fs.mkdirSync(docsDir, { recursive: true });
+  }
+
+  const sampleFiles = [
+    { filename: 'admission_renewal_fee_receipt_2026.pdf', name: 'Admission Renewal & Semester Fee Receipt 2026-27' },
+    { filename: 'aadhar_card_verified_copy.pdf', name: 'National Identity / Aadhar Card Copy' },
+    { filename: 'hsc_12th_grade_marksheet.pdf', name: 'HSC / 12th Standard Board Marksheet' },
+    { filename: 'mahadbt_scholarship_form.pdf', name: 'MahaDBT State Scholarship Application' },
+    { filename: 'aws_cloud_internship_certificate.pdf', name: 'AWS Cloud Architecture Internship Completion' },
+  ];
+
+  for (const sf of sampleFiles) {
+    fs.writeFileSync(path.join(docsDir, sf.filename), samplePdfContent);
+  }
+
+  await prisma.documentRequirement.deleteMany();
+  await prisma.documentRequirement.createMany({
+    data: [
+      {
+        title: 'Semester Admission Renewal Form & Fee Receipt',
+        category: 'ADMISSION_RENEWAL',
+        description: 'Mandatory annual institutional fee payment receipt and signed renewal declaration.',
+        isMandatory: true,
+        appliesTo: 'ALL',
+      },
+      {
+        title: 'MahaDBT / National Scholarship Form',
+        category: 'SCHOLARSHIPS',
+        description: 'Approved scholarship receipt or e-Kalyan allotment order for fee concession.',
+        isMandatory: false,
+        appliesTo: 'ALL',
+      },
+      {
+        title: 'HSC (12th) / Diploma Final Marksheet',
+        category: 'ACADEMIC_RECORDS',
+        description: 'Attested copy of previous qualifying qualifying examination scorecard.',
+        isMandatory: true,
+        appliesTo: 'ALL',
+      },
+      {
+        title: 'Student Aadhar Card / Government Photo ID',
+        category: 'IDENTITY_DOCUMENTS',
+        description: 'Clear color copy of Aadhar card with DOB clearly legible.',
+        isMandatory: true,
+        appliesTo: 'ALL',
+      },
+      {
+        title: 'Degree / Technical Course Certificate',
+        category: 'CERTIFICATES',
+        description: 'NPTEL, Coursera, or industry recognized technical certifications.',
+        isMandatory: false,
+        appliesTo: 'ALL',
+      },
+      {
+        title: 'Medical Fitness / Extracurricular Affidavit',
+        category: 'OTHER_DOCUMENTS',
+        description: 'Anti-ragging declaration and medical fitness certificate.',
+        isMandatory: false,
+        appliesTo: 'ALL',
+      },
+    ],
+  });
+
+  await prisma.studentDocument.deleteMany();
+  await prisma.studentDocument.createMany({
+    data: [
+      {
+        studentId: student1.id,
+        documentName: 'Admission Renewal & Semester Fee Receipt 2026-27',
+        category: 'ADMISSION_RENEWAL',
+        status: 'AVAILABLE',
+        verificationStatus: 'VERIFIED',
+        filePath: 'student_docs/admission_renewal_fee_receipt_2026.pdf',
+        fileName: 'admission_renewal_fee_receipt_2026.pdf',
+        fileSize: samplePdfContent.length,
+        fileType: 'pdf',
+        notes: 'Paid via SBJIT Campus NetBanking. Transaction ID: TXN998231',
+        verifierNotes: 'Verified with College Accounts Section records.',
+        verifiedById: studentSectionStaff.id,
+        verifiedAt: new Date(),
+      },
+      {
+        studentId: student1.id,
+        documentName: 'National Identity / Aadhar Card Copy',
+        category: 'IDENTITY_DOCUMENTS',
+        status: 'AVAILABLE',
+        verificationStatus: 'VERIFIED',
+        filePath: 'student_docs/aadhar_card_verified_copy.pdf',
+        fileName: 'aadhar_card_verified_copy.pdf',
+        fileSize: samplePdfContent.length,
+        fileType: 'pdf',
+        notes: 'Original verified during admission.',
+        verifierNotes: 'Identity confirmed matching college enrollment records.',
+        verifiedById: studentSectionStaff.id,
+        verifiedAt: new Date(),
+      },
+      {
+        studentId: student1.id,
+        documentName: 'HSC / 12th Standard Board Marksheet',
+        category: 'ACADEMIC_RECORDS',
+        status: 'AVAILABLE',
+        verificationStatus: 'VERIFIED',
+        filePath: 'student_docs/hsc_12th_grade_marksheet.pdf',
+        fileName: 'hsc_12th_grade_marksheet.pdf',
+        fileSize: samplePdfContent.length,
+        fileType: 'pdf',
+        notes: 'Maharashtra State Board passing certificate.',
+        verifierNotes: 'Authenticated against MSBSHSE portal.',
+        verifiedById: studentSectionStaff.id,
+        verifiedAt: new Date(),
+      },
+      {
+        studentId: student1.id,
+        documentName: 'MahaDBT State Scholarship Application',
+        category: 'SCHOLARSHIPS',
+        status: 'AVAILABLE',
+        verificationStatus: 'PENDING',
+        filePath: 'student_docs/mahadbt_scholarship_form.pdf',
+        fileName: 'mahadbt_scholarship_form.pdf',
+        fileSize: samplePdfContent.length,
+        fileType: 'pdf',
+        notes: 'Submitted for OBC Post-Matric Scholarship Scheme 2026-27.',
+      },
+      {
+        studentId: student1.id,
+        documentName: 'AWS Cloud Architecture Internship Completion',
+        category: 'CERTIFICATES',
+        status: 'AVAILABLE',
+        verificationStatus: 'VERIFIED',
+        filePath: 'student_docs/aws_cloud_internship_certificate.pdf',
+        fileName: 'aws_cloud_internship_certificate.pdf',
+        fileSize: samplePdfContent.length,
+        fileType: 'pdf',
+        notes: '2-month summer internship certificate.',
+        verifierNotes: 'Verified by Head of T&P Cell.',
+        verifiedById: studentSectionStaff.id,
+        verifiedAt: new Date(),
+      },
+    ],
+  });
+
+  console.log('✅ Student DOCX Vault and Requirements seeded');
   console.log('✅ Marketplace, Chat, and Notifications seeded');
   console.log('🎉 Seeding completed successfully!');
 }

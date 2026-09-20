@@ -7,7 +7,7 @@ import { Request } from 'express';
 
 // Ensure storage subdirectories exist
 export function ensureStorageDirs() {
-  const dirs = ['resources', 'assignments', 'marketplace', 'general'];
+  const dirs = ['resources', 'assignments', 'marketplace', 'general', 'student_docs'];
   for (const dir of dirs) {
     const fullPath = path.join(config.STORAGE_DIR, dir);
     if (!fs.existsSync(fullPath)) {

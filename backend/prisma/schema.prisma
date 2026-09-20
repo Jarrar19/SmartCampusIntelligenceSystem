@@ -61,6 +61,8 @@ model User {
   resultPublications    ExamResultPublication[]
   examRecords           ExamRecord[]
   noticesPosted         CampusNotice[]
+  studentDocuments      StudentDocument[]     @relation("StudentDocuments")
+  verifiedDocuments     StudentDocument[]     @relation("DocumentVerifier")
 
   @@index([email])
   @@index([role])
@@ -457,6 +459,48 @@ model CampusNotice {
   @@index([expiresAt])
   @@index([category])
   @@index([priority])
+}
+
+model StudentDocument {
+  id                 Int       @id @default(autoincrement())
+  studentId          Int
+  documentName       String
+  category           String    // ADMISSION_RENEWAL, SCHOLARSHIPS, ACADEMIC_RECORDS, IDENTITY_DOCUMENTS, CERTIFICATES, OTHER_DOCUMENTS
+  status             String    @default("AVAILABLE") // AVAILABLE, REQUIRED, EXPIRED
+  verificationStatus String    @default("PENDING")   // PENDING, VERIFIED, REJECTED
+  filePath           String
+  fileName           String
+  fileSize           Int
+  fileType           String    // pdf, docx, png, jpg, jpeg, webp
+  fileHash           String?
+  expiryDate         DateTime?
+  notes              String?
+  verifierNotes      String?
+  verifiedById       Int?
+  verifiedAt         DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  student            User      @relation("StudentDocuments", fields: [studentId], references: [id], onDelete: Cascade)
+  verifiedBy         User?     @relation("DocumentVerifier", fields: [verifiedById], references: [id], onDelete: SetNull)
+
+  @@index([studentId])
+  @@index([category])
+  @@index([status])
+  @@index([verificationStatus])
+}
+
+model DocumentRequirement {
+  id          Int      @id @default(autoincrement())
+  title       String
+  category    String   // ADMISSION_RENEWAL, SCHOLARSHIPS, ACADEMIC_RECORDS, IDENTITY_DOCUMENTS, CERTIFICATES, OTHER_DOCUMENTS
+  description String?
+  isMandatory Boolean  @default(true)
+  appliesTo   String   @default("ALL") // ALL, or specific department/semester
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
 }
 
 

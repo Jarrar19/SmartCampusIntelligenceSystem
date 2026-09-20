@@ -1,29 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { 
-   X, Download, Maximize2, Minimize2, ZoomIn, ZoomOut, 
-   RotateCw, FileText, AlertCircle, Loader2, ExternalLink 
+import {
+  Download, ExternalLink, FileText, AlertCircle, CheckCircle2, Clock,
+  ZoomIn, ZoomOut, RotateCw, RefreshCcw, Sparkles, Send, Eye, ShieldCheck,
+  User, Building2, Calendar, FileCheck
 } from 'lucide-react';
-import { api, extractErrorMessage } from '../../services/api';
+import { Modal } from './Modal';
 import { Button } from './Button';
 import { Badge } from './Badge';
+import { api } from '../../services/api';
 
-interface DocumentPreviewModalProps {
+export interface DocumentPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
+  // Student Doc object
+  doc?: {
+    id: number;
+    documentName: string;
+    fileName: string;
+    fileType: string;
+    category?: string;
+    status?: string;
+    verificationStatus?: string;
+    verifierNotes?: string | null;
+    notes?: string | null;
+    fileSize?: number;
+    createdAt?: string;
+    updatedAt?: string;
+    student?: {
+      id?: number;
+      fullName?: string;
+      email?: string;
+      prn?: string | null;
+      department?: string | null;
+      semester?: number | null;
+    };
+  } | null;
+
+  // Legacy/Generic props (for GradingModal, ResourcesPage)
+  title?: string;
   subtitle?: string;
-  previewUrl: string; // e.g. /resources/12/download?preview=true or /assignments/submissions/5/download?preview=true
-  downloadUrl: string;
-  fileName: string;
+  previewUrl?: string;
+  downloadUrl?: string;
+  fileName?: string;
   fileSize?: number;
-  mimeType?: string;
   similarityScore?: number;
+
+  // Staff Verification Props
+  canVerify?: boolean;
+  onVerify?: (docId: number, status: 'VERIFIED' | 'REJECTED', notes: string) => Promise<void>;
+  isVerifying?: boolean;
 }
 
 export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
   isOpen,
   onClose,
+  doc,
   title,
   subtitle,
   previewUrl,
@@ -31,264 +62,430 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
   fileName,
   fileSize,
   similarityScore,
+  canVerify = false,
+  onVerify,
+  isVerifying = false,
 }) => {
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
-  const [textContent, setTextContent] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [zoom, setZoom] = useState(100);
+  const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [fileLoadError, setFileLoadError] = useState<string | null>(null);
+
+  // Image controls
+  const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
 
-  const ext = fileName.split('.').pop()?.toLowerCase() || '';
-  const isPdf = ext === 'pdf';
-  const isImage = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext);
-  const isCodeOrText = ['txt', 'csv', 'py', 'cpp', 'c', 'java', 'js', 'ts', 'jsx', 'tsx', 'json', 'md', 'html', 'css'].includes(ext);
+  // Verification panel state
+  const [verifyDecision, setVerifyDecision] = useState<'VERIFIED' | 'REJECTED'>('VERIFIED');
+  const [verifierNotes, setVerifierNotes] = useState('');
+  const [isSubmittingVerify, setIsSubmittingVerify] = useState(false);
+  const [verifySuccessMsg, setVerifySuccessMsg] = useState<string | null>(null);
 
+  // Determine metadata
+  const docId = doc?.id;
+  const resolvedTitle = doc?.documentName || title || 'Document Preview';
+  const resolvedFileName = doc?.fileName || fileName || 'document';
+  const resolvedFileType = (doc?.fileType || resolvedFileName.split('.').pop() || '').toLowerCase();
+  const resolvedDownloadUrl = docId ? `/api/v1/student-docs/${docId}/download` : downloadUrl || '#';
+
+  const isPdf = resolvedFileType === 'pdf';
+  const isImage = ['png', 'jpg', 'jpeg', 'webp', 'gif'].includes(resolvedFileType);
+  const isDocx = ['docx', 'doc'].includes(resolvedFileType);
+
+  // Fetch document securely via authenticated Axios call
   useEffect(() => {
-    let currentBlobUrl: string | null = null;
+    let active = true;
+    let createdUrl: string | null = null;
 
-    const loadPreview = async () => {
-      if (!isOpen) return;
-      setIsLoading(true);
-      setErrorMsg(null);
-      setTextContent(null);
-      setZoom(100);
+    const fetchDocument = async () => {
+      if (!isOpen) {
+        setBlobUrl(null);
+        return;
+      }
+
+      let fetchEndpoint: string | null = null;
+      if (docId) {
+        fetchEndpoint = `/student-docs/${docId}/view`;
+      } else if (previewUrl) {
+        fetchEndpoint = previewUrl.startsWith('/api/v1')
+          ? previewUrl.replace('/api/v1', '')
+          : previewUrl;
+      }
+
+      if (!fetchEndpoint) return;
+
+      setIsLoadingFile(true);
+      setFileLoadError(null);
+      setZoom(1);
       setRotation(0);
+      setVerifySuccessMsg(null);
+
+      // Pre-fill notes based on existing notes or default
+      if (doc?.verificationStatus === 'REJECTED') {
+        setVerifyDecision('REJECTED');
+        setVerifierNotes(doc?.verifierNotes || '');
+      } else {
+        setVerifyDecision('VERIFIED');
+        setVerifierNotes(doc?.verifierNotes || 'Document verified with institutional records.');
+      }
 
       try {
-        const response = await api.get(previewUrl, {
-          responseType: isCodeOrText ? 'text' : 'blob',
-        });
-
-        if (isCodeOrText) {
-          setTextContent(typeof response.data === 'string' ? response.data : JSON.stringify(response.data, null, 2));
-        } else {
-          const blob = response.data instanceof Blob ? response.data : new Blob([response.data]);
-          currentBlobUrl = URL.createObjectURL(blob);
-          setBlobUrl(currentBlobUrl);
+        const res = await api.get(fetchEndpoint, { responseType: 'blob' });
+        if (active) {
+          createdUrl = URL.createObjectURL(res.data);
+          setBlobUrl(createdUrl);
         }
       } catch (err: any) {
-        const msg = await extractErrorMessage(err, 'Failed to stream document preview');
-        setErrorMsg(msg);
+        console.error('Error fetching document blob:', err);
+        if (active) {
+          setFileLoadError(
+            'Unable to preview document inline. The file may be restricted or corrupted.'
+          );
+        }
       } finally {
-        setIsLoading(false);
+        if (active) {
+          setIsLoadingFile(false);
+        }
       }
     };
 
-    loadPreview();
+    fetchDocument();
 
     return () => {
-      if (currentBlobUrl) {
-        URL.revokeObjectURL(currentBlobUrl);
+      active = false;
+      if (createdUrl) {
+        URL.revokeObjectURL(createdUrl);
       }
     };
-  }, [isOpen, previewUrl, isCodeOrText]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, onClose]);
+  }, [isOpen, docId, previewUrl]);
 
   if (!isOpen) return null;
 
-  const handleDownload = async () => {
-    try {
-      const res = await api.get(downloadUrl, { responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([res.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', fileName);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (e) {
-      window.open(downloadUrl, '_blank');
+  const handleZoomIn = () => setZoom((z) => Math.min(Number((z + 0.25).toFixed(2)), 3.0));
+  const handleZoomOut = () => setZoom((z) => Math.max(Number((z - 0.25).toFixed(2)), 0.5));
+  const handleRotate = () => setRotation((r) => (r + 90) % 360);
+  const handleReset = () => {
+    setZoom(1);
+    setRotation(0);
+  };
+
+  const handleDecisionSelect = (action: 'VERIFIED' | 'REJECTED') => {
+    setVerifyDecision(action);
+    if (action === 'VERIFIED') {
+      setVerifierNotes('Document verified with institutional records.');
+    } else {
+      setVerifierNotes('Document rejected: Please upload a clear, legible copy.');
     }
   };
 
-  const modalContent = (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className={`fixed inset-0 z-[999999] flex flex-col bg-slate-950/80 backdrop-blur-md transition-all ${
-        isFullscreen ? 'p-0' : 'p-2 sm:p-4 lg:p-6'
-      }`}
-    >
-      {/* Viewer Main Container Card */}
-      <div className={`relative flex flex-col w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden animate-fade-in-up ${
-        isFullscreen ? 'rounded-0' : 'rounded-2xl max-w-[1400px] mx-auto'
-      }`}>
-        
-        {/* Top Control Bar */}
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md flex-shrink-0 gap-3">
-          <div className="flex items-center space-x-3 truncate">
-            <div className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-800/80 flex items-center justify-center flex-shrink-0">
-              <FileText className="w-4 h-4" />
-            </div>
-            <div className="truncate">
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                  {title}
-                </h3>
-                {similarityScore !== undefined && (
-                  <Badge 
-                    variant={similarityScore > 50 ? 'rose' : similarityScore > 25 ? 'amber' : 'emerald'} 
-                    size="xs"
-                    dot
-                  >
-                    {similarityScore}% Similarity
-                  </Badge>
-                )}
-              </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                {fileName} {fileSize ? `• ${(fileSize / (1024 * 1024)).toFixed(2)} MB` : ''} {subtitle ? `• ${subtitle}` : ''}
-              </p>
-            </div>
-          </div>
+  const handleExecuteVerification = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!docId || !onVerify) return;
 
-          {/* Action Toolbar */}
-          <div className="flex items-center space-x-1.5 flex-shrink-0">
-            {isImage && (
-              <>
-                <button
-                  onClick={() => setZoom(z => Math.max(z - 25, 50))}
-                  className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition"
-                  title="Zoom Out"
-                >
-                  <ZoomOut className="w-4 h-4" />
-                </button>
-                <span className="text-xs font-bold text-slate-600 dark:text-slate-300 min-w-[3rem] text-center">
-                  {zoom}%
-                </span>
-                <button
-                  onClick={() => setZoom(z => Math.min(z + 25, 300))}
-                  className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition"
-                  title="Zoom In"
-                >
-                  <ZoomIn className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setRotation(r => (r + 90) % 360)}
-                  className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition"
-                  title="Rotate"
-                >
-                  <RotateCw className="w-4 h-4" />
-                </button>
-              </>
+    setIsSubmittingVerify(true);
+    try {
+      await onVerify(docId, verifyDecision, verifierNotes.trim());
+      setVerifySuccessMsg(
+        verifyDecision === 'VERIFIED'
+          ? 'Document approved and marked as VERIFIED!'
+          : 'Document rejected. Student will be prompted to re-upload.'
+      );
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmittingVerify(false);
+    }
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={resolvedTitle}
+      subtitle={
+        doc?.student?.fullName
+          ? `Student: ${doc.student.fullName} (${doc.student.prn || 'No USN'}) • File: ${resolvedFileName}`
+          : subtitle || `File: ${resolvedFileName}`
+      }
+      maxWidth="3xl"
+    >
+      <div className="space-y-4 text-left">
+        {/* Top Status & Action Ribbon */}
+        <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+          <div className="flex flex-wrap items-center gap-2">
+            {doc?.verificationStatus && (
+              <Badge
+                variant={
+                  doc.verificationStatus === 'VERIFIED'
+                    ? 'emerald'
+                    : doc.verificationStatus === 'REJECTED'
+                    ? 'rose'
+                    : 'amber'
+                }
+                size="xs"
+              >
+                {doc.verificationStatus === 'VERIFIED' && <CheckCircle2 className="w-3 h-3 mr-1" />}
+                {doc.verificationStatus === 'REJECTED' && <AlertCircle className="w-3 h-3 mr-1" />}
+                {doc.verificationStatus === 'PENDING' && <Clock className="w-3 h-3 mr-1" />}
+                {doc.verificationStatus}
+              </Badge>
             )}
 
-            <Button
-              variant="saffron"
-              size="xs"
-              onClick={handleDownload}
-              leftIcon={<Download className="w-3.5 h-3.5" />}
-            >
-              Download
-            </Button>
+            {doc?.category && (
+              <Badge variant="indigo" size="xs">
+                {doc.category.replace(/_/g, ' ')}
+              </Badge>
+            )}
 
-            <button
-              onClick={() => setIsFullscreen(!isFullscreen)}
-              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition cursor-pointer"
-              title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-            >
-              {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-            </button>
+            {doc?.status && (
+              <Badge
+                variant={
+                  doc.status === 'AVAILABLE'
+                    ? 'purple'
+                    : doc.status === 'EXPIRED'
+                    ? 'rose'
+                    : 'blue'
+                }
+                size="xs"
+              >
+                Status: {doc.status}
+              </Badge>
+            )}
 
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition cursor-pointer active:scale-90"
-              title="Close Preview"
+            {typeof similarityScore === 'number' && (
+              <Badge variant={similarityScore > 20 ? 'rose' : 'emerald'} size="xs">
+                Similarity: {similarityScore}%
+              </Badge>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            {isImage && blobUrl && (
+              <div className="hidden sm:flex items-center space-x-1 bg-white dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+                <button
+                  type="button"
+                  onClick={handleZoomIn}
+                  className="p-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+                  title="Zoom In"
+                >
+                  <ZoomIn className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleZoomOut}
+                  className="p-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+                  title="Zoom Out"
+                >
+                  <ZoomOut className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRotate}
+                  className="p-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+                  title="Rotate 90°"
+                >
+                  <RotateCw className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="p-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+                  title="Reset View"
+                >
+                  <RefreshCcw className="w-3.5 h-3.5" />
+                </button>
+                <span className="text-[10px] font-mono font-bold text-slate-400 px-1">
+                  {Math.round(zoom * 100)}%
+                </span>
+              </div>
+            )}
+
+            <a
+              href={resolvedDownloadUrl}
+              download={resolvedFileName}
+              target="_blank"
+              rel="noreferrer"
             >
-              <X className="w-5 h-5" />
-            </button>
+              <Button variant="secondary" size="xs" leftIcon={<Download className="w-3.5 h-3.5" />}>
+                Download
+              </Button>
+            </a>
           </div>
         </div>
 
-        {/* Viewer Content Body */}
-        <div className="flex-1 bg-slate-100/70 dark:bg-slate-950 flex items-center justify-center overflow-auto p-4 relative">
-          {isLoading && (
-            <div className="flex flex-col items-center justify-center space-y-3">
-              <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
-              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                Streaming secure document preview...
+        {/* Previous Verifier Notes if present */}
+        {doc?.verifierNotes && !verifySuccessMsg && (
+          <div
+            className={`p-3 rounded-2xl border text-xs font-medium space-y-1 ${
+              doc.verificationStatus === 'REJECTED'
+                ? 'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-200'
+                : 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-200'
+            }`}
+          >
+            <div className="flex items-center gap-1.5 font-bold">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>Current Review Feedback:</span>
+            </div>
+            <p className="text-[11px] leading-relaxed pl-5">{doc.verifierNotes}</p>
+          </div>
+        )}
+
+        {/* Verification Success Toast Banner inside modal */}
+        {verifySuccessMsg && (
+          <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+            <span>{verifySuccessMsg}</span>
+          </div>
+        )}
+
+        {/* Document In-Browser Viewport */}
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-900/5 dark:bg-slate-950 min-h-[380px] max-h-[65vh] flex items-center justify-center relative">
+          {isLoadingFile ? (
+            <div className="p-12 text-center space-y-3">
+              <Sparkles className="w-8 h-8 text-blue-500 animate-spin mx-auto" />
+              <p className="text-xs font-bold text-slate-600 dark:text-slate-400">
+                Retrieving document preview...
               </p>
             </div>
-          )}
-
-          {errorMsg && !isLoading && (
-            <div className="text-center max-w-md p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <AlertCircle className="w-10 h-10 text-rose-500 mx-auto mb-2" />
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">Unable to Preview In-Browser</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 mb-4">{errorMsg}</p>
-              <Button variant="saffron" size="sm" onClick={handleDownload} leftIcon={<Download className="w-3.5 h-3.5" />}>
-                Download File Directly
-              </Button>
+          ) : fileLoadError ? (
+            <div className="p-8 text-center space-y-3">
+              <AlertCircle className="w-10 h-10 text-amber-500 mx-auto" />
+              <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {fileLoadError}
+              </p>
+              <a href={resolvedDownloadUrl} download={resolvedFileName}>
+                <Button variant="primary" size="xs" leftIcon={<Download className="w-3.5 h-3.5" />}>
+                  Download Instead
+                </Button>
+              </a>
+            </div>
+          ) : isPdf && blobUrl ? (
+            <iframe
+              src={blobUrl}
+              title={resolvedTitle}
+              className="w-full h-[60vh] rounded-2xl border-0 bg-white"
+            />
+          ) : isImage && blobUrl ? (
+            <div className="w-full h-[60vh] overflow-auto flex items-center justify-center p-4">
+              <img
+                src={blobUrl}
+                alt={resolvedTitle}
+                style={{
+                  transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                  transition: 'transform 0.15s ease-out',
+                }}
+                className="max-h-[56vh] max-w-full object-contain rounded-xl shadow-lg select-none"
+              />
+            </div>
+          ) : isDocx ? (
+            <div className="text-center p-8 space-y-3">
+              <div className="w-16 h-16 rounded-3xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center mx-auto shadow-inner">
+                <FileText className="w-8 h-8" />
+              </div>
+              <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                Microsoft Word Document (.docx)
+              </h4>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                DOCX format can be downloaded and opened with Microsoft Word or Google Docs.
+              </p>
+              <a href={resolvedDownloadUrl} download={resolvedFileName}>
+                <Button variant="primary" size="sm" leftIcon={<Download className="w-4 h-4" />}>
+                  Download & Inspect DOCX
+                </Button>
+              </a>
+            </div>
+          ) : (
+            <div className="text-center p-8 space-y-2">
+              <FileText className="w-10 h-10 text-slate-400 mx-auto" />
+              <p className="text-xs font-bold text-slate-600 dark:text-slate-400">
+                Document ready for verification
+              </p>
+              <a href={resolvedDownloadUrl} download={resolvedFileName}>
+                <Button variant="primary" size="xs" leftIcon={<Download className="w-3.5 h-3.5" />}>
+                  Download Document
+                </Button>
+              </a>
             </div>
           )}
-
-          {!isLoading && !errorMsg && (
-            <>
-              {/* 1. PDF Document Embedded Viewer */}
-              {isPdf && blobUrl && (
-                <iframe
-                  src={`${blobUrl}#toolbar=1&navpanes=0`}
-                  title={fileName}
-                  className="w-full h-full rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs bg-white"
-                />
-              )}
-
-              {/* 2. Image Viewer */}
-              {isImage && blobUrl && (
-                <div className="flex items-center justify-center w-full h-full overflow-auto">
-                  <img
-                    src={blobUrl}
-                    alt={fileName}
-                    style={{
-                      transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
-                      transition: 'transform 0.15s ease-out',
-                    }}
-                    className="max-h-[85vh] max-w-[85vw] object-contain rounded-lg shadow-md select-none"
-                  />
-                </div>
-              )}
-
-              {/* 3. Text and Source Code Viewer */}
-              {isCodeOrText && textContent !== null && (
-                <div className="w-full h-full overflow-auto bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 font-mono text-xs text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre select-text shadow-xs">
-                  {textContent}
-                </div>
-              )}
-
-              {/* 4. Other formats (Office docs, zip) */}
-              {!isPdf && !isImage && !isCodeOrText && (
-                <div className="text-center p-8 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm max-w-md">
-                  <FileText className="w-12 h-12 text-blue-600 mx-auto mb-3" />
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Binary Document Format (.${ext})</h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 mb-4">
-                    This file format is optimized for dedicated desktop applications (e.g. Word, PowerPoint, Excel).
-                  </p>
-                  <Button variant="saffron" size="sm" onClick={handleDownload} leftIcon={<Download className="w-3.5 h-3.5" />}>
-                    Download & Open ({fileName})
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
         </div>
-      </div>
-    </div>
-  );
 
-  return createPortal(modalContent, document.body);
+        {/* Staff Verification & Review Section */}
+        {canVerify && onVerify && docId && (
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-indigo-500/30 shadow-md space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <ShieldCheck className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                  Student Section Document Review & Verification
+                </h4>
+              </div>
+              <span className="text-[10px] text-slate-400 font-bold">
+                Review inside portal without downloading
+              </span>
+            </div>
+
+            <form onSubmit={handleExecuteVerification} className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleDecisionSelect('VERIFIED')}
+                  className={`py-2.5 px-3 rounded-xl text-xs font-black border transition flex items-center justify-center gap-2 cursor-pointer ${
+                    verifyDecision === 'VERIFIED'
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-md'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-emerald-50'
+                  }`}
+                >
+                  <CheckCircle2 className="w-4 h-4" /> Approve Document
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDecisionSelect('REJECTED')}
+                  className={`py-2.5 px-3 rounded-xl text-xs font-black border transition flex items-center justify-center gap-2 cursor-pointer ${
+                    verifyDecision === 'REJECTED'
+                      ? 'bg-rose-600 text-white border-rose-600 shadow-md'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-rose-50'
+                  }`}
+                >
+                  <AlertCircle className="w-4 h-4" /> Reject / Request Re-upload
+                </button>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                  Staff Remarks / Institutional Notes
+                </label>
+                <textarea
+                  rows={2}
+                  value={verifierNotes}
+                  onChange={(e) => setVerifierNotes(e.target.value)}
+                  placeholder="Enter verification notes or feedback for student..."
+                  className="w-full glass-input rounded-xl px-3 py-2 text-xs font-medium focus:outline-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end space-x-2 pt-1">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="xs"
+                  onClick={onClose}
+                >
+                  Close
+                </Button>
+                <Button
+                  type="submit"
+                  variant={verifyDecision === 'VERIFIED' ? 'primary' : 'danger'}
+                  size="xs"
+                  isLoading={isSubmittingVerify || isVerifying}
+                  leftIcon={<Send className="w-3.5 h-3.5" />}
+                >
+                  {verifyDecision === 'VERIFIED' ? 'Confirm & Approve' : 'Confirm Rejection'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        )}
+      </div>
+    </Modal>
+  );
 };

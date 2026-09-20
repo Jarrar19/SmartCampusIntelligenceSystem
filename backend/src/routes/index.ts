@@ -9,6 +9,7 @@ import * as marketplaceController from '../controllers/marketplaceController';
 import * as chatController from '../controllers/chatController';
 import * as resultController from '../controllers/resultController';
 import * as noticeController from '../controllers/noticeController';
+import * as studentDocController from '../controllers/studentDocController';
 import { authenticate, requireRole } from '../middleware/auth';
 import { authLimiter } from '../middleware/rateLimit';
 import { memoryUpload } from '../services/fileStorage';
@@ -99,6 +100,23 @@ router.post('/chat/block-user', authenticate, asyncHandler(chatController.blockU
 router.get('/notices', authenticate, asyncHandler(noticeController.getNotices));
 router.post('/notices', authenticate, requireRole(['FACULTY', 'HOD', 'ADMIN']), asyncHandler(noticeController.createNotice));
 router.delete('/notices/:id', authenticate, asyncHandler(noticeController.deleteNotice));
+
+// Student DOCX Vault & Student Section Admin Routes
+router.get('/student-docs', authenticate, asyncHandler(studentDocController.getMyDocuments));
+router.post('/student-docs/upload', authenticate, memoryUpload.single('file'), asyncHandler(studentDocController.uploadDocument));
+router.patch('/student-docs/:id', authenticate, asyncHandler(studentDocController.updateDocument));
+router.delete('/student-docs/:id', authenticate, asyncHandler(studentDocController.deleteDocument));
+router.get('/student-docs/:id/view', authenticate, asyncHandler(studentDocController.viewDocument));
+router.get('/student-docs/:id/download', authenticate, asyncHandler(studentDocController.downloadDocument));
+
+// Student Section Admin Routes
+router.get('/student-docs/admin/all-documents', authenticate, requireRole(['STUDENT_SECTION', 'ADMIN', 'HOD', 'FACULTY']), asyncHandler(studentDocController.getAllAdminDocuments));
+router.get('/student-docs/admin/students', authenticate, requireRole(['STUDENT_SECTION', 'ADMIN', 'HOD', 'FACULTY']), asyncHandler(studentDocController.getAdminStudentDirectory));
+router.get('/student-docs/admin/students/:studentId', authenticate, requireRole(['STUDENT_SECTION', 'ADMIN', 'HOD', 'FACULTY']), asyncHandler(studentDocController.getAdminStudentDocuments));
+router.patch('/student-docs/admin/:id/verify', authenticate, requireRole(['STUDENT_SECTION', 'ADMIN', 'HOD', 'FACULTY']), asyncHandler(studentDocController.verifyDocument));
+router.get('/student-docs/admin/requirements', authenticate, asyncHandler(studentDocController.getRequirements));
+router.post('/student-docs/admin/requirements', authenticate, requireRole(['STUDENT_SECTION', 'ADMIN', 'HOD', 'FACULTY']), asyncHandler(studentDocController.createRequirement));
+router.delete('/student-docs/admin/requirements/:id', authenticate, requireRole(['STUDENT_SECTION', 'ADMIN', 'HOD', 'FACULTY']), asyncHandler(studentDocController.deleteRequirement));
 
 // AI Academic Advisor Routes
 import aiRoutes from './ai';

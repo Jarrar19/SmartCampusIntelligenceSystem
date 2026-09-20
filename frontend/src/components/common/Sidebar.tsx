@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   LayoutDashboard, BookOpen, FileText, CheckSquare, ShoppingBag, 
   ShieldCheck, Heart, Tag, Inbox, PanelLeftClose, PanelLeft,
-  Sparkles, CheckCircle2, Award, Edit3, Megaphone
+  Sparkles, CheckCircle2, Award, Edit3, Megaphone, FolderLock, FileCheck2
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { ProfileSettingsModal } from './ProfileSettingsModal';
@@ -42,6 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       title: 'Academic & Learning',
       items: [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'student-docx', label: 'Student DOCX Vault', icon: FolderLock },
         { id: 'notice-board', label: 'Campus Notice Board', icon: Megaphone },
         { id: 'courses', label: 'My Courses', icon: BookOpen },
         { id: 'resources', label: 'Notes & PYQs', icon: FileText },
@@ -102,6 +103,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       title: 'Campus Governance',
       items: [
         { id: 'dashboard', label: 'Admin Control Center', icon: LayoutDashboard },
+        { id: 'student-section-admin', label: 'Student Section DOCX', icon: FileCheck2 },
+        { id: 'notice-board', label: 'Campus Notice Board', icon: Megaphone },
         { id: 'courses', label: 'Course Catalog', icon: BookOpen },
         { 
           id: 'moderation', 
@@ -127,7 +130,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
-  const sections = user?.role === 'ADMIN' ? adminSections : isFaculty ? facultySections : studentSections;
+  const studentSectionSections: NavSection[] = [
+    {
+      title: 'Student Section & Registry',
+      items: [
+        { id: 'student-section-admin', label: 'DOCX Management', icon: FileCheck2 },
+        { id: 'notice-board', label: 'Campus Notice Board', icon: Megaphone },
+      ],
+    },
+    {
+      title: 'Audit & Compliance',
+      items: [
+        { id: 'audit-logs', label: 'Security & Audit Logs', icon: ShieldCheck },
+      ],
+    },
+  ];
+
+  const isStudentSection = user?.role === 'STUDENT_SECTION';
+  const sections = user?.role === 'ADMIN'
+    ? adminSections
+    : isStudentSection
+    ? studentSectionSections
+    : isFaculty
+    ? facultySections
+    : studentSections;
 
   return (
     <aside

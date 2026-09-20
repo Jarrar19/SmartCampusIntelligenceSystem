@@ -24,6 +24,8 @@ import { WishlistPage } from './pages/marketplace/WishlistPage';
 import { AuditLogsPage } from './pages/audit/AuditLogsPage';
 import { SmartAiPage } from './pages/academic/SmartAiPage';
 import { NoticeBoardPage } from './pages/academic/NoticeBoardPage';
+import { StudentDocxPage } from './pages/student/StudentDocxPage';
+import { StudentSectionAdminPage } from './pages/admin/StudentSectionAdminPage';
 import { ResourceUploadModal } from './components/academic/ResourceUploadModal';
 import { CreateProductModal } from './components/marketplace/CreateProductModal';
 import { GlobalSearchModal } from './components/common/GlobalSearchModal';
@@ -123,6 +125,8 @@ const AppContent: React.FC = () => {
             {currentTab === 'dashboard' && (
               user.role === 'ADMIN' ? (
                 <AdminDashboard onNavigate={handleNavigate} />
+              ) : user.role === 'STUDENT_SECTION' ? (
+                <StudentSectionAdminPage />
               ) : isFaculty ? (
                 <FacultyDashboard
                   onNavigate={handleNavigate}
@@ -137,6 +141,14 @@ const AppContent: React.FC = () => {
                   onOpenChat={() => openChat()}
                 />
               )
+            )}
+
+            {currentTab === 'student-docx' && (
+              <StudentDocxPage />
+            )}
+
+            {currentTab === 'student-section-admin' && (
+              <StudentSectionAdminPage />
             )}
 
             {currentTab === 'notice-board' && (

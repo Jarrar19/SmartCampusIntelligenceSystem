@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   GraduationCap, Lock, Mail, User, BookOpen, 
   ShieldCheck, ArrowRight, Sparkles, CheckCircle2, Sun, Moon,
-  Eye, EyeOff, ShoppingBag, MessageSquare, ShieldAlert, Check
+  Eye, EyeOff, ShoppingBag, MessageSquare, ShieldAlert, Check, FileCheck2
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -156,10 +156,10 @@ export const AuthPage: React.FC = () => {
 
                 <div className="space-y-1.5 text-left">
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Campus Role <span className="text-rose-500">*</span>
+                    Registering As <span className="text-rose-500">*</span>
                   </label>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    {(['STUDENT', 'FACULTY', 'HOD'] as const).map((r) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                    {(['STUDENT', 'FACULTY', 'HOD', 'STUDENT_SECTION'] as const).map((r) => (
                       <button
                         key={r}
                         type="button"
@@ -170,7 +170,7 @@ export const AuthPage: React.FC = () => {
                             : 'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
                         }`}
                       >
-                        {r === 'STUDENT' ? 'Student' : r === 'HOD' ? 'HoD' : 'Faculty'}
+                        {r === 'STUDENT' ? 'Student' : r === 'HOD' ? 'HoD' : r === 'STUDENT_SECTION' ? 'Student Section' : 'Faculty'}
                       </button>
                     ))}
                   </div>
@@ -287,7 +287,7 @@ export const AuthPage: React.FC = () => {
             <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-center mb-2">
               1-Click Institutional Demo Profiles
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('student@sbjit.edu.in')}
@@ -326,6 +326,16 @@ export const AuthPage: React.FC = () => {
                 <ShieldCheck className="w-3.5 h-3.5 mx-auto mb-0.5 text-blue-700 dark:text-blue-400 group-hover:scale-110 transition-transform" />
                 <span className="text-[10px] font-extrabold block">HoD Portal</span>
                 <span className="text-[9px] text-slate-500 dark:text-slate-400 block">Publish Results</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickDemoLogin('studentsection@sbjit.edu.in')}
+                className="p-2 rounded-xl bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900/60 text-slate-800 dark:text-slate-200 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950/40 transition text-center cursor-pointer active:scale-95 group shadow-2xs"
+              >
+                <FileCheck2 className="w-3.5 h-3.5 mx-auto mb-0.5 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-extrabold block">Student Section</span>
+                <span className="text-[9px] text-purple-700/80 dark:text-purple-400/80 block">DOCX Admin</span>
               </button>
             </div>
           </div>
